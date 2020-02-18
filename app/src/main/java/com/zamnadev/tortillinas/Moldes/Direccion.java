@@ -1,6 +1,8 @@
 package com.zamnadev.tortillinas.Moldes;
 
-public class Direccion {
+import java.io.Serializable;
+
+public class Direccion implements Serializable {
 
     private String calle;
     private String numeroExterior;
@@ -11,6 +13,17 @@ public class Direccion {
 
     public Direccion() {
 
+    }
+
+    public Direccion(String calle, String numeroExterior) {
+        this.calle = calle;
+        this.numeroExterior = numeroExterior;
+    }
+
+    public Direccion(String calle, String numeroExterior, String numeroInterior) {
+        this.calle = calle;
+        this.numeroExterior = numeroExterior;
+        this.numeroInterior = numeroInterior;
     }
 
     public Direccion(String calle, String numeroExterior, String cp, String colonia, String municipio) {

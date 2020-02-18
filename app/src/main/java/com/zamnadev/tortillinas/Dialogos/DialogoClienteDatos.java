@@ -1,28 +1,59 @@
 package com.zamnadev.tortillinas.Dialogos;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 
-import com.zamnadev.tortillinas.R;
+import com.zamnadev.tortillinas.Moldes.Nombre;
 
-public class DialogoClienteDatos extends DialogFragment {
+public class DialogoClienteDatos extends DialogoFormulario {
+
+    public DialogoClienteDatos() {
+
+    }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        configuracionCampo1("Ingrese el nombre(s)", InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        configuracionCampo2("Ingrese el apellido(s)",InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        configuracionCampo3("Ingrese el numero telefonico",InputType.TYPE_CLASS_NUMBER);
 
-        View view = getActivity().getLayoutInflater().inflate(R.layout.dialogo_cliente_datos,null);
-        builder.setView(view);
+        configuracionTitulo("Agregar cliente (1 de 3)");
 
+        configuracionbtnOpcion1(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        },"Cancelar");
 
+        configuracionbtnOpcion2(null,"Anterior",false);
 
-        return builder.create();
+        configuracionbtnOpcion3(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (validaCampos("Rellene el campo nombre","Rellene el campo apellido","Rellene el campo telefono")) {
+                    Nombre nombre = new Nombre(getCampo1(),getCampo2());
+                    DialogoClienteDomicioCalle dialogoDomicioCalle = DialogoClienteDomicioCalle.newInstance(nombre,getCampo3());
+                    dialogoDomicioCalle.show(getActivity().getSupportFragmentManager(),"DialogoDomicioCalle");
+                    dismiss();
+                }
+            }
+        },"Siguiente");
+
+        configuracionBtnCerrar(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
+
+        return dialog;
     }
 }

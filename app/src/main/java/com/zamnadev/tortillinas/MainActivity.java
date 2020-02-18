@@ -27,34 +27,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        HashMap<String, Object> nombre = new HashMap<>();
-        nombre.put("nombres","Rafael");
-        nombre.put("apellidos","Perez Macias");
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Clientes");
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("idCliente", "1234");
-        hashMap.put("nombre",nombre);
-        //reference.push().updateChildren(hashMap);
-
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren())
-                {
-                    Log.e("Hola","" + snapshot.toString());
-                    Cliente cliente = snapshot.getValue(Cliente.class);
-                    Log.e("Hola","" + cliente.toString());
-                    Log.e("Cliente","" + cliente.getNombre().getNombres());
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
         ((Button) findViewById(R.id.btnClientes))
                 .setOnClickListener(new View.OnClickListener() {
                     @Override

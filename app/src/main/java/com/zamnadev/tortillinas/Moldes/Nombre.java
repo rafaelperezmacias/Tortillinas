@@ -1,6 +1,8 @@
 package com.zamnadev.tortillinas.Moldes;
 
-public class Nombre {
+import java.io.Serializable;
+
+public class Nombre implements Serializable {
 
     private String nombres;
     private String apellidos;

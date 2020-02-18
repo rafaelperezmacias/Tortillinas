@@ -25,7 +25,6 @@ public class ClientesActivity extends AppCompatActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //TODO Valida si existe una sucursal antes de aparecer
                         DialogoClienteDatos dialogoClienteDatos = new DialogoClienteDatos();
                         dialogoClienteDatos.show(getSupportFragmentManager(),"DialogoClienteDatos");
                     }

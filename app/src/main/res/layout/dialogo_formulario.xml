@@ -12,8 +12,8 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/txtTitulo"
             android:layout_weight="1"
-            android:text="Agregar cliente"
             android:gravity="center"
             android:padding="15dp"
             android:textColor="@color/blanco"
@@ -34,7 +34,7 @@
     </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/lytNombre"
+        android:id="@+id/lytCampo1"
         android:layout_marginTop="10dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
@@ -43,16 +43,14 @@
         app:errorEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/txtNombre"
-            android:hint="Ingrese el nombre(s)"
+            android:id="@+id/txtCampo1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textCapWords"/>
+            android:layout_height="wrap_content"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/lytApellidos"
+        android:id="@+id/lytCampo2"
         android:layout_marginTop="10dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
@@ -61,16 +59,14 @@
         app:errorEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/txtApellidos"
-            android:hint="Ingrese el apellido(s)"
+            android:id="@+id/txtCampo2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textCapWords"/>
+            android:layout_height="wrap_content"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/lytTelefono"
+        android:id="@+id/lytCampo3"
         android:layout_marginTop="10dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
@@ -79,9 +75,7 @@
         app:errorEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/txtTelefono"
-            android:inputType="number"
-            android:hint="Ingrese el numero telefonico"
+            android:id="@+id/txtCampo3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -94,13 +88,12 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btnCancelar"
-            android:text="Cancelar"
-            android:textAllCaps="false"
-            android:background="@null"
-            android:textColor="@color/colorAccent"
+            android:id="@+id/btnOpcion1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:textAllCaps="false"
+            android:textColor="@color/colorAccent" />
 
         <LinearLayout
             android:layout_weight="1"
@@ -108,13 +101,20 @@
             android:layout_height="match_parent"/>
 
         <Button
-            android:id="@+id/btnSiguiente"
-            android:text="Siguiente"
-            android:textAllCaps="false"
-            android:background="@null"
-            android:textColor="@color/colorAccent"
+            android:id="@+id/btnOpcion2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:textAllCaps="false"
+            android:textColor="@color/colorAccent" />
+
+        <Button
+            android:id="@+id/btnOpcion3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:textAllCaps="false"
+            android:textColor="@color/colorAccent" />
 
     </LinearLayout>
 

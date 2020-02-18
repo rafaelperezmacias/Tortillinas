@@ -6,19 +6,17 @@ public class Cliente {
     private Nombre nombre;
     private Direccion direccion;
     private String telefono;
-    private String idSucursal;
     private boolean eliminado;
 
     public Cliente() {
 
     }
 
-    public Cliente(String idCliente, Nombre nombre, Direccion direccion, String telefono, String idSucursal, boolean eliminado) {
+    public Cliente(String idCliente, Nombre nombre, Direccion direccion, String telefono, boolean eliminado) {
         this.idCliente = idCliente;
         this.nombre = nombre;
         this.direccion = direccion;
         this.telefono = telefono;
-        this.idSucursal = idSucursal;
         this.eliminado = eliminado;
     }
 
@@ -54,14 +52,6 @@ public class Cliente {
         this.telefono = telefono;
     }
 
-    public String getIdSucursal() {
-        return idSucursal;
-    }
-
-    public void setIdSucursal(String idSucursal) {
-        this.idSucursal = idSucursal;
-    }
-
     public boolean isEliminado() {
         return eliminado;
     }
@@ -77,7 +67,7 @@ public class Cliente {
                 ", nombre=" + nombre +
                 ", direccion=" + direccion +
                 ", telefono='" + telefono + '\'' +
-                ", idSucursal='" + idSucursal + '\'' +
+                ", eliminado=" + eliminado +
                 '}';
     }
 }
