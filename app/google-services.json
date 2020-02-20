@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "615973000200",
+    "firebase_url": "https://tortillasbd.firebaseio.com",
+    "project_id": "tortillasbd",
+    "storage_bucket": "tortillasbd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:615973000200:android:7ece76625f146c4214adbd",
+        "android_client_info": {
+          "package_name": "com.zamnadev.tortillinas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "615973000200-1bmdo8ioauh6h5n2vc32fj0ih00h5lod.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zamnadev.tortillinas",
+            "certificate_hash": "ab34faa1bc61f20badc0277abe393778476d3530"
+          }
+        },
+        {
+          "client_id": "615973000200-0a9a1n2okm01f623q4kbai1vi2ehvgln.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDL0fUa4hBLs2XIvPZVSnnSjsx98NESqzk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "615973000200-0a9a1n2okm01f623q4kbai1vi2ehvgln.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
