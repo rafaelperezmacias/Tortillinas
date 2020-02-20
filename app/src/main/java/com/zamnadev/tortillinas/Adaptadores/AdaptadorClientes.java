@@ -24,6 +24,8 @@ public class AdaptadorClientes extends RecyclerView.Adapter<AdaptadorClientes.Vi
         this.clientes = clientes;
     }
 
+    //jgjhg
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
