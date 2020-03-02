@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Clientes.ClientesActivity">
+    tools:context=".Sucursales.SucursalesActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnAddCliente"
+        android:id="@+id/btnAddSucursal"
         android:src="@drawable/ic_add_black_24dp"
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="15dp"

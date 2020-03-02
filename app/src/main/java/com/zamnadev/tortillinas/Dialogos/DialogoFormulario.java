@@ -129,14 +129,14 @@ public abstract class DialogoFormulario extends DialogFragment {
     }
 
     public String getCampo1() {
-        return txtCampo1.getText().toString();
+        return txtCampo1.getText().toString().trim();
     }
 
     public String getCampo2() {
-        return txtCampo2.getText().toString();
+        return txtCampo2.getText().toString().trim();
     }
 
     public String getCampo3() {
-        return txtCampo3.getText().toString();
+        return txtCampo3.getText().toString().trim();
     }
 }
