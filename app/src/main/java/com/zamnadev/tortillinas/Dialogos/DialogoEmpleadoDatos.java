@@ -10,9 +10,9 @@ import androidx.annotation.Nullable;
 
 import com.zamnadev.tortillinas.Moldes.Nombre;
 
-public class DialogoEmpleadosDatos extends DialogoFormulario {
+public class DialogoEmpleadoDatos extends DialogoFormulario {
 
-    public DialogoEmpleadosDatos() {
+    public DialogoEmpleadoDatos() {
 
     }
 
@@ -40,6 +40,9 @@ public class DialogoEmpleadosDatos extends DialogoFormulario {
             public void onClick(View view) {
                 if (validaCampos("Rellene el campo nombre","Rellene el campo apellido","Rellene el campo telefono")) {
                     Nombre nombre = new Nombre(getCampo1(),getCampo2());
+                    DialogoEmpleadoSucursal dialogoEmpleadoSucursal = DialogoEmpleadoSucursal.newInstance(nombre,getCampo3());
+                    dialogoEmpleadoSucursal.show(getFragmentManager(),"DialogoEmpleadoSucursal");
+                    dialogoEmpleadoSucursal.setCancelable(false);
                     dismiss();
                 }
             }

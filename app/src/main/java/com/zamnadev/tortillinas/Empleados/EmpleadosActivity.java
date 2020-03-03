@@ -7,8 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.zamnadev.tortillinas.Dialogos.DialogoClienteDatos;
-import com.zamnadev.tortillinas.Dialogos.DialogoEmpleadosDatos;
+import com.zamnadev.tortillinas.Dialogos.DialogoEmpleadoDatos;
 import com.zamnadev.tortillinas.R;
 
 public class EmpleadosActivity extends AppCompatActivity {
@@ -32,7 +31,7 @@ public class EmpleadosActivity extends AppCompatActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        DialogoEmpleadosDatos dialogoEmpleadosDatos = new DialogoEmpleadosDatos();
+                        DialogoEmpleadoDatos dialogoEmpleadosDatos = new DialogoEmpleadoDatos();
                         dialogoEmpleadosDatos.show(getSupportFragmentManager(),"DialogoEmpleadosDatos");
                     }
                 });

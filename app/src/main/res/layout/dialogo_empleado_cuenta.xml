@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -13,7 +12,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:text="Agregar empleado (2 de 3)"
+            android:text="Agregar empleado (3 de 3)"
             android:layout_weight="1"
             android:gravity="center"
             android:padding="15dp"
@@ -34,57 +33,42 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/lytUsuario"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        app:errorEnabled="true">
 
-        <TextView
-            android:gravity="center"
-            android:padding="5dp"
-            android:textColor="@color/negro"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Seleccione una sucursal"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:id="@+id/recyclerview"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txtUsuario"
+            android:inputType="text"
+            android:hint="Ingrese el usuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <TextView
-            android:gravity="center"
-            android:padding="5dp"
-            android:textColor="@color/negro"
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/lytPassword"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:passwordToggleEnabled="true"
+        app:errorEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txtPassword"
+            android:inputType="textPassword"
+            android:hint="Ingrese la contraseña"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Tipo"/>
+            android:layout_height="wrap_content"/>
 
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content">
-
-                <RadioButton
-                    android:id="@+id/rdbMostrador"
-                    android:checked="true"
-                    android:layout_weight="1"
-                    android:text="Venta-Mostrador"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-                <RadioButton
-                    android:id="@+id/rdbRepartidor"
-                    android:layout_weight="1"
-                    android:text="Repartidor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-        </RadioGroup>
-
-    </LinearLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
         android:layout_marginTop="15dp"
@@ -116,8 +100,8 @@
             android:textColor="@color/colorAccent" />
 
         <Button
-            android:id="@+id/btnSiguiente"
-            android:text="Siguiente"
+            android:id="@+id/btnFinalizar"
+            android:text="Finalizar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@null"
