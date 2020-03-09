@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.zamnadev.tortillinas.Vistas.VentasView;
 
 public class VentasPresenter implements VentasView.Presenter {
+
     private Activity activity;
 
     @Override

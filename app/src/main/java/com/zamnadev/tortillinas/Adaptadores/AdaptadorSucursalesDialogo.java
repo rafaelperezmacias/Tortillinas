@@ -24,7 +24,7 @@ public class AdaptadorSucursalesDialogo extends RecyclerView.Adapter<AdaptadorSu
 
     public AdaptadorSucursalesDialogo(Context context, ArrayList<Sucursal> sucursals)
     {
-        positionCheckBox = -1;
+        positionCheckBox = 0;
         this.context = context;
         this.sucursals = sucursals;
     }
@@ -48,13 +48,10 @@ public class AdaptadorSucursalesDialogo extends RecyclerView.Adapter<AdaptadorSu
 
         holder.cbSucursal.setText(sucursal.getNombre());
 
-        holder.cbSucursal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                holder.cbSucursal.setChecked(true);
-                positionCheckBox = position;
-                notifyDataSetChanged();
-            }
+        holder.cbSucursal.setOnClickListener(view -> {
+            holder.cbSucursal.setChecked(true);
+            positionCheckBox = position;
+            notifyDataSetChanged();
         });
     }
 
@@ -73,11 +70,11 @@ public class AdaptadorSucursalesDialogo extends RecyclerView.Adapter<AdaptadorSu
         }
     }
 
-    public int getPositionCheckBox() {
-        return positionCheckBox;
-    }
-
     public String getIdSucursalActiva() {
         return sucursals.get(positionCheckBox).getIdSucursal();
+    }
+
+    public String getSucursalActiva() {
+        return sucursals.get(positionCheckBox).getNombre();
     }
 }

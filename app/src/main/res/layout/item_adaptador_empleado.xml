@@ -26,7 +26,21 @@
 
         <TextView
             android:layout_marginTop="5dp"
-            android:id="@+id/txtDireccion"
+            android:id="@+id/txtSucursal"
+            android:textColor="@color/negro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_marginTop="5dp"
+            android:id="@+id/txtTipo"
+            android:textColor="@color/negro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_marginTop="5dp"
+            android:id="@+id/txtCuenta"
             android:textColor="@color/negro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

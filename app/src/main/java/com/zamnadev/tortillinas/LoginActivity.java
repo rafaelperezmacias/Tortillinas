@@ -21,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Moldes.Cuenta;
+import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -68,8 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 for (DataSnapshot snapshot : data.getChildren()) {
                                                     cuenta = snapshot.getValue(Cuenta.class);
                                                 }
-                                                SharedPreferences preferences = getSharedPreferences("cuentas",MODE_PRIVATE);
-                                                preferences.edit().putString("idCuenta",cuenta.getIdCuenta()).apply();
+                                                ControlSesiones.IngreasarUsuario(getApplicationContext(),cuenta.getIdCuenta());
                                                 startActivity(new Intent(LoginActivity.this,MainActivity.class));
                                                 finish();
                                             } else {
@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (getSharedPreferences("cuentas",MODE_PRIVATE).getString("idCuenta",null) != null) {
+        if (ControlSesiones.ValidaUsuarioActivo(getApplicationContext())) {
             startActivity(new Intent(LoginActivity.this,MainActivity.class));
             finish();
         }

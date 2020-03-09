@@ -2,9 +2,15 @@ package com.zamnadev.tortillinas.Moldes;
 
 public class Empleado {
 
-    public static final int TIPO_MOSTRADOR = 1;
-    public static final int TIPO_REPARTIDOR = 2;
-    public static final int TIPO_ADMIN = 3;
+    public static String[] NIVELES_DE_USUARIO = {
+            "Mostrador",
+            "Repartidor",
+            "Administrador"
+    };
+
+    public static final int TIPO_MOSTRADOR = 0;
+    public static final int TIPO_REPARTIDOR = 1;
+    public static final int TIPO_ADMIN = 2;
 
     private String idEmpleado;
     private Nombre nombre;
@@ -72,5 +78,17 @@ public class Empleado {
 
     public void setEliminado(boolean eliminado) {
         this.eliminado = eliminado;
+    }
+
+    @Override
+    public String toString() {
+        return "Empleado{" +
+                "idEmpleado='" + idEmpleado + '\'' +
+                ", nombre=" + nombre.toString() +
+                ", telefono='" + telefono + '\'' +
+                ", tipo=" + tipo +
+                ", idSucursal='" + idSucursal + '\'' +
+                ", eliminado=" + eliminado +
+                '}';
     }
 }

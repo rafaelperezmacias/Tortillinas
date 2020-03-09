@@ -48,4 +48,14 @@ public class Sucursal {
     public void setEliminado(boolean eliminado) {
         this.eliminado = eliminado;
     }
+
+    @Override
+    public String toString() {
+        return "Sucursal{" +
+                "idSucursal='" + idSucursal + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", direccion=" + direccion.toString() +
+                ", eliminado=" + eliminado +
+                '}';
+    }
 }

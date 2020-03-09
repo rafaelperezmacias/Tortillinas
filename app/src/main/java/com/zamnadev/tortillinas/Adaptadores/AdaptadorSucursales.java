@@ -9,54 +9,50 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.zamnadev.tortillinas.Moldes.Cliente;
+import com.zamnadev.tortillinas.Moldes.Sucursal;
 import com.zamnadev.tortillinas.R;
 
 import java.util.ArrayList;
 
-public class AdaptadorClientes extends RecyclerView.Adapter<AdaptadorClientes.ViewHolder> {
+public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursales.ViewHolder> {
 
     private Context context;
-    private ArrayList<Cliente> clientes;
+    private ArrayList<Sucursal> sucursals;
 
-    public AdaptadorClientes(Context context, ArrayList<Cliente> clientes) {
+    public AdaptadorSucursales(Context context, ArrayList<Sucursal> sucursals)
+    {
         this.context = context;
-        this.clientes = clientes;
+        this.sucursals = sucursals;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_adaptador_clientes,parent,false);
-        return new AdaptadorClientes.ViewHolder(view);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_adaptador_sucursal,parent,false);
+        return new AdaptadorSucursales.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Cliente cliente = clientes.get(position);
+        Sucursal sucursal = sucursals.get(position);
 
-        holder.txtNombre.setText(cliente.getNombre().getNombres() + " " +  cliente.getNombre().getApellidos());
-
-        holder.txtTelefono.setText(cliente.getTelefono());
-
-        holder.txtDireccion.setText(cliente.getDireccion().toStringRecyclerView());
+        holder.txtNombre.setText(sucursal.getNombre());
+        holder.txtDireccion.setText(sucursal.getDireccion().toStringRecyclerView());
     }
 
     @Override
     public int getItemCount() {
-        return clientes.size();
+        return sucursals.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView txtNombre;
-        private TextView txtTelefono;
         private TextView txtDireccion;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             txtNombre = (TextView) itemView.findViewById(R.id.txtNombre);
-            txtTelefono = (TextView) itemView.findViewById(R.id.txtTelefono);
             txtDireccion = (TextView) itemView.findViewById(R.id.txtDireccion);
         }
     }

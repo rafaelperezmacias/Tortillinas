@@ -3,6 +3,7 @@ package com.zamnadev.tortillinas.Vistas;
 import com.zamnadev.tortillinas.Presentadores.BasePresenter;
 
 public interface VentasView {
+
     interface View {
         void showVentas();
     }

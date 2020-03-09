@@ -39,4 +39,13 @@ public class Cuenta {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    @Override
+    public String toString() {
+        return "Cuenta{" +
+                "idCuenta='" + idCuenta + '\'' +
+                ", usuario='" + usuario + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

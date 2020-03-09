@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorSucursalesDialogo;
+import com.zamnadev.tortillinas.BottomSheets.EmpleadosBottomSheet;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Nombre;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
@@ -34,17 +35,10 @@ import java.util.jar.Attributes;
 public class DialogoEmpleadoSucursal extends DialogFragment {
 
     private AdaptadorSucursalesDialogo adaptador;
+    private EmpleadosBottomSheet empleadosBottomSheet;
 
-    public static DialogoEmpleadoSucursal newInstance(Nombre nombre, String telefono) {
-        Bundle args = new Bundle();
-        args.putString("telefono",telefono);
-        args.putSerializable("nombre",nombre);
-        DialogoEmpleadoSucursal fragment = new DialogoEmpleadoSucursal();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public DialogoEmpleadoSucursal() {
+    public DialogoEmpleadoSucursal(EmpleadosBottomSheet empleadosBottomSheet) {
+        this.empleadosBottomSheet = empleadosBottomSheet;
     }
 
     @NonNull
@@ -52,18 +46,12 @@ public class DialogoEmpleadoSucursal extends DialogFragment {
     public Dialog onCreateDialog(@Nullable final Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-        final Nombre nombre = (Nombre) getArguments().getSerializable("nombre");
-        final String telefono = getArguments().getString("telefono");
-
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialogo_empleado_sucursal,null);
         builder.setView(view);
 
         final RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
-
-        final RadioButton rdbMostrador = view.findViewById(R.id.rdbMostrador);
-        final RadioButton rdbRepartidor = view.findViewById(R.id.rdbRepartidor);
 
         final ArrayList<Sucursal> sucursals = new ArrayList<>();
 
@@ -87,53 +75,23 @@ public class DialogoEmpleadoSucursal extends DialogFragment {
             }
         });
 
-        ((ImageView) view.findViewById(R.id.btnCerrar))
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dismiss();
-                    }
-                });
+        ((Button) view.findViewById(R.id.btnCancelar))
+                .setBackground(null);
 
         ((Button) view.findViewById(R.id.btnSiguiente))
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (adaptador.getPositionCheckBox() < 0) {
-                            Toast.makeText(getContext(), "Seleccione una sucursal", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
+                .setBackground(null);
 
-                        int tipo = 0;
+        ((ImageView) view.findViewById(R.id.btnCerrar))
+                .setOnClickListener(view1 -> dismiss());
 
-                        if (rdbMostrador.isChecked()) {
-                            tipo = Empleado.TIPO_MOSTRADOR;
-                        } else if (rdbRepartidor.isChecked()) {
-                            tipo = Empleado.TIPO_REPARTIDOR;
-                        }
-
-                        DialogoEmpleadoCuenta dialogoEmpleadoCuenta = DialogoEmpleadoCuenta.newInstance(nombre,telefono,tipo,adaptador.getIdSucursalActiva());
-                        dialogoEmpleadoCuenta.show(getFragmentManager(),"DialogoEmpleadoCuenta");
-                        dialogoEmpleadoCuenta.setCancelable(false);
-                        dismiss();
-                    }
+        ((Button) view.findViewById(R.id.btnSiguiente))
+                .setOnClickListener(view1 -> {
+                    empleadosBottomSheet.setTxtSucursal(adaptador.getIdSucursalActiva(),adaptador.getSucursalActiva());
+                    dismiss();
                 });
 
         ((Button) view.findViewById(R.id.btnCancelar))
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dismiss();
-                    }
-                });
-
-        ((Button) view.findViewById(R.id.btnAnterior))
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                    }
-                });
+                .setOnClickListener(view1 -> dismiss());
 
         return builder.create();
     }

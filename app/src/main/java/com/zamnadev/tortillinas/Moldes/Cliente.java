@@ -64,8 +64,8 @@ public class Cliente {
     public String toString() {
         return "Cliente{" +
                 "idCliente='" + idCliente + '\'' +
-                ", nombre=" + nombre +
-                ", direccion=" + direccion +
+                ", nombre=" + nombre.toString() +
+                ", direccion=" + direccion.toString() +
                 ", telefono='" + telefono + '\'' +
                 ", eliminado=" + eliminado +
                 '}';

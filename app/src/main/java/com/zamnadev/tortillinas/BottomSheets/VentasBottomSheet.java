@@ -28,9 +28,15 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class VentasBottomSheet extends BottomSheetDialogFragment {
+
     private BottomSheetBehavior bottomSheetBehavior;
 
     private TextInputEditText txtFecha;
+
+    public VentasBottomSheet()
+    {
+
+    }
 
     @Override
     @NonNull
@@ -58,7 +64,7 @@ public class VentasBottomSheet extends BottomSheetDialogFragment {
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, month);
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
             txtFecha.setText(sdf.format(calendar.getTime()));
         };
         txtFecha.setOnClickListener((v) -> new DatePickerDialog(getContext(), date,

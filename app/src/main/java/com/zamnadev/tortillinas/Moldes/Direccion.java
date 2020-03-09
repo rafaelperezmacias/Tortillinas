@@ -91,6 +91,19 @@ public class Direccion implements Serializable {
         this.municipio = municipio;
     }
 
+    public String toStringRecyclerView() {
+        String tmp  = "";
+
+        tmp += calle + "#" + numeroExterior;
+
+        if (numeroInterior != null) {
+            tmp += ", int: " + numeroInterior;
+        }
+
+        tmp += ", C.P. " + cp + ", " + colonia + ", " + municipio + ".";
+        return tmp;
+    }
+
     @Override
     public String toString() {
         return "Direccion{" +

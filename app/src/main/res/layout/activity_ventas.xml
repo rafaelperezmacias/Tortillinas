@@ -14,7 +14,7 @@
         android:orientation="vertical">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_ventas"
+            android:id="@+id/toolbar"
             app:title="Ventas"
             app:popupTheme="@style/Menu"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
