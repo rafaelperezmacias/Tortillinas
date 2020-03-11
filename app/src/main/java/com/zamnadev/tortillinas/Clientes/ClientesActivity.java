@@ -1,12 +1,12 @@
 package com.zamnadev.tortillinas.Clientes;
 
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -15,7 +15,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorClientes;
-import com.zamnadev.tortillinas.BottomSheets.ClientesBottomSheet;
 import com.zamnadev.tortillinas.Moldes.Cliente;
 import com.zamnadev.tortillinas.R;
 
@@ -65,8 +64,7 @@ public class ClientesActivity extends AppCompatActivity {
 
         ((FloatingActionButton) findViewById(R.id.btnAddCliente))
                 .setOnClickListener(view -> {
-                    ClientesBottomSheet clientesBottomSheet = new ClientesBottomSheet();
-                    clientesBottomSheet.show(getSupportFragmentManager(),clientesBottomSheet.getTag());
+
                 });
 
     }

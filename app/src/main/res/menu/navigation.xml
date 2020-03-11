@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/home_selector"
+        android:title="Inicio" />
+
+    <item
+        android:id="@+id/navigation_clientes"
+        android:icon="@drawable/clientes_selector"
+        android:title="Clientes" />
+
+    <item
+        android:id="@+id/navigation_ventas"
+        android:icon="@drawable/ventas_selector"
+        android:title="Ventas" />
+
+    <item
+        android:id="@+id/navigation_administrador"
+        android:icon="@drawable/admin_selector"
+        android:title="Administración" />
+</menu>

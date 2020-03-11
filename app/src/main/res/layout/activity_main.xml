@@ -10,112 +10,23 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        app:popupTheme="@style/Menu"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:popupTheme="@style/Menu" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/frontera05H"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintGuide_percent=".05"
-            android:orientation="horizontal"/>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/frontera45H"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent=".48"/>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/frontera55H"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintGuide_percent=".53"
-            android:orientation="horizontal"/>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/frontera95H"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintGuide_percent=".95"
-            android:orientation="horizontal"/>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/frontera05V"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintGuide_percent=".05"
-            android:orientation="vertical"/>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/frontera45V"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintGuide_percent=".45"
-            android:orientation="vertical"/>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/frontera55V"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintGuide_percent=".55"
-            android:orientation="vertical"/>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/frontera95V"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintGuide_percent=".95"
-            android:orientation="vertical"/>
-
-        <Button
-            android:id="@+id/btnClientes"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:text="Clientes"
-            app:layout_constraintTop_toTopOf="@id/frontera05H"
-            app:layout_constraintLeft_toLeftOf="@id/frontera05V"
-            app:layout_constraintRight_toRightOf="@id/frontera45V"
-            app:layout_constraintBottom_toBottomOf="@id/frontera45H"/>
-
-        <Button
-            android:id="@+id/btnSucursales"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:text="Sucursales"
-            app:layout_constraintTop_toTopOf="@id/frontera05H"
-            app:layout_constraintLeft_toLeftOf="@id/frontera55V"
-            app:layout_constraintRight_toRightOf="@id/frontera95V"
-            app:layout_constraintBottom_toBottomOf="@id/frontera45H"/>
-
-        <Button
-            android:id="@+id/btnVentas"
-            android:text="Ventas"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="@id/frontera55H"
-            app:layout_constraintLeft_toLeftOf="@id/frontera05V"
-            app:layout_constraintRight_toRightOf="@id/frontera45V"
-            app:layout_constraintBottom_toBottomOf="@id/frontera95H"/>
-
-        <Button
-            android:id="@+id/btnEmpleados"
-            android:text="Empleados"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="@id/frontera55H"
-            app:layout_constraintLeft_toLeftOf="@id/frontera55V"
-            app:layout_constraintRight_toRightOf="@id/frontera95V"
-            app:layout_constraintBottom_toBottomOf="@id/frontera95H"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/navigation"/>
 
 </LinearLayout>
