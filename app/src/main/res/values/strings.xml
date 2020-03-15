@@ -1,6 +1,17 @@
 <resources>
     <string name="app_name">Proyecto</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="icon">Icon</string>
+    <string name="agregar_cliente">Agregar cliente</string>
+    <string name="guardar_mayus">GUARDAR</string>
+    <string name="datos_generales">Datos generales</string>
+    <string name="nombre">Nombre</string>
+    <string name="apellidos">Apellido(s)</string>
+    <string name="telefono">Teléfono</string>
+    <string name="direccion">Dirección</string>
+    <string name="calle">Calle</string>
+    <string name="numero_exterior">Número exterior</string>
+    <string name="numero_interior">Número interior (opcional)</string>
+    <string name="codigo_postal">Código postal</string>
+    <string name="colonia">Colonia</string>
+    <string name="municipio">Municipio</string>
 </resources>

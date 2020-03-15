@@ -23,15 +23,17 @@
                 android:id="@+id/btn_cerrar"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:paddingStart="0dp"
                 android:paddingEnd="16dp"
                 android:background="@color/blanco"
-                android:src="@drawable/ic_close_black_24dp"/>
+                android:src="@drawable/ic_close_black_24dp"
+                android:contentDescription="@string/icon"/>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Agregar cliente"
+                android:text="@string/agregar_cliente"
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
 
             <com.google.android.material.button.MaterialButton
@@ -40,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:gravity="center"
-                android:text="GUARDAR"/>
+                android:text="@string/guardar_mayus"/>
 
         </LinearLayout>
 
@@ -66,7 +68,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
-                android:text="Datos generales"
+                android:text="@string/datos_generales"
                 android:textColor="@android:color/black"
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
 
@@ -80,7 +82,8 @@
                     android:layout_height="24dp"
                     android:layout_marginTop="22dp"
                     android:layout_marginStart="16dp"
-                    android:src="@drawable/ic_user_24dp"/>
+                    android:src="@drawable/ic_user_24dp"
+                    android:contentDescription="@string/icon"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/lytNombre"
@@ -88,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/icon"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:hint="Nombre"
+                    android:hint="@string/nombre"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     app:errorEnabled="true">
@@ -110,7 +113,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="Apellido(s)"
+                android:hint="@string/apellidos"
                 android:paddingStart="56dp"
                 android:paddingEnd="16dp"
                 app:errorEnabled="true">
@@ -135,7 +138,8 @@
                 android:layout_height="24dp"
                 android:layout_marginTop="22dp"
                 android:layout_marginStart="16dp"
-                android:src="@drawable/ic_phone_24dp"/>
+                android:src="@drawable/ic_phone_24dp"
+                android:contentDescription="@string/icon"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/lytTelefono"
@@ -143,7 +147,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/icon2"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:hint="Teléfono"
+                    android:hint="@string/telefono"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     app:errorEnabled="true">
@@ -172,7 +176,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
-                android:text="Dirección"
+                android:text="@string/direccion"
                 android:textColor="@android:color/black"
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
 
@@ -186,7 +190,8 @@
                 android:layout_height="24dp"
                 android:layout_marginTop="22dp"
                 android:layout_marginStart="16dp"
-                android:src="@drawable/ic_location_24dp"/>
+                android:src="@drawable/ic_location_24dp"
+                android:contentDescription="@string/icon"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/lytCalle"
@@ -194,7 +199,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/icon3"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:hint="Calle"
+                    android:hint="@string/calle"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     app:errorEnabled="true">
@@ -221,7 +226,8 @@
                 android:layout_height="24dp"
                 android:layout_marginTop="22dp"
                 android:layout_marginStart="16dp"
-                android:src="@drawable/ic_numbers_24dp"/>
+                android:src="@drawable/ic_numbers_24dp"
+                android:contentDescription="@string/icon"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/lytNumeroExterior"
@@ -229,7 +235,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/icon4"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:hint="Número exterior"
+                    android:hint="@string/numero_exterior"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     app:errorEnabled="true">
@@ -251,7 +257,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="Número interior (Opcional)"
+                android:hint="@string/numero_interior"
                 android:paddingStart="56dp"
                 android:paddingEnd="16dp"
                 app:errorEnabled="true">
@@ -271,7 +277,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="Código postal"
+                android:hint="@string/codigo_postal"
                 android:paddingStart="56dp"
                 android:paddingEnd="16dp"
                 app:errorEnabled="true">
@@ -296,7 +302,8 @@
                 android:layout_height="24dp"
                 android:layout_marginTop="22dp"
                 android:layout_marginStart="16dp"
-                android:src="@drawable/ic_home_city_24dp"/>
+                android:src="@drawable/ic_home_city_24dp"
+                android:contentDescription="@string/icon"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/lytColonia"
@@ -304,7 +311,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/icon5"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:hint="Colonia"
+                    android:hint="@string/colonia"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     app:errorEnabled="true">
@@ -326,7 +333,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="Municipio"
+                android:hint="@string/municipio"
                 android:paddingStart="56dp"
                 android:paddingEnd="16dp"
                 app:errorEnabled="true">
