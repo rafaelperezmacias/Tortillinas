@@ -23,16 +23,13 @@ public class AdaptadorClientesProductos extends RecyclerView.Adapter<AdaptadorCl
 
     private Context context;
     private ArrayList<Producto> productos;
-    private ArrayList<Double> nuevosPrecios;
+    private ArrayList<Producto> nuevosPrecios;
 
-    public AdaptadorClientesProductos(Context context, ArrayList<Producto> productos)
+    public AdaptadorClientesProductos(Context context, ArrayList<Producto> productos, ArrayList<Producto> nuevosPrecios)
     {
         this.context = context;
         this.productos = productos;
-        nuevosPrecios = new ArrayList<>();
-        for (Producto p : productos) {
-            nuevosPrecios.add(p.getPrecio());
-        }
+        this.nuevosPrecios = nuevosPrecios;
     }
 
     @NonNull
@@ -57,7 +54,13 @@ public class AdaptadorClientesProductos extends RecyclerView.Adapter<AdaptadorCl
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                nuevosPrecios.set(position,Double.parseDouble(holder.txtPrecio.getText().toString().trim()));
+                if (holder.txtPrecio.getText().toString().isEmpty()) {
+                    nuevosPrecios.set(position,producto);
+                } else {
+                    Producto p = new Producto(producto);
+                    p.setPrecio(Double.parseDouble(holder.txtPrecio.getText().toString().trim()));
+                    nuevosPrecios.set(position,p);
+                }
             }
 
             @Override
@@ -90,7 +93,7 @@ public class AdaptadorClientesProductos extends RecyclerView.Adapter<AdaptadorCl
         return true;
     }
 
-    public ArrayList<Double> getNuevosPrecios() {
+    public ArrayList<Producto> getNuevosPrecios() {
         return nuevosPrecios;
     }
 

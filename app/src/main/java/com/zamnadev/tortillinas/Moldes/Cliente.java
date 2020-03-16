@@ -1,11 +1,14 @@
 package com.zamnadev.tortillinas.Moldes;
 
+import java.util.HashMap;
+
 public class Cliente {
 
     private String idCliente;
     private Nombre nombre;
     private Direccion direccion;
     private String telefono;
+    private HashMap<String, String> productos;
     private boolean eliminado;
     private boolean preferencial;
 
@@ -13,12 +16,15 @@ public class Cliente {
 
     }
 
-    public Cliente(String idCliente, Nombre nombre, Direccion direccion, String telefono, boolean eliminado) {
+    public Cliente(String idCliente, Nombre nombre, Direccion direccion, String telefono, HashMap<String, String> productos, boolean eliminado, boolean preferencial)
+    {
         this.idCliente = idCliente;
         this.nombre = nombre;
         this.direccion = direccion;
         this.telefono = telefono;
+        this.productos = productos;
         this.eliminado = eliminado;
+        this.preferencial = preferencial;
     }
 
     public String getIdCliente() {
@@ -53,6 +59,14 @@ public class Cliente {
         this.telefono = telefono;
     }
 
+    public HashMap<String, String> getProductos() {
+        return productos;
+    }
+
+    public void setProductos(HashMap<String, String> productos) {
+        this.productos = productos;
+    }
+
     public boolean isEliminado() {
         return eliminado;
     }
@@ -61,14 +75,24 @@ public class Cliente {
         this.eliminado = eliminado;
     }
 
+    public boolean isPreferencial() {
+        return preferencial;
+    }
+
+    public void setPreferencial(boolean preferencial) {
+        this.preferencial = preferencial;
+    }
+
     @Override
     public String toString() {
         return "Cliente{" +
                 "idCliente='" + idCliente + '\'' +
-                ", nombre=" + nombre.toString() +
+                ", nombre=" + nombre +
                 ", direccion=" + direccion.toString() +
                 ", telefono='" + telefono + '\'' +
+                ", productos=" +
                 ", eliminado=" + eliminado +
+                ", preferencial=" + preferencial +
                 '}';
     }
 }

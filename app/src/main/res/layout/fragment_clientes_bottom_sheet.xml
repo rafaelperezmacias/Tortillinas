@@ -262,7 +262,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtNumeroExterior"
-                        android:inputType="text"
+                        android:inputType="number|text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -284,7 +284,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtNumeroInterior"
-                    android:inputType="text"
+                    android:inputType="number|text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -311,7 +311,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/icon5"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:hint="@string/colonia"
+                    android:hint="Zona"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     app:errorEnabled="true">

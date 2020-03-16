@@ -37,9 +37,11 @@ public class AdaptadorClientes extends RecyclerView.Adapter<AdaptadorClientes.Vi
 
         holder.txtNombre.setText(cliente.getNombre().getNombres() + " " +  cliente.getNombre().getApellidos());
 
-        holder.txtTelefono.setText(cliente.getTelefono());
+        //holder.txtTelefono.setText(cliente.getTelefono());
 
-        holder.txtDireccion.setText(cliente.getDireccion().toString());
+        holder.txtTelefono.setText(cliente.toString());
+
+        //holder.txtDireccion.setText(cliente.getDireccion().toString());
     }
 
     @Override

@@ -35,6 +35,7 @@ import com.zamnadev.tortillinas.Adaptadores.AdaptadorProductos;
 import com.zamnadev.tortillinas.Moldes.Direccion;
 import com.zamnadev.tortillinas.Moldes.Nombre;
 import com.zamnadev.tortillinas.Moldes.Producto;
+import com.zamnadev.tortillinas.Moldes.ProductoModificado;
 import com.zamnadev.tortillinas.R;
 
 import java.util.ArrayList;
@@ -110,7 +111,7 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
                         productos.add(producto);
                     }
                 }
-                adaptador = new AdaptadorClientesProductos(getContext(),productos);
+                adaptador = new AdaptadorClientesProductos(getContext(),productos,productos);
                 recyclerView.setAdapter(adaptador);
             }
 
@@ -130,14 +131,6 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
 
         ((Button) view.findViewById(R.id.btnGuardar))
                 .setOnClickListener(view1 -> {
-                    for (int x = 0; x < adaptador.getNuevosPrecios().size(); x++) {
-                        Log.e("GOla","" + adaptador.getNuevosPrecios().get(x));
-                    }
-
-                    if (adaptador.validaCampos()) {
-                        return;
-                    }
-
                     isError = false;
                     if (!validaCampo(lytNombre,txtNombre,"Ingrese el nombre")
                         | !validaCampo(lytApellidos,txtApellidos,"Ingrese el apellido(s)")
@@ -168,7 +161,15 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
                     clienteMap.put("eliminado",false);
 
                     if (sPrecio.isChecked()) {
+                        HashMap<String, Object> mapaProductos = new HashMap<>();
+                        for (int x = 0; x < adaptador.getNuevosPrecios().size(); x++) {
+                            ProductoModificado p = new ProductoModificado();
+                            p.setIdProducto(adaptador.getNuevosPrecios().get(x).getIdProducto());
+                            p.setPrecio(adaptador.getNuevosPrecios().get(x).getPrecio());
+                           mapaProductos.put("p"+x,p);
+                        }
                         clienteMap.put("preferencial",true);
+                        clienteMap.put("precios",mapaProductos);
                     } else {
                         clienteMap.put("preferencial",false);
                     }
