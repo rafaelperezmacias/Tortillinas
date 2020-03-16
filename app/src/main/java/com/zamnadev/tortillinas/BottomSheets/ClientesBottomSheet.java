@@ -161,12 +161,10 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
                     clienteMap.put("eliminado",false);
 
                     if (sPrecio.isChecked()) {
-                        HashMap<String, Object> mapaProductos = new HashMap<>();
+                        HashMap<String, String> mapaProductos = new HashMap<>();
                         for (int x = 0; x < adaptador.getNuevosPrecios().size(); x++) {
-                            ProductoModificado p = new ProductoModificado();
-                            p.setIdProducto(adaptador.getNuevosPrecios().get(x).getIdProducto());
-                            p.setPrecio(adaptador.getNuevosPrecios().get(x).getPrecio());
-                           mapaProductos.put("p"+x,p);
+                            String tmpProducto = adaptador.getNuevosPrecios().get(x).getPrecio() + "?" + adaptador.getNuevosPrecios().get(x).getIdProducto();
+                            mapaProductos.put("p"+x,tmpProducto);
                         }
                         clienteMap.put("preferencial",true);
                         clienteMap.put("precios",mapaProductos);
