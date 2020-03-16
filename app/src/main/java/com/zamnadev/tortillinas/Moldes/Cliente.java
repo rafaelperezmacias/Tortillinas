@@ -7,6 +7,7 @@ public class Cliente {
     private Direccion direccion;
     private String telefono;
     private boolean eliminado;
+    private boolean preferencial;
 
     public Cliente() {
 

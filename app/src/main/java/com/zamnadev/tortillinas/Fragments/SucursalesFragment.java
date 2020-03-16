@@ -26,7 +26,11 @@ import com.zamnadev.tortillinas.R;
 import java.util.ArrayList;
 
 public class SucursalesFragment extends Fragment {
+
     private Activity activity;
+
+    private DatabaseReference refSucursal;
+    private ValueEventListener listenerSucursal;
 
     public SucursalesFragment() { }
 
@@ -37,15 +41,14 @@ public class SucursalesFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sucursales, container, false);
         final RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setHasFixedSize(true);
         ArrayList<Sucursal> sucursals = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Sucursales");
-        reference.addValueEventListener(new ValueEventListener() {
+        refSucursal = FirebaseDatabase.getInstance().getReference("Sucursales");
+        listenerSucursal = refSucursal.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 sucursals.clear();
@@ -71,5 +74,11 @@ public class SucursalesFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        refSucursal.removeEventListener(listenerSucursal);
     }
 }

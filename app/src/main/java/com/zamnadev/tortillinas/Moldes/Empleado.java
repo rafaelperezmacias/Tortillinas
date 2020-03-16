@@ -1,5 +1,7 @@
 package com.zamnadev.tortillinas.Moldes;
 
+import java.util.HashMap;
+
 public class Empleado {
 
     public static String[] NIVELES_DE_USUARIO = {
@@ -16,19 +18,19 @@ public class Empleado {
     private Nombre nombre;
     private String telefono;
     private int tipo;
-    private String idSucursal;
+    private HashMap<String, String> sucursales;
     private boolean eliminado;
 
     public Empleado() {
 
     }
 
-    public Empleado(String idEmpleado, Nombre nombre, String telefono, int tipo, String idSucursal, boolean eliminado) {
+    public Empleado(String idEmpleado, Nombre nombre, String telefono, int tipo, HashMap<String, String> sucursales, boolean eliminado) {
         this.idEmpleado = idEmpleado;
         this.nombre = nombre;
         this.telefono = telefono;
         this.tipo = tipo;
-        this.idSucursal = idSucursal;
+        this.sucursales = sucursales;
         this.eliminado = eliminado;
     }
 
@@ -64,12 +66,12 @@ public class Empleado {
         this.tipo = tipo;
     }
 
-    public String getIdSucursal() {
-        return idSucursal;
+    public HashMap<String, String> getSucursales() {
+        return sucursales;
     }
 
-    public void setIdSucursal(String idSucursal) {
-        this.idSucursal = idSucursal;
+    public void setSucursales(HashMap<String, String> sucursales) {
+        this.sucursales = sucursales;
     }
 
     public boolean isEliminado() {
@@ -87,7 +89,7 @@ public class Empleado {
                 ", nombre=" + nombre.toString() +
                 ", telefono='" + telefono + '\'' +
                 ", tipo=" + tipo +
-                ", idSucursal='" + idSucursal + '\'' +
+                ", sucursales=" + sucursales.toString() +
                 ", eliminado=" + eliminado +
                 '}';
     }

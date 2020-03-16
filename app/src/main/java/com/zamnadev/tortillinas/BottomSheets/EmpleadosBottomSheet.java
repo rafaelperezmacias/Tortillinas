@@ -4,6 +4,8 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -21,17 +23,25 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Dialogos.DialogoEmpleadoSucursal;
+import com.zamnadev.tortillinas.Fragments.EmpleadosFragment;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Nombre;
+import com.zamnadev.tortillinas.Moldes.Sucursal;
 import com.zamnadev.tortillinas.R;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 public class EmpleadosBottomSheet extends BottomSheetDialogFragment {
 
@@ -41,11 +51,17 @@ public class EmpleadosBottomSheet extends BottomSheetDialogFragment {
 
     private boolean isError;
 
-    private String idSucursal;
+    private ArrayList<Sucursal> sucursals;
 
-    public EmpleadosBottomSheet()
+    private EmpleadosFragment empleadosFragment;
+
+    private String nombre;
+    private String apellidos;
+    private String telefono;
+
+    public EmpleadosBottomSheet(EmpleadosFragment empleadosFragment)
     {
-
+        this.empleadosFragment = empleadosFragment;
     }
 
     @Override
@@ -66,6 +82,10 @@ public class EmpleadosBottomSheet extends BottomSheetDialogFragment {
 
             @Override public void onSlide(@NonNull View view, float v) { }
         });
+
+        nombre = "";
+        apellidos = "";
+        telefono = "";
 
         TextInputLayout lytNombre = view.findViewById(R.id.lytNombre);
         TextInputLayout lytApellidos = view.findViewById(R.id.lytApellidos);
@@ -92,9 +112,84 @@ public class EmpleadosBottomSheet extends BottomSheetDialogFragment {
             dialogoEmpleadoSucursal.show(getFragmentManager(),dialogoEmpleadoSucursal.getTag());
         });
 
+        //Eventos que escuchan los txt para generar un usario aleatoriamente atravez de ellos
+        //para ello tomaremos un un nombre, _ , primera 2 letras del apellido (mayusculas) en caso de tener 2 se integraran, 2 ultimos numeros de telefono
+        txtNombre.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                nombre = txtNombre.getText().toString().trim().toLowerCase();
+                txtUsuario.setText(nombre +"_" + apellidos + telefono);
+                txtPassword.setText(txtUsuario.getText().toString().trim());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        txtApellidos.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                StringTokenizer token = new StringTokenizer(txtApellidos.getText().toString().trim()," ");
+                apellidos = "";
+                while (token.hasMoreTokens())
+                {
+                    String tmpToken = token.nextToken();
+                    if (tmpToken.length() > 1) {
+                        apellidos += tmpToken.substring(0,2).toUpperCase();
+                    } else {
+                        apellidos += tmpToken.toUpperCase();
+                    }
+                }
+                txtUsuario.setText(nombre +"_" + apellidos + telefono);
+                txtPassword.setText(txtUsuario.getText().toString().trim());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        txtTelefono.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String tmpTelefono = txtTelefono.getText().toString().trim();
+                if (tmpTelefono.length() < 3) {
+                    telefono = tmpTelefono;
+                } else {
+                    telefono = txtTelefono.getText().toString().trim().substring(txtTelefono.length()-2,txtTelefono.length());
+                }
+                txtUsuario.setText(nombre +"_" + apellidos + telefono);
+                txtPassword.setText(txtUsuario.getText().toString().trim());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         ((Button) view.findViewById(R.id.btnGuardar))
                 .setOnClickListener(view1 -> {
                     isError = false;
+                    //Valida si los campos estan vacios
                     if (!validaCampo(lytNombre,txtNombre,"Ingrese el nombre")
                         | !validaCampo(lytApellidos,txtApellidos,"Ingrese el apellido(s)")
                         | !validaCampo(lytTelefono,txtTelefono,"Ingrese el telefono")
@@ -104,49 +199,75 @@ public class EmpleadosBottomSheet extends BottomSheetDialogFragment {
                         return;
                     }
 
-                    //TODO Falta valicadion de usuario repetido, encriptacion de datos
+                    //Valida que solo exista un nombre de usuario
+                    Query reference = FirebaseDatabase.getInstance().getReference("Cuentas")
+                            .orderByChild("usuario")
+                            .equalTo(txtUsuario.getText().toString().trim());
 
-                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Empleados");
+                    reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                lytUsuario.setError("El nombre de usuario ya existe");
+                                txtUsuario.requestFocus();
+                                return;
+                            }
 
-                    final String id = reference.push().getKey();
-                    HashMap<String,Object> empleadoMap = new HashMap<>();
-                    empleadoMap.put("idEmpleado",id);
-                    Nombre nombre = new Nombre(txtNombre.getText().toString().trim(),txtApellidos.getText().toString().trim());
-                    empleadoMap.put("nombre",nombre);
-                    empleadoMap.put("telefono",txtTelefono.getText().toString().trim());
-                    int tipo = 1;
-                    if (rdbMostrador.isChecked())
-                    {
-                        tipo = Empleado.TIPO_MOSTRADOR;
-                    } else if (rdbRepartidor.isChecked()) {
-                        tipo = Empleado.TIPO_REPARTIDOR;
-                    }
-                    empleadoMap.put("tipo",tipo);
-                    empleadoMap.put("idSucursal",idSucursal);
-                    empleadoMap.put("eliminado",false);
+                            lytUsuario.setError(null);
 
-                    reference.child(id).updateChildren(empleadoMap)
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful())
-                                {
-                                    DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Cuentas");
-                                    HashMap<String, Object> cuentaMap = new HashMap<>();
-                                    cuentaMap.put("idCuenta",id);
-                                    cuentaMap.put("usuario",txtUsuario.getText().toString().trim());
-                                    cuentaMap.put("password",txtPassword.getText().toString().trim());
+                            //Proceso de insercion de datos
+                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Empleados");
 
-                                    reference1.child(id).updateChildren(cuentaMap)
-                                            .addOnCompleteListener(task1 -> {
-                                                if (task1.isSuccessful()) {
-                                                    Toast.makeText(getContext(), "Registro exitoso", Toast.LENGTH_SHORT).show();
-                                                    dismiss();
-                                                } else {
-                                                    Toast.makeText(getContext(), "Error, intentelo mas tarde", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                }
-                            });
+                            final String id = reference.push().getKey();
+                            HashMap<String,Object> empleadoMap = new HashMap<>();
+                            empleadoMap.put("idEmpleado",id);
+                            Nombre nombre = new Nombre(txtNombre.getText().toString().trim(),txtApellidos.getText().toString().trim());
+                            empleadoMap.put("nombre",nombre);
+                            empleadoMap.put("telefono",txtTelefono.getText().toString().trim());
+                            int tipo = 1;
+                            if (rdbMostrador.isChecked())
+                            {
+                                tipo = Empleado.TIPO_MOSTRADOR;
+                            } else if (rdbRepartidor.isChecked()) {
+                                tipo = Empleado.TIPO_REPARTIDOR;
+                            }
+                            empleadoMap.put("tipo",tipo);
+                            HashMap<String, String> sucursalesMap = new HashMap<>();
+                            for (int x = 0; x < sucursals.size(); x++) {
+                                sucursalesMap.put("s" + x,sucursals.get(x).getIdSucursal());
+                            }
+                            empleadoMap.put("sucursales", sucursalesMap);
+                            empleadoMap.put("eliminado",false);
 
+                            reference.child(id).updateChildren(empleadoMap)
+                                    .addOnCompleteListener(task -> {
+                                        if (task.isSuccessful())
+                                        {
+                                            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Cuentas");
+                                            HashMap<String, Object> cuentaMap = new HashMap<>();
+                                            cuentaMap.put("idCuenta",id);
+                                            cuentaMap.put("usuario",txtUsuario.getText().toString().trim());
+                                            cuentaMap.put("password",txtPassword.getText().toString().trim());
+
+                                            reference1.child(id).updateChildren(cuentaMap)
+                                                    .addOnCompleteListener(task1 -> {
+                                                        if (task1.isSuccessful()) {
+                                                            Toast.makeText(getContext(), "Registro exitoso", Toast.LENGTH_SHORT).show();
+                                                            empleadosFragment.notificarCambios();
+                                                            dismiss();
+                                                        } else {
+                                                            Toast.makeText(getContext(), "Error, intentelo mas tarde", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+                                        }
+                                    });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 });
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -176,9 +297,21 @@ public class EmpleadosBottomSheet extends BottomSheetDialogFragment {
         return this;
     }
 
-    public void setTxtSucursal(String idSucursal, String nombre) {
-        this.idSucursal = idSucursal;
-        txtSucursal.setText(nombre);
+    public void setTxtSucursal(ArrayList<Sucursal> sucursals) {
+        this.sucursals = sucursals;
+        if (sucursals.size() == 1) {
+            txtSucursal.setText(sucursals.get(0).getNombre());
+            return;
+        }
+        String msg = "";
+        for (int x = 0; x < sucursals.size(); x++) {
+            if (x == 0) {
+                msg += sucursals.get(x).getNombre();
+                continue;
+            }
+            msg += ", " + sucursals.get(x).getNombre();
+        }
+        txtSucursal.setText(msg);
     }
 
     private boolean validaCampo(TextInputLayout lyt,TextInputEditText txt, String error) {

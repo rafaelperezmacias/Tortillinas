@@ -37,7 +37,7 @@ public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursale
         Sucursal sucursal = sucursals.get(position);
 
         holder.txtNombre.setText(sucursal.getNombre());
-        holder.txtDireccion.setText(sucursal.getDireccion().toStringRecyclerView());
+        holder.txtDireccion.setText(sucursal.getDireccion().toString());
     }
 
     @Override

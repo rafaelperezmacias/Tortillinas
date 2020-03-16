@@ -164,6 +164,26 @@
 
             </RelativeLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/lytPseudonimo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:hint="Pseudónimo"
+                android:paddingStart="56dp"
+                android:paddingEnd="16dp"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtPseudonimo"
+                    android:inputType="textCapSentences"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -272,26 +292,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/lytCodigoPostal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="@string/codigo_postal"
-                android:paddingStart="56dp"
-                android:paddingEnd="16dp"
-                app:errorEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txtCodigoPostal"
-                    android:inputType="number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                </com.google.android.material.textfield.TextInputEditText>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -306,7 +306,7 @@
                 android:contentDescription="@string/icon"/>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/lytColonia"
+                    android:id="@+id/lytZona"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/icon5"
@@ -317,7 +317,7 @@
                     app:errorEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/txtColonia"
+                        android:id="@+id/txtZona"
                         android:inputType="textCapSentences"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -328,25 +328,33 @@
 
             </RelativeLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/lytMunicipio"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+
+            <Switch
+                android:id="@+id/sPrecios"
+                android:padding="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="@string/municipio"
-                android:paddingStart="56dp"
-                android:paddingEnd="16dp"
-                app:errorEnabled="true">
+                android:textColor="@android:color/black"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+                android:text="Precios preferenciales"/>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txtMunicipio"
-                    android:inputType="textCapSentences"
+            <LinearLayout
+                android:id="@+id/lytProductos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerview"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"/>
 
-                </com.google.android.material.textfield.TextInputEditText>
-
-            </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
         </LinearLayout>
 

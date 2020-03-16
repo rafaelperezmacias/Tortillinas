@@ -1,6 +1,5 @@
 package com.zamnadev.tortillinas.BottomSheets;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,8 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -25,18 +22,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.zamnadev.tortillinas.Moldes.Direccion;
 import com.zamnadev.tortillinas.R;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Locale;
 
-public class SucursalesBottomSheet extends BottomSheetDialogFragment {
+public class ProductosBottomSheet extends BottomSheetDialogFragment {
 
     private BottomSheetBehavior bottomSheetBehavior;
 
     private boolean isError;
 
-    public SucursalesBottomSheet()
+    public ProductosBottomSheet()
     {
 
     }
@@ -45,7 +39,7 @@ public class SucursalesBottomSheet extends BottomSheetDialogFragment {
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         BottomSheetDialog bottomSheet = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
-        View view = View.inflate(getContext(), R.layout.fragment_sucursales_bottom_sheet, null);
+        View view = View.inflate(getContext(), R.layout.fragment_productos_bottom_sheet, null);
         bottomSheet.setContentView(view);
         bottomSheetBehavior = BottomSheetBehavior.from((View) (view.getParent()));
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -64,45 +58,30 @@ public class SucursalesBottomSheet extends BottomSheetDialogFragment {
                 .setOnClickListener((v -> dismiss()));
 
         TextInputLayout lytNombre = view.findViewById(R.id.lytNombre);
-        TextInputLayout lytCalle = view.findViewById(R.id.lytCalle);
-        TextInputLayout lytNumeroExterior = view.findViewById(R.id.lytNumeroExterior);
-        TextInputLayout lytNumeroInterior = view.findViewById(R.id.lytNumeroInterior);
-        TextInputLayout lytZona = view.findViewById(R.id.lytZona);
+        TextInputLayout lytPrecio = view.findViewById(R.id.lytPrecio);
 
         TextInputEditText txtNombre = view.findViewById(R.id.txtNombre);
-        TextInputEditText txtCalle = view.findViewById(R.id.txtCalle);
-        TextInputEditText txtNumeroExterior = view.findViewById(R.id.txtNumeroExterior);
-        TextInputEditText txtNumeroInterior = view.findViewById(R.id.txtNumeroInterior);
-        TextInputEditText txtZona = view.findViewById(R.id.txtZona);
+        TextInputEditText txtPrecio = view.findViewById(R.id.txtPrecio);
 
         ((Button) view.findViewById(R.id.btnGuardar))
                 .setOnClickListener(view1 -> {
                     isError = false;
                     if (!validaCampo(lytNombre,txtNombre,"Ingrese el nombre")
-                        | !validaCampo(lytCalle,txtCalle,"Ingrese la calle")
-                        | !validaCampo(lytNumeroExterior,txtNumeroExterior,"Ingrese el numero exterior")
-                        | !validaCampo(lytZona,txtZona,"Ingrese la zona"))  {
+                            | !validaCampo(lytPrecio,txtPrecio,"Ingrese el precio")){
                         return;
                     }
 
-                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Sucursales");
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Productos");
 
                     String id = reference.push().getKey();
-                    HashMap<String,Object> sucursalMap = new HashMap<>();
-                    Direccion direccion = new Direccion();
-                    direccion.setCalle(txtCalle.getText().toString().trim());
-                    if (!txtNumeroInterior.getText().toString().isEmpty()) {
-                        direccion.setNumeroInterior(txtNumeroInterior.getText().toString().trim());
-                    }
-                    direccion.setNumeroExterior(txtNumeroExterior.getText().toString().trim());
-                    direccion.setZona(txtZona.getText().toString().trim());
-                    sucursalMap.put("idSucursal",id);
-                    sucursalMap.put("nombre",txtNombre.getText().toString().trim());
-                    sucursalMap.put("direccion",direccion);
-                    sucursalMap.put("eliminado",false);
-                    sucursalMap.put("botes",0);
+                    HashMap<String,Object> productoMap = new HashMap<>();
+                    productoMap.put("idProducto",id);
+                    productoMap.put("nombre",txtNombre.getText().toString().trim());
+                    productoMap.put("precio",Double.parseDouble(txtPrecio.getText().toString().trim()));
+                    productoMap.put("modificado",false);
+                    productoMap.put("eliminado",true);
 
-                    reference.child(id).updateChildren(sucursalMap)
+                    reference.child(id).updateChildren(productoMap)
                             .addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(getContext(), "Registro exitoso", Toast.LENGTH_SHORT).show();
@@ -150,4 +129,3 @@ public class SucursalesBottomSheet extends BottomSheetDialogFragment {
         return true;
     }
 }
-

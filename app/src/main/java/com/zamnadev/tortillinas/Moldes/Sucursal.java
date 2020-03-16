@@ -5,15 +5,17 @@ public class Sucursal {
     private String idSucursal;
     private String nombre;
     private Direccion direccion;
+    private int botes;
     private boolean eliminado;
 
     public Sucursal() {
     }
 
-    public Sucursal(String idSucursal, String nombre, Direccion direccion, boolean eliminado) {
+    public Sucursal(String idSucursal, String nombre, Direccion direccion, int botes, boolean eliminado) {
         this.idSucursal = idSucursal;
         this.nombre = nombre;
         this.direccion = direccion;
+        this.botes = botes;
         this.eliminado = eliminado;
     }
 
@@ -41,6 +43,14 @@ public class Sucursal {
         this.direccion = direccion;
     }
 
+    public int getBotes() {
+        return botes;
+    }
+
+    public void setBotes(int botes) {
+        this.botes = botes;
+    }
+
     public boolean isEliminado() {
         return eliminado;
     }
@@ -55,6 +65,7 @@ public class Sucursal {
                 "idSucursal='" + idSucursal + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", direccion=" + direccion.toString() +
+                ", botes=" + botes +
                 ", eliminado=" + eliminado +
                 '}';
     }

@@ -43,56 +43,54 @@ public class LoginActivity extends AppCompatActivity {
         //TODO Usuario y contraseña para el acceso admin , admin
 
         ((Button) findViewById(R.id.btnIngresar))
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (!validaUsuario() | !validaPassword()) {
-                            return;
+                .setOnClickListener((View.OnClickListener) view -> {
+                    if (!validaUsuario() | !validaPassword()) {
+                        return;
+                    }
+
+                    Query reference = FirebaseDatabase.getInstance().getReference("Cuentas")
+                            .orderByChild("usuario")
+                            .equalTo(txtUsuario.getText().toString().trim());
+
+                    reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+                            Log.e("data",dataSnapshot.toString());
+                            if (dataSnapshot.exists()) {
+                                Query reference = FirebaseDatabase.getInstance().getReference("Cuentas")
+                                        .orderByChild("password")
+                                        .equalTo(txtPassword.getText().toString().trim());
+                                reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot data) {
+                                        if (data.exists()) {
+                                            Cuenta cuenta = null;
+                                            for (DataSnapshot snapshot : data.getChildren()) {
+                                                cuenta = snapshot.getValue(Cuenta.class);
+                                            }
+                                            ControlSesiones.IngreasarUsuario(getApplicationContext(),cuenta.getIdCuenta());
+                                            startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                                            finish();
+                                        } else {
+                                            Toast.makeText(LoginActivity.this, "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(LoginActivity.this, "Usuario no registrado", Toast.LENGTH_SHORT).show();
+                            }
                         }
 
-                        Query reference = FirebaseDatabase.getInstance().getReference("Cuentas")
-                                .orderByChild("usuario")
-                                .equalTo(txtUsuario.getText().toString());
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.exists()) {
-                                    Query reference = FirebaseDatabase.getInstance().getReference("Cuentas")
-                                            .orderByChild("password")
-                                            .equalTo(txtPassword.getText().toString());
-                                    reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot data) {
-                                            if (data.exists()) {
-                                                Cuenta cuenta = null;
-                                                for (DataSnapshot snapshot : data.getChildren()) {
-                                                    cuenta = snapshot.getValue(Cuenta.class);
-                                                }
-                                                ControlSesiones.IngreasarUsuario(getApplicationContext(),cuenta.getIdCuenta());
-                                                startActivity(new Intent(LoginActivity.this,MainActivity.class));
-                                                finish();
-                                            } else {
-                                                Toast.makeText(LoginActivity.this, "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
-                                } else {
-                                    Toast.makeText(LoginActivity.this, "Usuario no registrado", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
+                        }
+                    });
                 });
     }
 

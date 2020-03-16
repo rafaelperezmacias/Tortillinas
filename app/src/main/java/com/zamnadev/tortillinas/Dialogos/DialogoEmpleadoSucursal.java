@@ -86,7 +86,11 @@ public class DialogoEmpleadoSucursal extends DialogFragment {
 
         ((Button) view.findViewById(R.id.btnSiguiente))
                 .setOnClickListener(view1 -> {
-                    empleadosBottomSheet.setTxtSucursal(adaptador.getIdSucursalActiva(),adaptador.getSucursalActiva());
+                    if (adaptador.getTmpSucursales().size() == 0) {
+                        Toast.makeText(getContext(), "Seleccione minimo una sucursal", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    empleadosBottomSheet.setTxtSucursal(adaptador.getTmpSucursales());
                     dismiss();
                 });
 

@@ -196,26 +196,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/lytCodigoPostal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="Código postal"
-                android:paddingStart="56dp"
-                android:paddingEnd="16dp"
-                app:errorEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txtCodigoPostal"
-                    android:inputType="number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                </com.google.android.material.textfield.TextInputEditText>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -229,18 +209,18 @@
                 android:src="@drawable/ic_home_city_24dp"/>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/lytColonia"
+                    android:id="@+id/lytZona"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/icon3"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:hint="Colonia"
+                    android:hint="Zona"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     app:errorEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/txtColonia"
+                        android:id="@+id/txtZona"
                         android:inputType="textCapSentences"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -250,26 +230,6 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
             </RelativeLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/lytMunicipio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="Municipio"
-                android:paddingStart="56dp"
-                android:paddingEnd="16dp"
-                app:errorEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txtMunicipio"
-                    android:inputType="textCapSentences"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                </com.google.android.material.textfield.TextInputEditText>
-
-            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 

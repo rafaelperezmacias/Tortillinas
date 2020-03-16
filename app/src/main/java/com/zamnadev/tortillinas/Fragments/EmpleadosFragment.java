@@ -2,6 +2,7 @@ package com.zamnadev.tortillinas.Fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,13 +29,14 @@ import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 import java.util.ArrayList;
 
 public class EmpleadosFragment extends Fragment {
+
     private Activity activity;
 
     private boolean existeSucursal;
 
     private DatabaseReference refSucursal;
-
     private ValueEventListener listenerSucuarsal;
+    private AdaptadorEmpleado adaptadorEmpleado;
 
     public EmpleadosFragment() { }
 
@@ -45,8 +47,7 @@ public class EmpleadosFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_empleados, container, false);
         validaExistenciaSucursales();
         final RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
@@ -65,7 +66,7 @@ public class EmpleadosFragment extends Fragment {
                         empleados.add(empleado);
                     }
                 }
-                AdaptadorEmpleado adaptadorEmpleado = new AdaptadorEmpleado(activity, empleados);
+                adaptadorEmpleado = new AdaptadorEmpleado(activity, empleados);
                 recyclerView.setAdapter(adaptadorEmpleado);
             }
 
@@ -76,7 +77,7 @@ public class EmpleadosFragment extends Fragment {
         FloatingActionButton fab = view.findViewById(R.id.fab_empleados);
         fab.setOnClickListener(v -> {
             if (existeSucursal) {
-                EmpleadosBottomSheet empleadosBottomSheet = new EmpleadosBottomSheet();
+                EmpleadosBottomSheet empleadosBottomSheet = new EmpleadosBottomSheet(getMe());
                 if (getFragmentManager() != null) {
                     empleadosBottomSheet.show(getFragmentManager(), empleadosBottomSheet.getTag());
                 }
@@ -85,6 +86,15 @@ public class EmpleadosFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private EmpleadosFragment getMe() {
+        return this;
+    }
+
+    //Repinta de nuevo el recycler, las inserciones de cuentas se hacen un poco lentas
+    public void notificarCambios() {
+        adaptadorEmpleado.notifyDataSetChanged();
     }
 
     private void validaExistenciaSucursales() {

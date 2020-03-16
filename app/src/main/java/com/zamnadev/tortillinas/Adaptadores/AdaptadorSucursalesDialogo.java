@@ -1,6 +1,7 @@
 package com.zamnadev.tortillinas.Adaptadores;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +21,13 @@ public class AdaptadorSucursalesDialogo extends RecyclerView.Adapter<AdaptadorSu
 
     private Context context;
     private ArrayList<Sucursal> sucursals;
-    private int positionCheckBox;
+    private ArrayList<Sucursal> tmpSucursales;
 
     public AdaptadorSucursalesDialogo(Context context, ArrayList<Sucursal> sucursals)
     {
-        positionCheckBox = 0;
         this.context = context;
         this.sucursals = sucursals;
+        tmpSucursales = new ArrayList<>();
     }
 
     @NonNull
@@ -40,18 +41,14 @@ public class AdaptadorSucursalesDialogo extends RecyclerView.Adapter<AdaptadorSu
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final Sucursal sucursal = sucursals.get(position);
 
-        if (positionCheckBox == position) {
-            holder.cbSucursal.setChecked(true);
-        } else {
-            holder.cbSucursal.setChecked(false);
-        }
-
         holder.cbSucursal.setText(sucursal.getNombre());
 
         holder.cbSucursal.setOnClickListener(view -> {
-            holder.cbSucursal.setChecked(true);
-            positionCheckBox = position;
-            notifyDataSetChanged();
+            if (holder.cbSucursal.isChecked()) {
+                tmpSucursales.add(sucursal);
+            } else {
+                tmpSucursales.remove(sucursal);
+            }
         });
     }
 
@@ -70,11 +67,7 @@ public class AdaptadorSucursalesDialogo extends RecyclerView.Adapter<AdaptadorSu
         }
     }
 
-    public String getIdSucursalActiva() {
-        return sucursals.get(positionCheckBox).getIdSucursal();
-    }
-
-    public String getSucursalActiva() {
-        return sucursals.get(positionCheckBox).getNombre();
+    public ArrayList<Sucursal> getTmpSucursales() {
+        return tmpSucursales;
     }
 }

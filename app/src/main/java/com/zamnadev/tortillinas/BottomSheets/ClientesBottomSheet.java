@@ -3,14 +3,20 @@ package com.zamnadev.tortillinas.BottomSheets;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -19,12 +25,19 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.zamnadev.tortillinas.Adaptadores.AdaptadorClientesProductos;
+import com.zamnadev.tortillinas.Adaptadores.AdaptadorProductos;
 import com.zamnadev.tortillinas.Moldes.Direccion;
 import com.zamnadev.tortillinas.Moldes.Nombre;
+import com.zamnadev.tortillinas.Moldes.Producto;
 import com.zamnadev.tortillinas.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ClientesBottomSheet extends BottomSheetDialogFragment {
@@ -32,6 +45,8 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
     private BottomSheetBehavior bottomSheetBehavior;
 
     private boolean isError;
+
+    private AdaptadorClientesProductos adaptador;
 
     public ClientesBottomSheet()
     {
@@ -66,9 +81,8 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
         TextInputLayout lytCalle = view.findViewById(R.id.lytCalle);
         TextInputLayout lytNumeroExterior = view.findViewById(R.id.lytNumeroExterior);
         TextInputLayout lytNumeroInterior = view.findViewById(R.id.lytNumeroInterior);
-        TextInputLayout lytCodigoPostal = view.findViewById(R.id.lytCodigoPostal);
-        TextInputLayout lytColonia = view.findViewById(R.id.lytColonia);
-        TextInputLayout lytMunicipio = view.findViewById(R.id.lytMunicipio);
+        TextInputLayout lytZona = view.findViewById(R.id.lytZona);
+        TextInputLayout lytPseudonimo = view.findViewById(R.id.lytPseudonimo);
 
         TextInputEditText txtNombre = view.findViewById(R.id.txtNombre);
         TextInputEditText txtApellidos = view.findViewById(R.id.txtApellidos);
@@ -76,21 +90,62 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
         TextInputEditText txtCalle = view.findViewById(R.id.txtCalle);
         TextInputEditText txtNumeroExterior = view.findViewById(R.id.txtNumeroExterior);
         TextInputEditText txtNumeroInterior = view.findViewById(R.id.txtNumeroInterior);
-        TextInputEditText txtCodigoPostal = view.findViewById(R.id.txtCodigoPostal);
-        TextInputEditText txtColonia = view.findViewById(R.id.txtColonia);
-        TextInputEditText txtMunicipio = view.findViewById(R.id.txtMunicipio);
+        TextInputEditText txtZona = view.findViewById(R.id.txtZona);
+        TextInputEditText txtPseudonimo = view.findViewById(R.id.txtPseudonimo);
+
+        Switch sPrecio = view.findViewById(R.id.sPrecios);
+        LinearLayout lytProductos = view.findViewById(R.id.lytProductos);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true);
+        ArrayList<Producto> productos = new ArrayList<>();
+        DatabaseReference refProductos = FirebaseDatabase.getInstance().getReference("Productos");
+        refProductos.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                productos.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Producto producto = snapshot.getValue(Producto.class);
+                    if (!producto.isEliminado()) {
+                        productos.add(producto);
+                    }
+                }
+                adaptador = new AdaptadorClientesProductos(getContext(),productos);
+                recyclerView.setAdapter(adaptador);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        sPrecio.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (sPrecio.isChecked()) {
+                lytProductos.setVisibility(View.VISIBLE);
+            } else {
+                lytProductos.setVisibility(View.GONE);
+            }
+        });
 
         ((Button) view.findViewById(R.id.btnGuardar))
                 .setOnClickListener(view1 -> {
+                    for (int x = 0; x < adaptador.getNuevosPrecios().size(); x++) {
+                        Log.e("GOla","" + adaptador.getNuevosPrecios().get(x));
+                    }
+
+                    if (adaptador.validaCampos()) {
+                        return;
+                    }
+
                     isError = false;
                     if (!validaCampo(lytNombre,txtNombre,"Ingrese el nombre")
                         | !validaCampo(lytApellidos,txtApellidos,"Ingrese el apellido(s)")
                         | !validaCampo(lytTelefono,txtTelefono,"Ingrese el teléfono")
                         | !validaCampo(lytCalle,txtCalle,"Ingrese la calle")
                         | !validaCampo(lytNumeroExterior,txtNumeroExterior,"Ingrese el numero exterior")
-                        | !validaCampo(lytCodigoPostal,txtCodigoPostal,"Ingrese el código postal")
-                        | !validaCampo(lytColonia,txtColonia,"Ingrese la colonia")
-                        | !validaCampo(lytMunicipio,txtMunicipio,"Ingrese el municipio")) {
+                        | !validaCampo(lytZona,txtZona,"Ingrese la zona")
+                        | !validaCampo(lytPseudonimo,txtPseudonimo,"Ingrese el pseudónimo")) {
                         return;
                     }
 
@@ -104,15 +159,19 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
                         direccion.setNumeroInterior(txtNumeroInterior.getText().toString().trim());
                     }
                     direccion.setNumeroExterior(txtNumeroExterior.getText().toString().trim());
-                    direccion.setCp(txtCodigoPostal.getText().toString().trim());
-                    direccion.setColonia(txtColonia.getText().toString().trim());
-                    direccion.setMunicipio(txtMunicipio.getText().toString().trim());
+                    direccion.setZona(txtZona.getText().toString().trim());
                     Nombre nombre = new Nombre(txtNombre.getText().toString().trim(),txtApellidos.getText().toString().trim());
                     clienteMap.put("idCliente",id);
                     clienteMap.put("nombre",nombre);
                     clienteMap.put("direccion",direccion);
                     clienteMap.put("telefono",txtTelefono.getText().toString().trim());
                     clienteMap.put("eliminado",false);
+
+                    if (sPrecio.isChecked()) {
+                        clienteMap.put("preferencial",true);
+                    } else {
+                        clienteMap.put("preferencial",false);
+                    }
 
                     reference.child(id).updateChildren(clienteMap)
                             .addOnCompleteListener(task -> {

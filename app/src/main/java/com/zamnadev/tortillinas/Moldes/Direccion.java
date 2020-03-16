@@ -7,40 +7,23 @@ public class Direccion implements Serializable {
     private String calle;
     private String numeroExterior;
     private String numeroInterior;
-    private String cp;
-    private String colonia;
-    private String municipio;
+    private String zona;
 
     public Direccion() {
 
     }
 
-    public Direccion(String calle, String numeroExterior) {
+    public Direccion(String calle, String numeroExterior, String zona) {
         this.calle = calle;
         this.numeroExterior = numeroExterior;
+        this.zona = zona;
     }
 
-    public Direccion(String calle, String numeroExterior, String numeroInterior) {
+    public Direccion(String calle, String numeroExterior, String numeroInterior, String zona) {
         this.calle = calle;
         this.numeroExterior = numeroExterior;
         this.numeroInterior = numeroInterior;
-    }
-
-    public Direccion(String calle, String numeroExterior, String cp, String colonia, String municipio) {
-        this.calle = calle;
-        this.numeroExterior = numeroExterior;
-        this.cp = cp;
-        this.colonia = colonia;
-        this.municipio = municipio;
-    }
-
-    public Direccion(String calle, String numeroExterior, String numeroInterior, String cp, String colonia, String municipio) {
-        this.calle = calle;
-        this.numeroExterior = numeroExterior;
-        this.numeroInterior = numeroInterior;
-        this.cp = cp;
-        this.colonia = colonia;
-        this.municipio = municipio;
+        this.zona = zona;
     }
 
     public String getCalle() {
@@ -67,41 +50,12 @@ public class Direccion implements Serializable {
         this.numeroInterior = numeroInterior;
     }
 
-    public String getCp() {
-        return cp;
+    public String getZona() {
+        return zona;
     }
 
-    public void setCp(String cp) {
-        this.cp = cp;
-    }
-
-    public String getColonia() {
-        return colonia;
-    }
-
-    public void setColonia(String colonia) {
-        this.colonia = colonia;
-    }
-
-    public String getMunicipio() {
-        return municipio;
-    }
-
-    public void setMunicipio(String municipio) {
-        this.municipio = municipio;
-    }
-
-    public String toStringRecyclerView() {
-        String tmp  = "";
-
-        tmp += calle + "#" + numeroExterior;
-
-        if (numeroInterior != null) {
-            tmp += ", int: " + numeroInterior;
-        }
-
-        tmp += ", C.P. " + cp + ", " + colonia + ", " + municipio + ".";
-        return tmp;
+    public void setZona(String zona) {
+        this.zona = zona;
     }
 
     @Override
@@ -110,9 +64,7 @@ public class Direccion implements Serializable {
                 "calle='" + calle + '\'' +
                 ", numeroExterior='" + numeroExterior + '\'' +
                 ", numeroInterior='" + numeroInterior + '\'' +
-                ", cp='" + cp + '\'' +
-                ", colonia='" + colonia + '\'' +
-                ", municipio='" + municipio + '\'' +
+                ", zona='" + zona + '\'' +
                 '}';
     }
 }

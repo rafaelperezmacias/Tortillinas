@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,13 +48,16 @@ public class AdaptadorEmpleado extends RecyclerView.Adapter<AdaptadorEmpleado.Vi
         holder.txtTelefono.setText(empleado.getTelefono());
         holder.txtTipo.setText(Empleado.NIVELES_DE_USUARIO[empleado.getTipo()]);
 
+        holder.txtSucursal.setText("Sucursale(s): ");
+
+        /// Una sola sucursal
         DatabaseReference refSucursal = FirebaseDatabase.getInstance().getReference("Sucursales")
-                .child(empleado.getIdSucursal());
+                .child(empleado.getSucursales().get("s0"));
         refSucursal.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Sucursal sucursal = dataSnapshot.getValue(Sucursal.class);
-                holder.txtSucursal.setText(sucursal.getNombre());
+                holder.txtSucursal.append(sucursal.getNombre());
             }
 
             @Override
@@ -61,14 +65,34 @@ public class AdaptadorEmpleado extends RecyclerView.Adapter<AdaptadorEmpleado.Vi
 
             }
         });
+
+        //Agrega las demas en caso de ser mas (ojo, es importante hacerlo de esta forma)
+        for (int x = 1; x < empleado.getSucursales().size(); x++) {
+            refSucursal = FirebaseDatabase.getInstance().getReference("Sucursales")
+                    .child(empleado.getSucursales().get("s"+x));
+            refSucursal.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Sucursal sucursal = dataSnapshot.getValue(Sucursal.class);
+                    holder.txtSucursal.append(", " + sucursal.getNombre());
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
 
         DatabaseReference refCuentas = FirebaseDatabase.getInstance().getReference("Cuentas")
                 .child(empleado.getIdEmpleado());
         refCuentas.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Cuenta cuenta = dataSnapshot.getValue(Cuenta.class);
-                holder.txtCuenta.setText(cuenta.getUsuario() + ", " + cuenta.getPassword());
+                if (dataSnapshot.exists()) {
+                    Cuenta cuenta = dataSnapshot.getValue(Cuenta.class);
+                    holder.txtCuenta.setText(cuenta.getUsuario() + ", " + cuenta.getPassword());
+                }
             }
 
             @Override
@@ -76,7 +100,6 @@ public class AdaptadorEmpleado extends RecyclerView.Adapter<AdaptadorEmpleado.Vi
 
             }
         });
-
     }
 
     @Override
