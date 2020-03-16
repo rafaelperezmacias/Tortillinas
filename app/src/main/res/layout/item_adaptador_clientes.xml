@@ -1,36 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="horizontal"
     android:paddingTop="8dp"
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
-    android:paddingBottom="8dp">
+    android:paddingBottom="8dp"
+    android:gravity="center">
 
-    <TextView
-        android:id="@+id/txtNombre"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/layout1"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textColor="@color/negro"
-        android:layout_marginBottom="6dp"
-        tools:text="Pablo Alexis Padilla Maldonado"/>
+        android:layout_weight="1">
 
-    <TextView
-        android:id="@+id/txtTelefono"
-        android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/txtNombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="@color/negro"
+            android:layout_marginBottom="6dp"
+            tools:text="Pablo Alexis Padilla Maldonado"/>
+
+        <TextView
+            android:id="@+id/txtTelefono"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtNombre"
+            android:layout_marginBottom="6dp"
+            tools:text="+523327201710" />
+
+        <TextView
+            android:id="@+id/txtDireccion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtTelefono"
+            tools:text="Circuito Concepción Oriente #146, La Concha, Tonalá, Jalisco"/>
+
+    </RelativeLayout>
+
+    <ImageButton
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtNombre"
-        android:layout_marginBottom="6dp"
-        tools:text="+523327201710" />
+        android:layout_marginStart="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_more_horiz_24dp"
+        android:contentDescription="@string/icon"/>
 
-    <TextView
-        android:id="@+id/txtDireccion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtTelefono"
-        tools:text="Circuito Concepción Oriente #146, La Concha, Tonalá, Jalisco"/>
-
-</RelativeLayout>
+</LinearLayout>
