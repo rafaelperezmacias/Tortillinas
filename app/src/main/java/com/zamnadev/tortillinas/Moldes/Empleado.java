@@ -89,7 +89,7 @@ public class Empleado {
                 ", nombre=" + nombre.toString() +
                 ", telefono='" + telefono + '\'' +
                 ", tipo=" + tipo +
-                ", sucursales=" + sucursales.toString() +
+                ", sucursales=" + sucursales +
                 ", eliminado=" + eliminado +
                 '}';
     }

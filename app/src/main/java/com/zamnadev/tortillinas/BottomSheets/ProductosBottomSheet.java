@@ -3,6 +3,7 @@ package com.zamnadev.tortillinas.BottomSheets;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -17,9 +18,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.zamnadev.tortillinas.Moldes.Cliente;
 import com.zamnadev.tortillinas.Moldes.Direccion;
+import com.zamnadev.tortillinas.Moldes.ProductoModificado;
 import com.zamnadev.tortillinas.R;
 
 import java.util.HashMap;
@@ -79,13 +85,34 @@ public class ProductosBottomSheet extends BottomSheetDialogFragment {
                     productoMap.put("nombre",txtNombre.getText().toString().trim());
                     productoMap.put("precio",Double.parseDouble(txtPrecio.getText().toString().trim()));
                     productoMap.put("modificado",false);
-                    productoMap.put("eliminado",true);
+                    productoMap.put("eliminado",false);
 
                     reference.child(id).updateChildren(productoMap)
                             .addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(getContext(), "Registro exitoso", Toast.LENGTH_SHORT).show();
-                                    dismiss();
+                                    //Esto lo que hace es actualizar los precios preferenciales por defecto en caso de agregar un nuevo
+                                    //producto a la base de datos, en caso de no ser preferencial lo toma por defecto
+                                    DatabaseReference refCliente = FirebaseDatabase.getInstance().getReference("Clientes");
+                                    refCliente.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                                            {
+                                                Cliente c = snapshot.getValue(Cliente.class);
+                                                if (c.isPreferencial()) {
+                                                    c.getPrecios().put("p"+c.getPrecios().size(),Double.parseDouble(txtPrecio.getText().toString().trim()) + "?" + id);
+                                                    snapshot.getRef().child("precios").setValue(c.getPrecios());
+                                                }
+                                            }
+                                            Toast.makeText(getContext(), "Registro exitoso", Toast.LENGTH_SHORT).show();
+                                            dismiss();
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                            Toast.makeText(getContext(), "Error, intentelo mas tarde", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                                 } else {
                                     Toast.makeText(getContext(), "Error, intentelo mas tarde", Toast.LENGTH_SHORT).show();
                                 }

@@ -1,11 +1,14 @@
 package com.zamnadev.tortillinas.Moldes;
 
+import java.util.HashMap;
+
 public class Cliente {
 
     private String idCliente;
     private Nombre nombre;
     private Direccion direccion;
     private String telefono;
+    private HashMap<String, String> precios;
     private boolean eliminado;
     private boolean preferencial;
 
@@ -13,12 +16,14 @@ public class Cliente {
 
     }
 
-    public Cliente(String idCliente, Nombre nombre, Direccion direccion, String telefono, boolean eliminado) {
+    public Cliente(String idCliente, Nombre nombre, Direccion direccion, String telefono, HashMap<String, String> precios, boolean eliminado, boolean preferencial) {
         this.idCliente = idCliente;
         this.nombre = nombre;
         this.direccion = direccion;
         this.telefono = telefono;
+        this.precios = precios;
         this.eliminado = eliminado;
+        this.preferencial = preferencial;
     }
 
     public String getIdCliente() {
@@ -53,6 +58,14 @@ public class Cliente {
         this.telefono = telefono;
     }
 
+    public HashMap<String, String> getPrecios() {
+        return precios;
+    }
+
+    public void setPrecios(HashMap<String, String> precios) {
+        this.precios = precios;
+    }
+
     public boolean isEliminado() {
         return eliminado;
     }
@@ -61,14 +74,24 @@ public class Cliente {
         this.eliminado = eliminado;
     }
 
+    public boolean isPreferencial() {
+        return preferencial;
+    }
+
+    public void setPreferencial(boolean preferencial) {
+        this.preferencial = preferencial;
+    }
+
     @Override
     public String toString() {
         return "Cliente{" +
                 "idCliente='" + idCliente + '\'' +
-                ", nombre=" + nombre.toString() +
-                ", direccion=" + direccion.toString() +
+                ", nombre=" + nombre +
+                ", direccion=" + direccion +
                 ", telefono='" + telefono + '\'' +
+                ", precios=" + precios +
                 ", eliminado=" + eliminado +
+                ", preferencial=" + preferencial +
                 '}';
     }
 }
