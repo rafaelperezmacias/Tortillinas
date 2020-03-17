@@ -119,22 +119,18 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.navigation_home : {
-                toolbar.setTitle("Inicio");
                 showFragment(fragmentHome);
                 break;
             }
             case R.id.navigation_clientes : {
-                toolbar.setTitle("Clientes");
                 showFragment(fragmentClientes);
                 break;
             }
             case R.id.navigation_ventas : {
-                toolbar.setTitle("Ventas");
                 showFragment(fragmentVentas);
                 break;
             }
             case R.id.navigation_administrador : {
-                toolbar.setTitle("Administración");
                 showFragment(fragmentAdministrador);
                 break;
             }
