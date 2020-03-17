@@ -22,7 +22,7 @@ public class FirmaActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.bringToFront();
-        mCanvas = new Canvas(this, null);
+        mCanvas = findViewById(R.id.canvas);
         MaterialButton btnBorrar = findViewById(R.id.btn_borrar);
         btnBorrar.setOnClickListener((v) -> mCanvas.clear());
         MaterialButton btnCancelar = findViewById(R.id.btn_cancelar);

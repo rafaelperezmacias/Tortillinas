@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,9 +35,10 @@ public class Canvas extends View {
         super.onDraw(canvas);
         if(clearCanvas) {
             path = new Path();
-            Paint paint2 = new Paint();
-            paint2.setAlpha(0);
-            canvas.drawPath(path, paint2);
+            Paint clearPaint = new Paint();
+            clearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+            canvas.drawRect(0, 0, 0, 0, clearPaint);
+            canvas.drawColor(Color.WHITE);
             clearCanvas = false;
         } else {
             canvas.drawPath(path, paint);
