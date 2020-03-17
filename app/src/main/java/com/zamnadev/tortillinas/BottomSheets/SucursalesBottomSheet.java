@@ -33,15 +33,12 @@ public class SucursalesBottomSheet extends BottomSheetDialogFragment {
 
     private Direccion direccion;
 
-    private FragmentManager fragmentManager;
-
     private boolean isEditMode = false;
 
     public SucursalesBottomSheet() { }
 
-    public SucursalesBottomSheet(Sucursal sucursal, FragmentManager fragmentManager) {
+    public SucursalesBottomSheet(Sucursal sucursal) {
         this.sucursal = sucursal;
-        this.fragmentManager = fragmentManager;
         isEditMode = true;
     }
 
@@ -89,6 +86,7 @@ public class SucursalesBottomSheet extends BottomSheetDialogFragment {
             txtNombre.setText(sucursal.getNombre());
             direccion = sucursal.getDireccion();
             txtCalle.setText(direccion.getCalle());
+            txtNombre.setSelection(txtNombre.getText().length());
             txtNumeroExterior.setText(direccion.getNumeroExterior());
             if (direccion.getNumeroInterior() != null) {
                 txtNumeroInterior.setText(direccion.getNumeroInterior());
@@ -132,7 +130,11 @@ public class SucursalesBottomSheet extends BottomSheetDialogFragment {
                 }
                 direccion.setCalle(txtCalle.getText().toString().trim());
                 direccion.setNumeroExterior(txtNumeroExterior.getText().toString().trim());
-                direccion.setNumeroInterior(txtNumeroInterior.getText().toString().trim());
+                if (!txtNumeroInterior.getText().toString().isEmpty()) {
+                    direccion.setNumeroInterior(txtNumeroInterior.getText().toString().trim());
+                } else {
+                    direccion.setNumeroInterior(null);
+                }
                 direccion.setZona(txtZona.getText().toString().trim());
                 referenceDireccion.setValue(direccion).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

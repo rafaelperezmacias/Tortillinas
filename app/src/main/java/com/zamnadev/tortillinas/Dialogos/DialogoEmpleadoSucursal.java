@@ -63,7 +63,9 @@ public class DialogoEmpleadoSucursal extends DialogFragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren())
                 {
                     Sucursal sucursal = snapshot.getValue(Sucursal.class);
-                    sucursals.add(sucursal);
+                    if (!sucursal.isEliminado()){
+                        sucursals.add(sucursal);
+                    }
                 }
                 adaptador = new AdaptadorSucursalesDialogo(getContext(),sucursals);
                 recyclerView.setAdapter(adaptador);

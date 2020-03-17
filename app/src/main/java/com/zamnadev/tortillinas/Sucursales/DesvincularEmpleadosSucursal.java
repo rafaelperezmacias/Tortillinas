@@ -17,6 +17,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -28,6 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.zamnadev.tortillinas.Adaptadores.AdaptadorSucursales;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorSucursalesDialogo;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorSucursalesEmpleado;
 import com.zamnadev.tortillinas.Dialogos.DialogoAddSucursalEmpleado;
@@ -46,23 +49,25 @@ public class DesvincularEmpleadosSucursal extends BottomSheetDialogFragment {
 
     private ArrayList<Empleado> empleados;
     private int contador;
-    private String idSucursal;
+    private Sucursal s;
     private boolean eliminado;
     private int contadorDeSucursales;
 
     private RecyclerView recyclerView;
     private ArrayList<Sucursal> sucursals;
     private AdaptadorSucursalesEmpleado adaptador;
+    private Button btnGuardar;
+    private TextView txtNombre;
 
     private FragmentManager fragmentManager;
+    private AdaptadorSucursales padre;
 
-    public DesvincularEmpleadosSucursal(ArrayList<Empleado> empleados, String idSucursal, FragmentManager fragmentManager) {
+    public DesvincularEmpleadosSucursal(ArrayList<Empleado> empleados, Sucursal s, FragmentManager fragmentManager, AdaptadorSucursales padre) {
         this.empleados = empleados;
-        this.idSucursal = idSucursal;
+        this.s = s;
         this.fragmentManager = fragmentManager;
+        this.padre = padre;
         contador = 0;
-        contadorDeSucursales = 0;
-        eliminado = false;
     }
 
     @Override
@@ -87,15 +92,17 @@ public class DesvincularEmpleadosSucursal extends BottomSheetDialogFragment {
         ((ImageButton) view.findViewById(R.id.btn_cerrar))
                 .setOnClickListener((v -> dismiss()));
 
-        MaterialButton btnGuardar = view.findViewById(R.id.btnGuardar);
-        TextView txtNombre = view.findViewById(R.id.txtNombre);
+        btnGuardar = view.findViewById(R.id.btnGuardar);
+        txtNombre = view.findViewById(R.id.txtNombre);
         Button btnAgregar = view.findViewById(R.id.btnAgregarSucursal);
+
+        ((TextView) view.findViewById(R.id.txtSucursal))
+                .setText(s.getNombre());
+
         recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
 
-        btnGuardar.setText("Siguiente");
-        txtNombre.setText("" + empleados.get(contador).getNombre().getNombres() + " " + empleados.get(contador).getNombre().getApellidos());
         sucursals = new ArrayList<>();
 
         btnAgregar.setOnClickListener(view12 -> {
@@ -103,9 +110,78 @@ public class DesvincularEmpleadosSucursal extends BottomSheetDialogFragment {
                 Toast.makeText(getContext(), "El empleado pertenece a todas las sucursales", Toast.LENGTH_SHORT).show();
                 return;
             }
-            DialogoAddSucursalEmpleado dialog = new DialogoAddSucursalEmpleado(getMe(),idSucursal);
+            DialogoAddSucursalEmpleado dialog = new DialogoAddSucursalEmpleado(getMe(),s.getIdSucursal());
             dialog.show(fragmentManager,dialog.getTag());
         });
+
+        generarSucursalesUsario();
+
+        btnGuardar.setOnClickListener(view1 -> {
+            if (!eliminado) {
+                Toast.makeText(getContext(), "Desvincule la sucursal para poder continuar", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (sucursals.isEmpty()) {
+                Toast.makeText(getContext(), "Agrege una sucursal para el empleado", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            HashMap<String, String> hashMap = new HashMap<>();
+            for (int x = 0; x < sucursals.size(); x++) {
+                hashMap.put("s"+x,sucursals.get(x).getIdSucursal());
+            }
+            DatabaseReference refEmpleado = FirebaseDatabase.getInstance().getReference("Empleados")
+                    .child(empleados.get(contador).getIdEmpleado())
+                    .child("sucursales");
+            refEmpleado.setValue(hashMap).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    contador++;
+                    if (contador == empleados.size()) {
+                        Toast.makeText(getContext(), "Proceso finalizado con exito", Toast.LENGTH_SHORT).show();
+                        padre.eliminarSucursal(s);
+                        dismiss();
+                        return;
+                    }
+                    generarSucursalesUsario();
+                    if (contador == (empleados.size() - 1)) {
+                        btnGuardar.setText("Finalizar");
+                    }
+                }
+            });
+        });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Toolbar toolbar = view.findViewById(R.id.toolbar);
+            NestedScrollView nestedScrollView = view.findViewById(R.id.nested_scroll_ventas);
+            nestedScrollView.setOnScrollChangeListener((View.OnScrollChangeListener)
+                    (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+                        if(scrollY == 0) {
+                            toolbar.setElevation(0);
+                        } else {
+                            toolbar.setElevation(8);
+                        }
+                    });
+        }
+        setCancelable(false);
+        return bottomSheet;
+    }
+
+    private DesvincularEmpleadosSucursal getMe() {
+        return this;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+
+    private void generarSucursalesUsario() {
+        eliminado = false;
+
+        btnGuardar.setText("Siguiente");
+        txtNombre.setText("Empleado: " + empleados.get(contador).getNombre().getNombres() + " " + empleados.get(contador).getNombre().getApellidos());
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Sucursales");
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -136,53 +212,6 @@ public class DesvincularEmpleadosSucursal extends BottomSheetDialogFragment {
 
             }
         });
-
-        btnGuardar.setOnClickListener(view1 -> {
-            if (!eliminado) {
-                Toast.makeText(getContext(), "Desvincule la sucursal para poder continuar", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            if (sucursals.isEmpty()) {
-                Toast.makeText(getContext(), "Agrege una sucursal para el empleado", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            contador++;
-            if (contador == empleados.size()) {
-                dismiss();
-                return;
-            }
-            if (contador == (empleados.size() - 1)) {
-                btnGuardar.setText("Finalizar");
-            }
-            txtNombre.setText("" + empleados.get(contador).getNombre().getNombres() + " " + empleados.get(contador).getNombre().getApellidos());
-        });
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Toolbar toolbar = view.findViewById(R.id.toolbar);
-            NestedScrollView nestedScrollView = view.findViewById(R.id.nested_scroll_ventas);
-            nestedScrollView.setOnScrollChangeListener((View.OnScrollChangeListener)
-                    (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-                        if(scrollY == 0) {
-                            toolbar.setElevation(0);
-                        } else {
-                            toolbar.setElevation(8);
-                        }
-                    });
-        }
-        setCancelable(false);
-        return bottomSheet;
-    }
-
-    private DesvincularEmpleadosSucursal getMe() {
-        return this;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     public void addSucursal(ArrayList<Sucursal> sucursal) {
@@ -207,7 +236,7 @@ public class DesvincularEmpleadosSucursal extends BottomSheetDialogFragment {
         for (Sucursal s : sucursals) {
             if (idSucursal.equals(s.getIdSucursal())) {
                 sucursals.remove(x);
-                if (this.idSucursal.equals(idSucursal)) {
+                if (this.s.getIdSucursal().equals(idSucursal)) {
                     eliminado = true;
                 }
                 adaptador = new AdaptadorSucursalesEmpleado(getContext(),sucursals,getMe());

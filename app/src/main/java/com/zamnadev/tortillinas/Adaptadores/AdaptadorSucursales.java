@@ -61,11 +61,20 @@ public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursale
             popupMenu.setOnMenuItemClickListener(menuItem -> {
                 switch (menuItem.getItemId()) {
                     case R.id.menuEditar: {
-                        SucursalesBottomSheet bottomSheet = new SucursalesBottomSheet(sucursal, fragmentManager);
+                        SucursalesBottomSheet bottomSheet = new SucursalesBottomSheet(sucursal);
                         bottomSheet.show(fragmentManager, bottomSheet.getTag());
                         return true;
                     }
                     case R.id.menuEliminar: {
+                        if (sucursals.size() == 1) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setTitle("Alerta")
+                                    .setMessage("No puede eliminar todas las sucursales")
+                                    .setPositiveButton("Ok",null)
+                                    .show();
+                            return true;
+                        }
+
                         //Valida que no exista ningun empleado referenciado a la sucursal
                         ArrayList<Empleado> empleados = new ArrayList<>();
                         DatabaseReference refEmpleado = FirebaseDatabase.getInstance().getReference("Empleados");
@@ -88,29 +97,13 @@ public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursale
                                     builder.setTitle("Alerta")
                                             .setMessage("Para poder eliminar la sucursal tiene que desvincular a todos los empleados que pertenecen a ella.")
                                             .setPositiveButton("Desvincular", (dialogInterface, i) -> {
-                                                DesvincularEmpleadosSucursal bottomSheet = new DesvincularEmpleadosSucursal(empleados, sucursal.getIdSucursal(), fragmentManager);
+                                                DesvincularEmpleadosSucursal bottomSheet = new DesvincularEmpleadosSucursal(empleados, sucursal, fragmentManager, getMe());
                                                 bottomSheet.show(fragmentManager, bottomSheet.getTag());
                                             })
                                             .setNegativeButton("Cancelar",null)
                                             .show();
                                 } else {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                    builder.setTitle("Alerta")
-                                            .setMessage("¿Esta seguro de quere eliminar esta sucursal?")
-                                            .setPositiveButton("Eliminar", (dialogInterface, i) -> {
-                                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Sucursales").child(sucursal.getIdSucursal());
-                                                reference.child("eliminado")
-                                                        .setValue(true)
-                                                        .addOnCompleteListener(task -> {
-                                                            if (task.isSuccessful()) {
-                                                                Toast.makeText(context, "Sucursal eliminada con exito", Toast.LENGTH_SHORT).show();
-                                                            } else {
-                                                                Toast.makeText(context, "Error, intentelo mas tarde", Toast.LENGTH_SHORT).show();
-                                                            }
-                                                        });
-                                            })
-                                            .setNegativeButton("Cancelar",null)
-                                            .show();
+                                    eliminarSucursal(sucursal);
                                 }
                             }
 
@@ -124,6 +117,30 @@ public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursale
             });
             popupMenu.show();
         });
+    }
+
+    public void eliminarSucursal(Sucursal sucursal) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Alerta")
+                .setMessage("¿Esta seguro de quere eliminar esta sucursal?")
+                .setPositiveButton("Eliminar", (dialogInterface, i) -> {
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Sucursales").child(sucursal.getIdSucursal());
+                    reference.child("eliminado")
+                            .setValue(true)
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(context, "Sucursal eliminada con exito", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(context, "Error, intentelo mas tarde", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                })
+                .setNegativeButton("Cancelar",null)
+                .show();
+    }
+
+    private AdaptadorSucursales getMe() {
+        return this;
     }
 
     @Override
