@@ -1,34 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingTop="8dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="8dp"
+    android:paddingBottom="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:orientation="vertical">
+        android:layout_weight="1">
 
         <TextView
             android:id="@+id/txtNombre"
             android:textColor="@color/negro"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:layout_marginBottom="6dp"
+            tools:text="Pablo Alexis Padilla Maldonado"/>
+
+        <TextView
+            android:id="@+id/txtDireccion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtNombre"
+            tools:text="+523327201710"/>
 
         <TextView
             android:layout_marginTop="5dp"
-            android:id="@+id/txtDireccion"
-            android:textColor="@color/negro"
+            android:id="@+id/txtZona"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtDireccion"
+            android:layout_marginBottom="6dp"
+            tools:text="Sucursal"/>
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/txtCubetas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtZona"
+            android:layout_marginBottom="6dp"
+            tools:text="Cubetas"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/btnOpciones"
+        android:layout_gravity="top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/icon"
+        android:padding="8dp"
+        android:src="@drawable/ic_more_horiz_24dp" />
 
 </LinearLayout>

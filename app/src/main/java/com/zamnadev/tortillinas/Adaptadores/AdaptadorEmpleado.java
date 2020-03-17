@@ -51,30 +51,14 @@ public class AdaptadorEmpleado extends RecyclerView.Adapter<AdaptadorEmpleado.Vi
         holder.txtSucursal.setText("Sucursale(s): ");
 
         /// Una sola sucursal
-        DatabaseReference refSucursal = FirebaseDatabase.getInstance().getReference("Sucursales")
-                .child(empleado.getSucursales().get("s0"));
-        refSucursal.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Sucursal sucursal = dataSnapshot.getValue(Sucursal.class);
-                holder.txtSucursal.append(sucursal.getNombre());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        //Agrega las demas en caso de ser mas (ojo, es importante hacerlo de esta forma)
-        for (int x = 1; x < empleado.getSucursales().size(); x++) {
-            refSucursal = FirebaseDatabase.getInstance().getReference("Sucursales")
-                    .child(empleado.getSucursales().get("s"+x));
+        if (empleado.getTipo() != Empleado.TIPO_ADMIN) {
+            DatabaseReference refSucursal = FirebaseDatabase.getInstance().getReference("Sucursales")
+                    .child(empleado.getSucursales().get("s0"));
             refSucursal.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     Sucursal sucursal = dataSnapshot.getValue(Sucursal.class);
-                    holder.txtSucursal.append(", " + sucursal.getNombre());
+                    holder.txtSucursal.append(sucursal.getNombre());
                 }
 
                 @Override
@@ -82,6 +66,24 @@ public class AdaptadorEmpleado extends RecyclerView.Adapter<AdaptadorEmpleado.Vi
 
                 }
             });
+
+            //Agrega las demas en caso de ser mas (ojo, es importante hacerlo de esta forma)
+            for (int x = 1; x < empleado.getSucursales().size(); x++) {
+                refSucursal = FirebaseDatabase.getInstance().getReference("Sucursales")
+                        .child(empleado.getSucursales().get("s"+x));
+                refSucursal.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Sucursal sucursal = dataSnapshot.getValue(Sucursal.class);
+                        holder.txtSucursal.append(", " + sucursal.getNombre());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
         }
 
         DatabaseReference refCuentas = FirebaseDatabase.getInstance().getReference("Cuentas")

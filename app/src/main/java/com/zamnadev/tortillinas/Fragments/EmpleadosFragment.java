@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -83,6 +84,7 @@ public class EmpleadosFragment extends Fragment {
                 }
             } else {
                 //TODO notifica error de sucursal
+                Toast.makeText(activity, "Ninguna sucursal activa", Toast.LENGTH_SHORT).show();
             }
         });
         return view;

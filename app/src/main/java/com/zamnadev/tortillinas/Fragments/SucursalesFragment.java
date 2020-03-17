@@ -58,7 +58,7 @@ public class SucursalesFragment extends Fragment {
                         sucursals.add(sucursal);
                     }
                 }
-                AdaptadorSucursales adaptadorSucursales = new AdaptadorSucursales(activity, sucursals);
+                AdaptadorSucursales adaptadorSucursales = new AdaptadorSucursales(activity, sucursals,getChildFragmentManager());
                 recyclerView.setAdapter(adaptadorSucursales);
             }
 

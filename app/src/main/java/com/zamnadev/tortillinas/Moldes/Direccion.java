@@ -58,6 +58,14 @@ public class Direccion implements Serializable {
         this.zona = zona;
     }
 
+    public String toRecyclerView() {
+        String msg = calle + " #" + numeroExterior;
+        if (numeroInterior != null) {
+            msg += ", Int. #" + numeroInterior;
+        }
+        return msg;
+    }
+
     @Override
     public String toString() {
         return "Direccion{" +
