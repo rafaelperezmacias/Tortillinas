@@ -20,6 +20,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.BottomSheets.SucursalesBottomSheet;
+import com.zamnadev.tortillinas.Dialogs.MessageDialog;
+import com.zamnadev.tortillinas.Dialogs.MessageDialogBuilder;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
 import com.zamnadev.tortillinas.R;
@@ -94,23 +96,33 @@ public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursale
                                             .setNegativeButton("Cancelar",null)
                                             .show();
                                 } else {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                    builder.setTitle("Alerta")
-                                            .setMessage("¿Esta seguro de quere eliminar esta sucursal?")
-                                            .setPositiveButton("Eliminar", (dialogInterface, i) -> {
-                                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Sucursales").child(sucursal.getIdSucursal());
+                                    MessageDialog dialog = new MessageDialog(context, new MessageDialogBuilder()
+                                            .setTitle("Alerta")
+                                            .setMessage("¿Estás seguro de que quieres eliminar esta sucursal?")
+                                            .setPositiveButtonText("Sí, eliminar")
+                                            .setPositiveButtonListener(v -> {
+                                                DatabaseReference reference = FirebaseDatabase
+                                                        .getInstance()
+                                                        .getReference("Sucursales")
+                                                        .child(sucursal.getIdSucursal());
                                                 reference.child("eliminado")
                                                         .setValue(true)
                                                         .addOnCompleteListener(task -> {
                                                             if (task.isSuccessful()) {
-                                                                Toast.makeText(context, "Sucursal eliminada con exito", Toast.LENGTH_SHORT).show();
+                                                                Toast.makeText(context,
+                                                                        "Sucursal eliminada con exito",
+                                                                        Toast.LENGTH_SHORT).show();
                                                             } else {
-                                                                Toast.makeText(context, "Error, intentelo mas tarde", Toast.LENGTH_SHORT).show();
+                                                                Toast.makeText(context,
+                                                                        "Error, intentelo mas tarde",
+                                                                        Toast.LENGTH_SHORT).show();
                                                             }
                                                         });
                                             })
-                                            .setNegativeButton("Cancelar",null)
-                                            .show();
+                                            .setNegativeButtonText("No, cancelar")
+                                    );
+                                    dialog.show();
+                                    dialog.setNegativeButtonListener(v -> dialog.dismiss());
                                 }
                             }
 
