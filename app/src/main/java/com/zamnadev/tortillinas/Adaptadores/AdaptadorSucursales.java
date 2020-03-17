@@ -94,15 +94,19 @@ public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursale
                                     }
                                 }
                                 if (empleados.size() > 0) {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                    builder.setTitle("Alerta")
+                                    MessageDialog dialog = new MessageDialog(context, new MessageDialogBuilder()
+                                            .setTitle("Alerta")
                                             .setMessage("Para poder eliminar la sucursal tiene que desvincular a todos los empleados que pertenecen a ella.")
-                                            .setPositiveButton("Desvincular", (dialogInterface, i) -> {
-                                                DesvincularEmpleadosSucursal bottomSheet = new DesvincularEmpleadosSucursal(empleados, sucursal, fragmentManager, getMe());
+                                            .setPositiveButtonText("Desvincular")
+                                            .setPositiveButtonListener(v -> {
+                                                DesvincularEmpleadosSucursal bottomSheet =
+                                                        new DesvincularEmpleadosSucursal(empleados, sucursal, fragmentManager, getMe());
                                                 bottomSheet.show(fragmentManager, bottomSheet.getTag());
                                             })
-                                            .setNegativeButton("Cancelar",null)
-                                            .show();
+                                            .setNegativeButtonText("Cancelar")
+                                    );
+                                    dialog.show();
+                                    dialog.setNegativeButtonListener(v -> dialog.dismiss());
                                 } else {
                                     eliminarSucursal(sucursal);
                                 }

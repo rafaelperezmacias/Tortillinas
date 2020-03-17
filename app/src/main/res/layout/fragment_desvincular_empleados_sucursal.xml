@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".BottomSheets.VentasBottomSheet">
 
@@ -24,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:paddingEnd="16dp"
-                android:background="@color/blanco"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_close_black_24dp"/>
 
             <LinearLayout
@@ -52,7 +51,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:gravity="center" />
+                android:gravity="center"
+                style="@style/Widget.AppCompat.Button.Borderless"/>
 
         </LinearLayout>
 
@@ -72,35 +72,39 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
-
             <TextView
                 android:id="@+id/txtNombre"
                 android:textColor="@color/negro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="22sp" />
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="20sp"
+                tools:text="Hola"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
 
                 <TextView
                     android:layout_weight="1"
                     android:textColor="@color/negro"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Sucursale(s):"/>
+                    android:text="Sucursal(es):"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Button" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAgregarSucursal"
-                    android:drawableEnd="@drawable/ic_add_black_24dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:text="Agregar sucursal"
+                    android:drawableEnd="@drawable/ic_add_black_24dp"
+                    android:drawableTint="@color/colorPrimary"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
             </LinearLayout>
 
