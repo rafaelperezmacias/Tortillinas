@@ -28,6 +28,7 @@
                 android:src="@drawable/ic_close_black_24dp"/>
 
             <TextView
+                android:id="@+id/lbl_toolbar_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -230,6 +231,27 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
             </RelativeLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_cubetas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:hint="Cubetas"
+                android:paddingStart="56dp"
+                android:paddingEnd="16dp"
+                android:visibility="gone"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txt_cubetas"
+                    android:inputType="number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 

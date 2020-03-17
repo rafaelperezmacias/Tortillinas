@@ -2,9 +2,7 @@ package com.zamnadev.tortillinas.Adaptadores;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -16,22 +14,17 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.dynamic.SupportFragmentWrapper;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.zamnadev.tortillinas.BottomSheets.SucursalesBottomSheet;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
 import com.zamnadev.tortillinas.R;
 import com.zamnadev.tortillinas.Sucursales.AddCubetasSucursalBottomSheet;
 import com.zamnadev.tortillinas.Sucursales.DesvincularEmpleadosSucursal;
-import com.zamnadev.tortillinas.Sucursales.MenuSucursalesBottomSheet;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -76,8 +69,8 @@ public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursale
                         bottomSheet.show(fragmentManager,bottomSheet.getTag());
                     } return true;
                     case R.id.menuEditar: {
-                            MenuSucursalesBottomSheet bottomSheet = new MenuSucursalesBottomSheet(sucursal,fragmentManager);
-                            bottomSheet.show(fragmentManager,bottomSheet.getTag());
+                            SucursalesBottomSheet bottomSheet = new SucursalesBottomSheet(sucursal, fragmentManager);
+                            bottomSheet.show(fragmentManager, bottomSheet.getTag());
                     } return true;
                     case R.id.menuEliminar: {
                         //Valida que no exista ningun empleado referenciado a la sucursal
