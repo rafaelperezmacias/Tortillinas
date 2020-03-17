@@ -28,48 +28,43 @@ import com.zamnadev.tortillinas.Sucursales.DesvincularEmpleadosSucursal;
 import java.util.ArrayList;
 
 public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursales.ViewHolder> {
-
     private Context context;
+
     private ArrayList<Sucursal> sucursals;
+
     private FragmentManager fragmentManager;
 
-    public AdaptadorSucursales(Context context, ArrayList<Sucursal> sucursals, FragmentManager fragmentManager)
-    {
+    public AdaptadorSucursales(Context context, ArrayList<Sucursal> sucursals,
+                               FragmentManager fragmentManager) {
         this.context = context;
         this.sucursals = sucursals;
         this.fragmentManager = fragmentManager;
-
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_adaptador_sucursal,parent,false);
-        return new AdaptadorSucursales.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Sucursal sucursal = sucursals.get(position);
-
         holder.txtNombre.setText(sucursal.getNombre());
         holder.txtDireccion.setText(sucursal.getDireccion().toRecyclerView());
         holder.txtZona.setText(sucursal.getDireccion().getZona());
         holder.txtCubetas.setText("Cubetas: " + sucursal.getBotes());
-
         holder.btnOpciones.setOnClickListener(view -> {
             PopupMenu popupMenu = new PopupMenu(context,holder.btnOpciones);
             popupMenu.inflate(R.menu.menu_sucursales_recyclerview);
             popupMenu.setOnMenuItemClickListener(menuItem -> {
-                switch (menuItem.getItemId())
-                {
-                    case R.id.menuAddCubetas: {
-
-                    } return true;
+                switch (menuItem.getItemId()) {
                     case R.id.menuEditar: {
-                            SucursalesBottomSheet bottomSheet = new SucursalesBottomSheet(sucursal, fragmentManager);
-                            bottomSheet.show(fragmentManager, bottomSheet.getTag());
-                    } return true;
+                        SucursalesBottomSheet bottomSheet = new SucursalesBottomSheet(sucursal, fragmentManager);
+                        bottomSheet.show(fragmentManager, bottomSheet.getTag());
+                        return true;
+                    }
                     case R.id.menuEliminar: {
                         //Valida que no exista ningun empleado referenciado a la sucursal
                         ArrayList<Empleado> empleados = new ArrayList<>();
@@ -93,8 +88,8 @@ public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursale
                                     builder.setTitle("Alerta")
                                             .setMessage("Para poder eliminar la sucursal tiene que desvincular a todos los empleados que pertenecen a ella.")
                                             .setPositiveButton("Desvincular", (dialogInterface, i) -> {
-                                                DesvincularEmpleadosSucursal bottomSheet = new DesvincularEmpleadosSucursal(empleados,sucursal.getIdSucursal(),fragmentManager);
-                                                bottomSheet.show(fragmentManager,bottomSheet.getTag());
+                                                DesvincularEmpleadosSucursal bottomSheet = new DesvincularEmpleadosSucursal(empleados, sucursal.getIdSucursal(), fragmentManager);
+                                                bottomSheet.show(fragmentManager, bottomSheet.getTag());
                                             })
                                             .setNegativeButton("Cancelar",null)
                                             .show();
@@ -120,11 +115,10 @@ public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursale
                             }
 
                             @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
+                            public void onCancelled(@NonNull DatabaseError databaseError) { }
                         });
-                    } return true;
+                        return true;
+                    }
                 }
                 return false;
             });
@@ -133,25 +127,23 @@ public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursale
     }
 
     @Override
-    public int getItemCount() {
-        return sucursals.size();
-    }
+    public int getItemCount() { return sucursals.size(); }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
+    static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView txtNombre;
         private TextView txtDireccion;
         private TextView txtZona;
         private TextView txtCubetas;
+
         private ImageButton btnOpciones;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
-            txtNombre = (TextView) itemView.findViewById(R.id.txtNombre);
-            txtDireccion = (TextView) itemView.findViewById(R.id.txtDireccion);
-            txtZona = (TextView) itemView.findViewById(R.id.txtZona);
-            btnOpciones = (ImageButton) itemView.findViewById(R.id.btnOpciones);
-            txtCubetas = (TextView) itemView.findViewById(R.id.txtCubetas);
+            txtNombre = itemView.findViewById(R.id.txtNombre);
+            txtDireccion = itemView.findViewById(R.id.txtDireccion);
+            txtZona = itemView.findViewById(R.id.txtZona);
+            btnOpciones = itemView.findViewById(R.id.btnOpciones);
+            txtCubetas = itemView.findViewById(R.id.txtCubetas);
         }
     }
 }
