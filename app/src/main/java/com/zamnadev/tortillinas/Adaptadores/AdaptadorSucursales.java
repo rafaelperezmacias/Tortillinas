@@ -76,7 +76,6 @@ public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursale
                                     .show();
                             return true;
                         }
-
                         //Valida que no exista ningun empleado referenciado a la sucursal
                         ArrayList<Empleado> empleados = new ArrayList<>();
                         DatabaseReference refEmpleado = FirebaseDatabase.getInstance().getReference("Empleados");
@@ -122,11 +121,14 @@ public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursale
     }
 
     public void eliminarSucursal(Sucursal sucursal) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Alerta")
-                .setMessage("¿Esta seguro de quere eliminar esta sucursal?")
-                .setPositiveButton("Eliminar", (dialogInterface, i) -> {
-                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Sucursales").child(sucursal.getIdSucursal());
+        MessageDialog dialog = new MessageDialog(context, new MessageDialogBuilder()
+                .setTitle("Alerta")
+                .setMessage("¿Estás seguro de que quieres eliminar esta sucursal?")
+                .setPositiveButtonText("Sí, eliminar")
+                .setPositiveButtonListener(v -> {
+                    DatabaseReference reference = FirebaseDatabase.getInstance()
+                            .getReference("Sucursales")
+                            .child(sucursal.getIdSucursal());
                     reference.child("eliminado")
                             .setValue(true)
                             .addOnCompleteListener(task -> {
@@ -137,42 +139,13 @@ public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursale
                                 }
                             });
                 })
-                .setNegativeButton("Cancelar",null)
-                .show();
+                .setNegativeButtonText("No, cancelar")
+        );
+        dialog.show();
+        dialog.setNegativeButtonListener(v -> dialog.dismiss());
     }
-                                    MessageDialog dialog = new MessageDialog(context, new MessageDialogBuilder()
-                                            .setTitle("Alerta")
-                                            .setMessage("¿Estás seguro de que quieres eliminar esta sucursal?")
-                                            .setPositiveButtonText("Sí, eliminar")
-                                            .setPositiveButtonListener(v -> {
-                                                DatabaseReference reference = FirebaseDatabase
-                                                        .getInstance()
-                                                        .getReference("Sucursales")
-                                                        .child(sucursal.getIdSucursal());
-                                                reference.child("eliminado")
-                                                        .setValue(true)
-                                                        .addOnCompleteListener(task -> {
-                                                            if (task.isSuccessful()) {
-                                                                Toast.makeText(context,
-                                                                        "Sucursal eliminada con exito",
-                                                                        Toast.LENGTH_SHORT).show();
-                                                            } else {
-                                                                Toast.makeText(context,
-                                                                        "Error, intentelo mas tarde",
-                                                                        Toast.LENGTH_SHORT).show();
-                                                            }
-                                                        });
-                                            })
-                                            .setNegativeButtonText("No, cancelar")
-                                    );
-                                    dialog.show();
-                                    dialog.setNegativeButtonListener(v -> dialog.dismiss());
-                                }
-                            }
 
-    private AdaptadorSucursales getMe() {
-        return this;
-    }
+    private AdaptadorSucursales getMe() { return this; }
 
     @Override
     public int getItemCount() { return sucursals.size(); }
