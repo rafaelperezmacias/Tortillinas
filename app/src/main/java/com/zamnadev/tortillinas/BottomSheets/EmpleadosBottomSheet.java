@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -122,7 +123,9 @@ public class EmpleadosBottomSheet extends BottomSheetDialogFragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                nombre = txtNombre.getText().toString().trim().toLowerCase();
+                String tmPnombre = txtNombre.getText().toString().trim().toLowerCase();
+                //Quita los espacion de toda la cadena. el \\s es una expresion regular
+                nombre = tmPnombre.replaceAll("\\s","");
                 txtUsuario.setText(nombre +"_" + apellidos + telefono);
                 txtPassword.setText(txtUsuario.getText().toString().trim());
             }
