@@ -23,7 +23,6 @@ import com.zamnadev.tortillinas.BottomSheets.SucursalesBottomSheet;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
 import com.zamnadev.tortillinas.R;
-import com.zamnadev.tortillinas.Sucursales.AddCubetasSucursalBottomSheet;
 import com.zamnadev.tortillinas.Sucursales.DesvincularEmpleadosSucursal;
 
 import java.util.ArrayList;
@@ -65,8 +64,7 @@ public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursale
                 switch (menuItem.getItemId())
                 {
                     case R.id.menuAddCubetas: {
-                        AddCubetasSucursalBottomSheet bottomSheet = new AddCubetasSucursalBottomSheet(sucursal);
-                        bottomSheet.show(fragmentManager,bottomSheet.getTag());
+
                     } return true;
                     case R.id.menuEditar: {
                             SucursalesBottomSheet bottomSheet = new SucursalesBottomSheet(sucursal, fragmentManager);
