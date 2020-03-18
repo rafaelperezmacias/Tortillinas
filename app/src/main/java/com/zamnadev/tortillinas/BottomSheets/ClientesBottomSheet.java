@@ -3,12 +3,9 @@ package com.zamnadev.tortillinas.BottomSheets;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +16,6 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -32,7 +28,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorClientesProductos;
-import com.zamnadev.tortillinas.Adaptadores.AdaptadorProductos;
 import com.zamnadev.tortillinas.Moldes.Cliente;
 import com.zamnadev.tortillinas.Moldes.Direccion;
 import com.zamnadev.tortillinas.Moldes.Nombre;
@@ -106,7 +101,6 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
         TextInputEditText txtPseudonimo = view.findViewById(R.id.txtPseudonimo);
 
         Switch sPrecio = view.findViewById(R.id.sPrecios);
-        LinearLayout lytProductos = view.findViewById(R.id.lytProductos);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
         TextView txtTitulo = view.findViewById(R.id.txtTitulo);
 
@@ -149,9 +143,9 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
 
         sPrecio.setOnCheckedChangeListener((compoundButton, b) -> {
             if (sPrecio.isChecked()) {
-                lytProductos.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
             } else {
-                lytProductos.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
             }
         });
 
@@ -170,7 +164,7 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
             txtZona.setText(cliente.getDireccion().getZona());
             if (cliente.isPreferencial()) {
                 sPrecio.setChecked(true);
-                lytProductos.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
             }
         } else {
             txtTitulo.setText("Agregar cliente");
