@@ -4,10 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingTop="8dp"
-    android:paddingStart="16dp"
-    android:paddingEnd="8dp"
-    android:paddingBottom="8dp"
+    android:padding="4dp"
     android:clickable="true"
     android:focusable="true"
     android:background="?attr/selectableItemBackground"
@@ -18,55 +15,30 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
+
+
         <TextView
             android:id="@+id/txtNombre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="14sp"
             android:textColor="@color/negro"
             android:layout_marginBottom="6dp"
-            tools:text="Pablo Alexis Padilla Maldonado"/>
+            tools:text="Tortillas"/>
 
         <TextView
-            android:id="@+id/txtTelefono"
+            android:id="@+id/txtPrecio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtNombre"
             android:layout_marginBottom="6dp"
-            tools:text="+523327201710" />
-
-        <TextView
-            android:id="@+id/txtDireccion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txtTelefono"
-            tools:text="Circuito Concepción Oriente #146, La Concha, Tonalá, Jalisco"/>
-
-        <LinearLayout
-            android:id="@+id/lytPreferenciales"
-            android:visibility="gone"
-            android:layout_marginTop="10dp"
-            android:layout_below="@id/txtDireccion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:text="Precios preferenciales"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
+            tools:text="$ 12.23" />
 
     </RelativeLayout>
 
     <ImageButton
         android:id="@+id/btnOpciones"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"

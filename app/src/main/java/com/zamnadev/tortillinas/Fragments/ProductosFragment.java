@@ -63,7 +63,7 @@ public class ProductosFragment extends Fragment {
                         productos.add(producto);
                     }
                 }
-                AdaptadorProductos adaptador = new AdaptadorProductos(getContext(),productos);
+                AdaptadorProductos adaptador = new AdaptadorProductos(getContext(),productos,true,getChildFragmentManager());
                 recyclerView.setAdapter(adaptador);
             }
 

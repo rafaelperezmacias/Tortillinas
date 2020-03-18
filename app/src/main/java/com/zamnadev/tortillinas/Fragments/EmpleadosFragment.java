@@ -67,7 +67,7 @@ public class EmpleadosFragment extends Fragment {
                         empleados.add(empleado);
                     }
                 }
-                adaptadorEmpleado = new AdaptadorEmpleado(activity, empleados);
+                adaptadorEmpleado = new AdaptadorEmpleado(activity, empleados,getChildFragmentManager(),getMe());
                 recyclerView.setAdapter(adaptadorEmpleado);
             }
 

@@ -1,27 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="8dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="8dp"
+    android:paddingBottom="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:orientation="vertical">
+        android:layout_weight="1">
 
         <TextView
-            android:id="@+id/txt"
-            android:textColor="@color/negro"
+            android:id="@+id/txtNombre"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="@color/negro"
+            android:layout_marginBottom="6dp"
+            tools:text="Tortillas"/>
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/txtPrecio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtNombre"
+            android:layout_marginBottom="6dp"
+            tools:text="$ 12.23" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/btnOpciones"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_more_horiz_24dp"
+        android:contentDescription="@string/icon"/>
 
 </LinearLayout>
