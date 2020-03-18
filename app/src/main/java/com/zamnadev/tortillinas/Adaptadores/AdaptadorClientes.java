@@ -5,8 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,29 +65,29 @@ public class AdaptadorClientes extends RecyclerView.Adapter<AdaptadorClientes.Vi
                 cliente.getNombre().getApellidos());
         holder.txtTelefono.setText(cliente.getTelefono());
         holder.txtDireccion.setText(cliente.getDireccion().toRecyclerView());
-        PopupMenu popupMenu = new PopupMenu(context,holder.btnOpciones);
+        PopupMenu popupMenu = new PopupMenu(context, holder.btnOpciones);
+        popupMenu.inflate(R.menu.menu_clientes_recyclerview);
         if (cliente.isPreferencial()) {
-            popupMenu.inflate(R.menu.menu_c_productos_recyclerview);
+            holder.btnMostrarPrecios.setVisibility(View.VISIBLE);
         } else {
-            popupMenu.inflate(R.menu.menu_clientes_recyclerview);
+            holder.btnMostrarPrecios.setVisibility(View.GONE);
         }
         if (showProductos.get(position) && cliente.isPreferencial()) {
-            popupMenu.getMenu().getItem(0).setTitle("Ocultar precios preferenciales");
+            holder.btnMostrarPrecios.setImageResource(R.drawable.ic_arrow_up_24dp);
         } else if (cliente.isPreferencial()) {
-            popupMenu.getMenu().getItem(0).setTitle("Mostrar precios preferenciales");
+            holder.btnMostrarPrecios.setImageResource(R.drawable.ic_arrow_down_24dp);
         }
+        holder.btnMostrarPrecios.setOnClickListener(v -> {
+            if (showProductos.get(position)) {
+                showProductos.set(position, false);
+            } else {
+                showProductos.set(position, true);
+            }
+            notifyDataSetChanged();
+        });
         holder.btnOpciones.setOnClickListener(view -> {
             popupMenu.setOnMenuItemClickListener(menuItem -> {
                 switch (menuItem.getItemId()) {
-                    case R.id.menuProductos: {
-                        if (showProductos.get(position)) {
-                            showProductos.set(position, false);
-                        } else {
-                            showProductos.set(position, true);
-                        }
-                        notifyDataSetChanged();
-                        return false;
-                    }
                     case R.id.menuEditar: {
                         ClientesBottomSheet bottomSheet = new ClientesBottomSheet(cliente);
                         bottomSheet.show(fragmentManager, bottomSheet.getTag());
@@ -125,7 +125,6 @@ public class AdaptadorClientes extends RecyclerView.Adapter<AdaptadorClientes.Vi
             });
             popupMenu.show();
         });
-
         if (cliente.isPreferencial()) {
             if (showProductos.get(position)) {
                 holder.lytPreferenciales.setVisibility(View.VISIBLE);
@@ -153,7 +152,7 @@ public class AdaptadorClientes extends RecyclerView.Adapter<AdaptadorClientes.Vi
                             }
                         }
                         AdaptadorProductos adaptadorProductos =
-                                new AdaptadorProductos(context,productos,false, fragmentManager);
+                                new AdaptadorProductos(context, productos,false, fragmentManager);
                         holder.recyclerView.setAdapter(adaptadorProductos);
                     }
 
@@ -176,11 +175,12 @@ public class AdaptadorClientes extends RecyclerView.Adapter<AdaptadorClientes.Vi
         private TextView txtTelefono;
         private TextView txtDireccion;
 
-        private LinearLayout lytPreferenciales;
+        private RelativeLayout lytPreferenciales;
 
         private RecyclerView recyclerView;
 
         private ImageButton btnOpciones;
+        private ImageButton btnMostrarPrecios;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -190,6 +190,7 @@ public class AdaptadorClientes extends RecyclerView.Adapter<AdaptadorClientes.Vi
             lytPreferenciales = itemView.findViewById(R.id.lytPreferenciales);
             recyclerView = itemView.findViewById(R.id.recyclerview);
             btnOpciones = itemView.findViewById(R.id.btnOpciones);
+            btnMostrarPrecios = itemView.findViewById(R.id.btn_mostrar_precios);
         }
     }
 }
