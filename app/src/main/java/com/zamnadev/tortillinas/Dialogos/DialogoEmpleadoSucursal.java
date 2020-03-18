@@ -1,13 +1,12 @@
 package com.zamnadev.tortillinas.Dialogos;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,7 +15,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.FirebaseApiNotAvailableException;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,46 +22,39 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorSucursalesDialogo;
 import com.zamnadev.tortillinas.BottomSheets.EmpleadosBottomSheet;
-import com.zamnadev.tortillinas.Moldes.Empleado;
-import com.zamnadev.tortillinas.Moldes.Nombre;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
 import com.zamnadev.tortillinas.R;
 
 import java.util.ArrayList;
-import java.util.jar.Attributes;
 
 public class DialogoEmpleadoSucursal extends DialogFragment {
-
     private AdaptadorSucursalesDialogo adaptador;
+
     private EmpleadosBottomSheet empleadosBottomSheet;
 
     public DialogoEmpleadoSucursal(EmpleadosBottomSheet empleadosBottomSheet) {
         this.empleadosBottomSheet = empleadosBottomSheet;
     }
 
-    @NonNull
+    @Nullable
     @Override
-    public Dialog onCreateDialog(@Nullable final Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-
-        View view = getActivity().getLayoutInflater().inflate(R.layout.dialogo_empleado_sucursal,null);
-        builder.setView(view);
-
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.dialogo_empleado_sucursal, container, false);
+        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         final RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
-
         final ArrayList<Sucursal> sucursals = new ArrayList<>();
-
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Sucursales");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 sucursals.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren())
-                {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Sucursal sucursal = snapshot.getValue(Sucursal.class);
-                    if (!sucursal.isEliminado()){
+                    if (!sucursal.isEliminado()) {
                         sucursals.add(sucursal);
                     }
                 }
@@ -72,33 +63,18 @@ public class DialogoEmpleadoSucursal extends DialogFragment {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
 
-        ((Button) view.findViewById(R.id.btnCancelar))
-                .setBackground(null);
-
-        ((Button) view.findViewById(R.id.btnSiguiente))
-                .setBackground(null);
-
-        ((ImageView) view.findViewById(R.id.btnCerrar))
-                .setOnClickListener(view1 -> dismiss());
-
-        ((Button) view.findViewById(R.id.btnSiguiente))
-                .setOnClickListener(view1 -> {
-                    if (adaptador.getTmpSucursales().size() == 0) {
-                        Toast.makeText(getContext(), "Seleccione minimo una sucursal", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    empleadosBottomSheet.setTxtSucursal(adaptador.getTmpSucursales());
-                    dismiss();
-                });
-
-        ((Button) view.findViewById(R.id.btnCancelar))
-                .setOnClickListener(view1 -> dismiss());
-
-        return builder.create();
+        (view.findViewById(R.id.btnSiguiente)).setOnClickListener(view1 -> {
+            if (adaptador.getTmpSucursales().size() == 0) {
+                Toast.makeText(getContext(), "Seleccione minimo una sucursal", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            empleadosBottomSheet.setTxtSucursal(adaptador.getTmpSucursales());
+            dismiss();
+        });
+        (view.findViewById(R.id.btnCancelar)).setOnClickListener(view1 -> dismiss());
+        return view;
     }
 }
