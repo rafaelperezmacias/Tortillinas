@@ -1,20 +1,30 @@
 package com.zamnadev.tortillinas.Adaptadores;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.zamnadev.tortillinas.BottomSheets.EmpleadosBottomSheet;
+import com.zamnadev.tortillinas.Fragments.EmpleadosFragment;
 import com.zamnadev.tortillinas.Moldes.Cuenta;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
@@ -26,11 +36,20 @@ public class AdaptadorEmpleado extends RecyclerView.Adapter<AdaptadorEmpleado.Vi
 
     private Context context;
     private ArrayList<Empleado> empleados;
+    private ArrayList<Boolean> showPassword;
+    private FragmentManager fragmentManager;
+    private EmpleadosFragment empleadosFragment;
 
-    public AdaptadorEmpleado(Context context, ArrayList<Empleado> empleados)
+    public AdaptadorEmpleado(Context context, ArrayList<Empleado> empleados, FragmentManager fragmentManager, EmpleadosFragment empleadosFragment)
     {
         this.context = context;
         this.empleados = empleados;
+        this.fragmentManager = fragmentManager;
+        this.empleadosFragment = empleadosFragment;
+        showPassword = new ArrayList<>();
+        for (Empleado e : empleados) {
+            showPassword.add(false);
+        }
     }
 
     @NonNull
@@ -85,6 +104,57 @@ public class AdaptadorEmpleado extends RecyclerView.Adapter<AdaptadorEmpleado.Vi
                 });
             }
         }
+        PopupMenu popupMenu = new PopupMenu(context,holder.btnOpciones);
+        popupMenu.inflate(R.menu.menu_empleados_recyclerview);
+
+        if (showPassword.get(position))
+        {
+            popupMenu.getMenu().getItem(0).setTitle("Ocultar contraseña");
+        } else {
+            popupMenu.getMenu().getItem(0).setTitle("Mostrar contraseña");
+        }
+
+        holder.btnOpciones.setOnClickListener(view -> {
+            popupMenu.setOnMenuItemClickListener(menuItem -> {
+                switch (menuItem.getItemId())
+                {
+                    case R.id.menuPassword:
+                        if (showPassword.get(position)) {
+                            showPassword.set(position,false);
+                        } else {
+                            showPassword.set(position,true);
+                        }
+                        notifyDataSetChanged();
+                        return true;
+                    case R.id.menuEditar:
+                        EmpleadosBottomSheet bottomSheet = new EmpleadosBottomSheet(empleado,empleadosFragment);
+                        bottomSheet.show(fragmentManager,bottomSheet.getTag());
+                        return true;
+                    case R.id.menuEliminar:
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("Alerta")
+                                .setMessage("¿Esta seguro que desea elimanar este empleado?")
+                                .setPositiveButton("Eliminar", (dialogInterface, i) -> {
+                                    DatabaseReference refEmpleado = FirebaseDatabase.getInstance().getReference("Empleados")
+                                            .child(empleado.getIdEmpleado())
+                                            .child("eliminado");
+                                    refEmpleado.setValue(true)
+                                            .addOnCompleteListener(task -> {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(context, "Empleado eliminado con exito", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(context, "Error, intentelo mas tarde", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                })
+                                .setNegativeButton("Cancelar",null)
+                                .show();
+                        return true;
+                }
+                return false;
+            });
+            popupMenu.show();
+        });
 
         DatabaseReference refCuentas = FirebaseDatabase.getInstance().getReference("Cuentas")
                 .child(empleado.getIdEmpleado());
@@ -93,7 +163,11 @@ public class AdaptadorEmpleado extends RecyclerView.Adapter<AdaptadorEmpleado.Vi
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     Cuenta cuenta = dataSnapshot.getValue(Cuenta.class);
-                    holder.txtCuenta.setText(cuenta.getUsuario() + ", " + cuenta.getPassword());
+                    if (showPassword.get(position)) {
+                        holder.txtCuenta.setText(cuenta.getUsuario() + ", " + cuenta.getPassword());
+                    } else {
+                        holder.txtCuenta.setText(cuenta.getUsuario() + ", " + cuenta.getPassword().replaceAll(".","*"));
+                    }
                 }
             }
 
@@ -116,6 +190,7 @@ public class AdaptadorEmpleado extends RecyclerView.Adapter<AdaptadorEmpleado.Vi
         private TextView txtSucursal;
         private TextView txtTipo;
         private TextView txtCuenta;
+        private ImageButton btnOpciones;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -124,6 +199,7 @@ public class AdaptadorEmpleado extends RecyclerView.Adapter<AdaptadorEmpleado.Vi
             txtSucursal = (TextView) itemView.findViewById(R.id.txtSucursal);
             txtTipo = (TextView) itemView.findViewById(R.id.txtTipo);
             txtCuenta = (TextView) itemView.findViewById(R.id.txtCuenta);
+            btnOpciones = (ImageButton) itemView.findViewById(R.id.btnOpciones);
         }
     }
 }

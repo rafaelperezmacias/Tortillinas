@@ -24,12 +24,14 @@ public class AdaptadorClientesProductos extends RecyclerView.Adapter<AdaptadorCl
     private Context context;
     private ArrayList<Producto> productos;
     private ArrayList<Producto> nuevosPrecios;
+    private boolean isEditable;
 
-    public AdaptadorClientesProductos(Context context, ArrayList<Producto> productos, ArrayList<Producto> nuevosPrecios)
+    public AdaptadorClientesProductos(Context context, ArrayList<Producto> productos, ArrayList<Producto> nuevosPrecios, boolean isEditable)
     {
         this.context = context;
         this.productos = productos;
         this.nuevosPrecios = nuevosPrecios;
+        this.isEditable = isEditable;
     }
 
     @NonNull
@@ -68,6 +70,10 @@ public class AdaptadorClientesProductos extends RecyclerView.Adapter<AdaptadorCl
 
             }
         });
+
+        if (isEditable) {
+            holder.txtPrecio.setText(""+ producto.getPrecio());
+        }
     }
 
     @Override

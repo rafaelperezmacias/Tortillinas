@@ -180,7 +180,12 @@ public class DesvincularEmpleadosSucursal extends BottomSheetDialogFragment {
     private void generarSucursalesUsario() {
         eliminado = false;
 
-        btnGuardar.setText("Siguiente");
+        if (empleados.size() > 1) {
+            btnGuardar.setText("Siguiente");
+        } else {
+            btnGuardar.setText("Finalizar");
+        }
+
         txtNombre.setText("Empleado: " + empleados.get(contador).getNombre().getNombres() + " " + empleados.get(contador).getNombre().getApellidos());
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Sucursales");
@@ -191,11 +196,11 @@ public class DesvincularEmpleadosSucursal extends BottomSheetDialogFragment {
                 contadorDeSucursales = 0;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren())
                 {
-                    contadorDeSucursales++;
                     Sucursal sucursal = snapshot.getValue(Sucursal.class);
                     if (sucursal.isEliminado()) {
                         continue;
                     }
+                    contadorDeSucursales++;
                     for (int x = 0; x < empleados.get(contador).getSucursales().size(); x++) {
                         if (sucursal.getIdSucursal().equals(empleados.get(contador).getSucursales().get("s"+x)))
                         {

@@ -7,15 +7,14 @@ public class Producto {
     private double precio;
     private boolean modificado;
     private boolean eliminado;
+    private Long alta;
 
-    public Producto()
-    {
+    public Producto() {
 
     }
 
     //TODO Constructor copia, luego lo utilizaremos
-    public Producto(final Producto p)
-    {
+    public Producto(final Producto p) {
         idProducto = p.idProducto;
         nombre = p.nombre;
         precio = p.precio;
@@ -23,13 +22,13 @@ public class Producto {
         eliminado = p.eliminado;
     }
 
-    public Producto(String idProducto, String nombre, double precio, boolean modificado, boolean eliminado)
-    {
+    public Producto(String idProducto, String nombre, double precio, boolean modificado, boolean eliminado, Long alta) {
         this.idProducto = idProducto;
         this.nombre = nombre;
         this.precio = precio;
         this.modificado = modificado;
         this.eliminado = eliminado;
+        this.alta = alta;
     }
 
     public String getIdProducto() {
@@ -72,6 +71,15 @@ public class Producto {
         this.eliminado = eliminado;
     }
 
+
+    public Long getAlta() {
+        return alta;
+    }
+
+    public void setAlta(Long alta) {
+        this.alta = alta;
+    }
+
     @Override
     public String toString() {
         return "Producto{" +
@@ -80,6 +88,7 @@ public class Producto {
                 ", precio=" + precio +
                 ", modificado=" + modificado +
                 ", eliminado=" + eliminado +
+                ", alta=" + alta +
                 '}';
     }
 }

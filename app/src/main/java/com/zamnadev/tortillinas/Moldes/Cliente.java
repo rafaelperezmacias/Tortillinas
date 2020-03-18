@@ -8,6 +8,7 @@ public class Cliente {
     private Nombre nombre;
     private Direccion direccion;
     private String telefono;
+    private String pseudonimo;
     private HashMap<String, String> precios;
     private boolean eliminado;
     private boolean preferencial;
@@ -16,11 +17,12 @@ public class Cliente {
 
     }
 
-    public Cliente(String idCliente, Nombre nombre, Direccion direccion, String telefono, HashMap<String, String> precios, boolean eliminado, boolean preferencial) {
+    public Cliente(String idCliente, Nombre nombre, Direccion direccion, String telefono, String pseudonimo, HashMap<String, String> precios, boolean eliminado, boolean preferencial) {
         this.idCliente = idCliente;
         this.nombre = nombre;
         this.direccion = direccion;
         this.telefono = telefono;
+        this.pseudonimo = pseudonimo;
         this.precios = precios;
         this.eliminado = eliminado;
         this.preferencial = preferencial;
@@ -58,6 +60,14 @@ public class Cliente {
         this.telefono = telefono;
     }
 
+    public String getPseudonimo() {
+        return pseudonimo;
+    }
+
+    public void setPseudonimo(String pseudonimo) {
+        this.pseudonimo = pseudonimo;
+    }
+
     public HashMap<String, String> getPrecios() {
         return precios;
     }
@@ -89,6 +99,7 @@ public class Cliente {
                 ", nombre=" + nombre +
                 ", direccion=" + direccion +
                 ", telefono='" + telefono + '\'' +
+                ", pseudonimo='" + pseudonimo + '\'' +
                 ", precios=" + precios +
                 ", eliminado=" + eliminado +
                 ", preferencial=" + preferencial +

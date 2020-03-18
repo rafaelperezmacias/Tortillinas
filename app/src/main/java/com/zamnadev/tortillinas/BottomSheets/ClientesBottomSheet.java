@@ -10,6 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,6 +33,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorClientesProductos;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorProductos;
+import com.zamnadev.tortillinas.Moldes.Cliente;
 import com.zamnadev.tortillinas.Moldes.Direccion;
 import com.zamnadev.tortillinas.Moldes.Nombre;
 import com.zamnadev.tortillinas.Moldes.Producto;
@@ -49,9 +51,18 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
 
     private AdaptadorClientesProductos adaptador;
 
+    private boolean isEditable;
+    private Cliente cliente;
+
     public ClientesBottomSheet()
     {
+        isEditable = false;
+    }
 
+    public ClientesBottomSheet(Cliente cliente)
+    {
+        this.cliente = cliente;
+        isEditable = true;
     }
 
     @Override
@@ -97,6 +108,8 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
         Switch sPrecio = view.findViewById(R.id.sPrecios);
         LinearLayout lytProductos = view.findViewById(R.id.lytProductos);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
+        TextView txtTitulo = view.findViewById(R.id.txtTitulo);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         ArrayList<Producto> productos = new ArrayList<>();
@@ -107,11 +120,24 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
                 productos.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Producto producto = snapshot.getValue(Producto.class);
-                    if (!producto.isEliminado()) {
+                    if (!producto.isEliminado() && isEditable && cliente.isPreferencial()) {
+                        for (int x = 0; x < cliente.getPrecios().size(); x++) {
+                            ProductoModificado productoModificado = new ProductoModificado(cliente.getPrecios().get("p"+x));
+                            if (productoModificado.getIdProducto().equals(producto.getIdProducto()))
+                            {
+                                producto.setPrecio(productoModificado.getPrecio());
+                                productos.add(producto);
+                            }
+                        }
+                    } else if (!producto.isEliminado()){
                         productos.add(producto);
                     }
                 }
-                adaptador = new AdaptadorClientesProductos(getContext(),productos,productos);
+                if (isEditable) {
+                    adaptador = new AdaptadorClientesProductos(getContext(),productos,productos,(cliente.isPreferencial() && isEditable));
+                } else {
+                    adaptador = new AdaptadorClientesProductos(getContext(),productos,productos,false);
+                }
                 recyclerView.setAdapter(adaptador);
             }
 
@@ -129,23 +155,51 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
             }
         });
 
+        if (isEditable) {
+            txtTitulo.setText("Editar cliente");
+            txtNombre.setText(cliente.getNombre().getNombres());
+            txtNombre.setSelection(txtNombre.getText().length());
+            txtApellidos.setText(cliente.getNombre().getApellidos());
+            txtTelefono.setText(cliente.getTelefono());
+            txtPseudonimo.setText(cliente.getPseudonimo());
+            txtCalle.setText(cliente.getDireccion().getCalle());
+            txtNumeroExterior.setText(cliente.getDireccion().getNumeroExterior());
+            if (cliente.getDireccion().getNumeroInterior() != null) {
+                txtNumeroInterior.setText(cliente.getDireccion().getNumeroInterior());
+            }
+            txtZona.setText(cliente.getDireccion().getZona());
+            if (cliente.isPreferencial()) {
+                sPrecio.setChecked(true);
+                lytProductos.setVisibility(View.VISIBLE);
+            }
+        } else {
+            txtTitulo.setText("Agregar cliente");
+        }
+
         ((Button) view.findViewById(R.id.btnGuardar))
                 .setOnClickListener(view1 -> {
                     isError = false;
                     if (!validaCampo(lytNombre,txtNombre,"Ingrese el nombre")
                         | !validaCampo(lytApellidos,txtApellidos,"Ingrese el apellido(s)")
                         | !validaCampo(lytTelefono,txtTelefono,"Ingrese el teléfono")
+                        | !validaCampo(lytPseudonimo,txtPseudonimo,"Ingrese el pseudónimo")
                         | !validaCampo(lytCalle,txtCalle,"Ingrese la calle")
                         | !validaCampo(lytNumeroExterior,txtNumeroExterior,"Ingrese el numero exterior")
-                        | !validaCampo(lytZona,txtZona,"Ingrese la zona")
-                        | !validaCampo(lytPseudonimo,txtPseudonimo,"Ingrese el pseudónimo")) {
+                        | !validaCampo(lytZona,txtZona,"Ingrese la zona")) {
                         return;
                     }
 
-                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Clientes");
-
-                    String id = reference.push().getKey();
+                    DatabaseReference reference;
                     HashMap<String, Object> clienteMap = new HashMap<>();
+                    if (isEditable) {
+                        reference = FirebaseDatabase.getInstance().getReference("Clientes")
+                                .child(cliente.getIdCliente());
+                    } else {
+                        reference = FirebaseDatabase.getInstance().getReference("Clientes");
+                        String id = reference.push().getKey();
+                        clienteMap.put("idCliente",id);
+                    }
+
                     Direccion direccion = new Direccion();
                     direccion.setCalle(txtCalle.getText().toString().trim());
                     if (!txtNumeroInterior.getText().toString().isEmpty()) {
@@ -154,9 +208,9 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
                     direccion.setNumeroExterior(txtNumeroExterior.getText().toString().trim());
                     direccion.setZona(txtZona.getText().toString().trim());
                     Nombre nombre = new Nombre(txtNombre.getText().toString().trim(),txtApellidos.getText().toString().trim());
-                    clienteMap.put("idCliente",id);
                     clienteMap.put("nombre",nombre);
                     clienteMap.put("direccion",direccion);
+                    clienteMap.put("pseudonimo",txtPseudonimo.getText().toString().trim());
                     clienteMap.put("telefono",txtTelefono.getText().toString().trim());
                     clienteMap.put("eliminado",false);
 
@@ -172,10 +226,23 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
                         clienteMap.put("preferencial",false);
                     }
 
-                    reference.child(id).updateChildren(clienteMap)
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(getContext(), "Registro exitoso", Toast.LENGTH_SHORT).show();
+                    Task<Void> task;
+
+                    //La insercion debe ser asi, al no exister el nodo tu papa firebase esta pendejo y no lo reconoce por
+                    //lo que este se obvea y lo escribe en la rama del padre, para ello lo controlaremos con un task
+                    if (!isEditable) {
+                        task = reference.child(clienteMap.get("idCliente").toString()).updateChildren(clienteMap);
+                    } else {
+                        task = reference.updateChildren(clienteMap);
+                    }
+
+                    task.addOnCompleteListener(task1 -> {
+                                if (task1.isSuccessful()) {
+                                    if (isEditable) {
+                                        Toast.makeText(getContext(), "Actualizacion exitosa", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(getContext(), "Registro exitoso", Toast.LENGTH_SHORT).show();
+                                    }
                                     dismiss();
                                 } else {
                                     Toast.makeText(getContext(), "Error, intentelo mas tarde", Toast.LENGTH_SHORT).show();
