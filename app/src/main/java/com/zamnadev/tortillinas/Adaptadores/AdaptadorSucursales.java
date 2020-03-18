@@ -98,14 +98,15 @@ public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursale
                                             .setTitle("Alerta")
                                             .setMessage("Para poder eliminar la sucursal tiene que desvincular a todos los empleados que pertenecen a ella.")
                                             .setPositiveButtonText("Desvincular")
-                                            .setPositiveButtonListener(v -> {
-                                                DesvincularEmpleadosSucursal bottomSheet =
-                                                        new DesvincularEmpleadosSucursal(empleados, sucursal, fragmentManager, getMe());
-                                                bottomSheet.show(fragmentManager, bottomSheet.getTag());
-                                            })
                                             .setNegativeButtonText("Cancelar")
                                     );
                                     dialog.show();
+                                    dialog.setPositiveButtonListener(v -> {
+                                        DesvincularEmpleadosSucursal bottomSheet =
+                                                new DesvincularEmpleadosSucursal(empleados, sucursal, fragmentManager, getMe());
+                                        bottomSheet.show(fragmentManager, bottomSheet.getTag());
+                                        dialog.dismiss();
+                                    });
                                     dialog.setNegativeButtonListener(v -> dialog.dismiss());
                                 } else {
                                     eliminarSucursal(sucursal);
@@ -129,23 +130,24 @@ public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursale
                 .setTitle("Alerta")
                 .setMessage("¿Estás seguro de que quieres eliminar esta sucursal?")
                 .setPositiveButtonText("Sí, eliminar")
-                .setPositiveButtonListener(v -> {
-                    DatabaseReference reference = FirebaseDatabase.getInstance()
-                            .getReference("Sucursales")
-                            .child(sucursal.getIdSucursal());
-                    reference.child("eliminado")
-                            .setValue(true)
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(context, "Sucursal eliminada con exito", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(context, "Error, intentelo mas tarde", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                })
                 .setNegativeButtonText("No, cancelar")
         );
         dialog.show();
+        dialog.setPositiveButtonListener(v -> {
+            DatabaseReference reference = FirebaseDatabase.getInstance()
+                    .getReference("Sucursales")
+                    .child(sucursal.getIdSucursal());
+            reference.child("eliminado")
+                    .setValue(true)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(context, "Sucursal eliminada con exito", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "Error, intentelo mas tarde", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+            dialog.dismiss();
+        });
         dialog.setNegativeButtonListener(v -> dialog.dismiss());
     }
 
