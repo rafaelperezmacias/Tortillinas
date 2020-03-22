@@ -45,26 +45,17 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        fragmentHome = new HomeFragment();
-        fragmentClientes = new ClientesFragment();
-        fragmentVentas = new VentasFragment();
-        fragmentAdministrador = new AdminFragment();
-        currentFragment = fragmentHome;
-
         fm = getSupportFragmentManager();
+        fragmentHome = new HomeFragment();
+        fragmentVentas = new VentasFragment();
+        currentFragment = fragmentHome;
         fm.beginTransaction().add(R.id.container, fragmentHome).commit();
-        fm.beginTransaction().add(R.id.container, fragmentClientes).hide(fragmentClientes).commit();
         fm.beginTransaction().add(R.id.container, fragmentVentas).hide(fragmentVentas).commit();
-        fm.beginTransaction().add(R.id.container, fragmentAdministrador).hide(fragmentAdministrador).commit();
-
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.navigation_home);
-
         if (ControlSesiones.ObtenerUsuarioActivo(getApplicationContext()) != null) {
             refEmpleado = FirebaseDatabase.getInstance().getReference("Empleados")
                     .child(ControlSesiones.ObtenerUsuarioActivo(getApplicationContext()));
@@ -75,16 +66,16 @@ public class MainActivity extends AppCompatActivity implements
                     Empleado empleado = dataSnapshot.getValue(Empleado.class);
                     switch (empleado.getTipo()) {
                         case Empleado.TIPO_ADMIN: {
+                            fragmentClientes = new ClientesFragment();
+                            fragmentAdministrador = new AdminFragment();
+                            fm.beginTransaction().add(R.id.container, fragmentClientes).hide(fragmentClientes).commit();
+                            fm.beginTransaction().add(R.id.container, fragmentAdministrador).hide(fragmentAdministrador).commit();
                             break;
                         }
-                        case Empleado.TIPO_REPARTIDOR: {
-                            /*((Button) findViewById(R.id.btnEmpleados)).setVisibility(View.GONE);
-                            ((Button) findViewById(R.id.btnSucursales)).setVisibility(View.GONE);*/
-                            break;
-                        }
+                        case Empleado.TIPO_REPARTIDOR:
                         case Empleado.TIPO_MOSTRADOR: {
-                            /*((Button) findViewById(R.id.btnEmpleados)).setVisibility(View.GONE);
-                            ((Button) findViewById(R.id.btnSucursales)).setVisibility(View.GONE);*/
+                            bottomNavigationView.getMenu().removeItem(R.id.navigation_clientes);
+                            bottomNavigationView.getMenu().removeItem(R.id.navigation_administrador);
                             break;
                         }
                     }

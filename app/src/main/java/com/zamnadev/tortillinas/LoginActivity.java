@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         //TODO Usuario y contraseña para el acceso admin , admin
 
         btnIngresar.setOnClickListener(view -> {
-            if (!validaUsuario() | !validaPassword()) { return; }
+            if (!validaUsuario() | !validaPassword()) return;
             btnIngresar.setText("INICIANDO SESIÓN...");
             btnIngresar.setEnabled(false);
             lytUsuario.setEnabled(false);
