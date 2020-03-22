@@ -36,6 +36,7 @@
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
 
             <com.google.android.material.button.MaterialButton
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:id="@+id/btnGuardar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
