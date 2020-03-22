@@ -11,7 +11,7 @@
     android:clickable="true"
     android:focusable="true"
     android:background="?attr/selectableItemBackground"
-    android:gravity="center">
+    android:gravity="top">
 
     <RelativeLayout
         android:layout_width="0dp"
@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_more_horiz_24dp"
+        android:src="@drawable/ic_more_vert_24dp"
         android:contentDescription="@string/icon"/>
 
 </LinearLayout>
