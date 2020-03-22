@@ -6,4 +6,6 @@
     <color name="blue_gray_50">#ECEFF1</color>
     <color name="blanco">#FFFFFF</color>
     <color name="negro">#000000</color>
+    <color name="error">#FFDCE0</color>
+    <color name="error_text">#86181D</color>
 </resources>
