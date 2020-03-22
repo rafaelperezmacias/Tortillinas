@@ -4,18 +4,12 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
-import androidx.fragment.app.Fragment;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.DatePicker;
-import android.widget.ImageButton;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -27,13 +21,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class VentasBottomSheet extends BottomSheetDialogFragment {
+public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
 
     private BottomSheetBehavior bottomSheetBehavior;
 
     private TextInputEditText txtFecha;
 
-    public VentasBottomSheet()
+    public VentasRepartidorBottomSheet()
     {
 
     }
@@ -75,12 +69,12 @@ public class VentasBottomSheet extends BottomSheetDialogFragment {
             NestedScrollView nestedScrollView = view.findViewById(R.id.nested_scroll_ventas);
             nestedScrollView.setOnScrollChangeListener((View.OnScrollChangeListener)
                     (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-                if(scrollY == 0) {
-                    toolbar.setElevation(0);
-                } else {
-                    toolbar.setElevation(8);
-                }
-            });
+                        if(scrollY == 0) {
+                            toolbar.setElevation(0);
+                        } else {
+                            toolbar.setElevation(8);
+                        }
+                    });
         }
         setCancelable(false);
         return bottomSheet;
