@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements
         fm.beginTransaction().add(R.id.container, fragmentHome).commit();
         fm.beginTransaction().add(R.id.container, fragmentVentas).hide(fragmentVentas).commit();
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.navigation_home);
         if (ControlSesiones.ObtenerUsuarioActivo(getApplicationContext()) != null) {
             refEmpleado = FirebaseDatabase.getInstance().getReference("Empleados")
@@ -86,11 +85,12 @@ public class MainActivity extends AppCompatActivity implements
             });
 
         }
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu,menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
