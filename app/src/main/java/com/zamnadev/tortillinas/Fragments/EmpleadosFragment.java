@@ -1,8 +1,8 @@
 package com.zamnadev.tortillinas.Fragments;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,6 +40,8 @@ public class EmpleadosFragment extends Fragment {
     private ValueEventListener listenerSucuarsal;
     private AdaptadorEmpleado adaptadorEmpleado;
 
+    private View elevation;
+
     public EmpleadosFragment() { }
 
     @Override
@@ -50,10 +53,23 @@ public class EmpleadosFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_empleados, container, false);
+        elevation = view.findViewById(R.id.elevation);
         validaExistenciaSucursales();
         final RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setHasFixedSize(true);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(recyclerView.canScrollVertically(-1)) {
+                    elevation.setVisibility(View.VISIBLE);
+                } else {
+                    elevation.setVisibility(View.GONE);
+                }
+            }
+        });
         ArrayList<Empleado> empleados = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Empleados");
         reference.addValueEventListener(new ValueEventListener() {

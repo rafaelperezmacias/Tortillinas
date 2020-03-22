@@ -1,14 +1,15 @@
 package com.zamnadev.tortillinas.Fragments;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +30,8 @@ import java.util.ArrayList;
 public class ClientesFragment extends Fragment {
     private Activity activity;
 
+    private View elevation;
+
     public ClientesFragment() { }
 
     @Override
@@ -40,9 +43,22 @@ public class ClientesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_clientes, container, false);
+        elevation = view.findViewById(R.id.elevation);
         final RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setHasFixedSize(true);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(recyclerView.canScrollVertically(-1)) {
+                    elevation.setVisibility(View.VISIBLE);
+                } else {
+                    elevation.setVisibility(View.GONE);
+                }
+            }
+        });
         final ArrayList<Cliente> clientes = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Clientes");
         reference.addValueEventListener(new ValueEventListener() {

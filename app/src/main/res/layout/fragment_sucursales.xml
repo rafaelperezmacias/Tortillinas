@@ -7,6 +7,14 @@
     android:background="@android:color/white"
     tools:context=".Fragments.SucursalesFragment">
 
+    <View
+        android:id="@+id/elevation"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/white"
+        android:elevation="8dp"
+        android:visibility="gone"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"

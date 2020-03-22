@@ -1,6 +1,7 @@
 package com.zamnadev.tortillinas.Fragments;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,11 +28,12 @@ import com.zamnadev.tortillinas.R;
 import java.util.ArrayList;
 
 public class SucursalesFragment extends Fragment {
-
     private Activity activity;
 
     private DatabaseReference refSucursal;
     private ValueEventListener listenerSucursal;
+
+    private View elevation;
 
     public SucursalesFragment() { }
 
@@ -43,9 +46,22 @@ public class SucursalesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sucursales, container, false);
+        elevation = view.findViewById(R.id.elevation);
         final RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setHasFixedSize(true);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(recyclerView.canScrollVertically(-1)) {
+                    elevation.setVisibility(View.VISIBLE);
+                } else {
+                    elevation.setVisibility(View.GONE);
+                }
+            }
+        });
         ArrayList<Sucursal> sucursals = new ArrayList<>();
         refSucursal = FirebaseDatabase.getInstance().getReference("Sucursales");
         listenerSucursal = refSucursal.addValueEventListener(new ValueEventListener() {
