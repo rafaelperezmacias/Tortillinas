@@ -26,13 +26,16 @@ public class AdaptadorClientesProductos extends
     private ArrayList<Producto> nuevosPrecios;
 
     private boolean isEditable;
+    private boolean isOnlyShow;
 
     public AdaptadorClientesProductos(Context context, ArrayList<Producto> productos,
-                                      ArrayList<Producto> nuevosPrecios, boolean isEditable) {
+                                      ArrayList<Producto> nuevosPrecios, boolean isEditable,
+                                      boolean isOnlyShow) {
         this.context = context;
         this.productos = productos;
         this.nuevosPrecios = nuevosPrecios;
         this.isEditable = isEditable;
+        this.isOnlyShow = isOnlyShow;
     }
 
     @NonNull
@@ -73,6 +76,10 @@ public class AdaptadorClientesProductos extends
             public void afterTextChanged(Editable editable) { }
         });
 
+        if (isOnlyShow) {
+            ocultaCampo(holder.txtPrecio);
+        }
+
         if (isEditable) { holder.txtPrecio.setText(String.valueOf(producto.getPrecio())); }
     }
 
@@ -98,6 +105,13 @@ public class AdaptadorClientesProductos extends
             lytPrecio = itemView.findViewById(R.id.lytPrecio);
             txtPrecio = itemView.findViewById(R.id.txtPrecio);
         }
+    }
+
+    private void ocultaCampo(TextInputEditText txt) {
+        txt.setCursorVisible(false);
+        txt.setLongClickable(false);
+        txt.setFocusable(false);
+        txt.setClickable(false);
     }
 
     public ArrayList<Producto> getNuevosPrecios() { return nuevosPrecios; }

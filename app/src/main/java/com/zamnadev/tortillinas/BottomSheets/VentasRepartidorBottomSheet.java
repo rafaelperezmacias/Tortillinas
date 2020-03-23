@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -20,12 +22,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.zamnadev.tortillinas.Adaptadores.AdaptadorRepartidorClientes;
+import com.zamnadev.tortillinas.Moldes.Cliente;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
 import com.zamnadev.tortillinas.Moldes.Venta;
 import com.zamnadev.tortillinas.R;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -83,6 +88,10 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
 
         TextView txtSucursal = view.findViewById(R.id.txtSucursal);
 
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true);
+
         final Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, Calendar.YEAR);
         calendar.set(Calendar.MONTH, Calendar.MONTH);
@@ -90,6 +99,28 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         String fecha = sdf.format(calendar.getTime());
 
+        ArrayList<Cliente> clientes = new ArrayList<>();
+        DatabaseReference refClientes = FirebaseDatabase.getInstance().getReference("Clientes");
+        refClientes.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                {
+                    Cliente cliente = snapshot.getValue(Cliente.class);
+                    if (!cliente.isEliminado())
+                    {
+                        clientes.add(cliente);
+                    }
+                }
+                AdaptadorRepartidorClientes adaptador = new AdaptadorRepartidorClientes(getContext(),clientes,getChildFragmentManager());
+                recyclerView.setAdapter(adaptador);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         refVenta = FirebaseDatabase.getInstance().getReference("Ventas")
                 .child(empleado.getIdEmpleado())

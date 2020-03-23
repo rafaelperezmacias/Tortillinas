@@ -47,17 +47,26 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
     private AdaptadorClientesProductos adaptador;
 
     private boolean isEditable;
+    private boolean isOnlyShow;
     private Cliente cliente;
 
     public ClientesBottomSheet()
     {
         isEditable = false;
+        isOnlyShow = false;
     }
 
     public ClientesBottomSheet(Cliente cliente)
     {
         this.cliente = cliente;
         isEditable = true;
+        isOnlyShow = false;
+    }
+
+    public ClientesBottomSheet(Cliente cliente, boolean isOnlyShow) {
+        this.cliente = cliente;
+        isEditable = true;
+        this.isOnlyShow = isOnlyShow;
     }
 
     @Override
@@ -128,9 +137,9 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
                     }
                 }
                 if (isEditable) {
-                    adaptador = new AdaptadorClientesProductos(getContext(),productos,productos,(cliente.isPreferencial() && isEditable));
+                    adaptador = new AdaptadorClientesProductos(getContext(),productos,productos,(cliente.isPreferencial() && isEditable),isOnlyShow);
                 } else {
-                    adaptador = new AdaptadorClientesProductos(getContext(),productos,productos,false);
+                    adaptador = new AdaptadorClientesProductos(getContext(),productos,productos,false,isOnlyShow);
                 }
                 recyclerView.setAdapter(adaptador);
             }
@@ -166,12 +175,29 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
                 sPrecio.setChecked(true);
                 recyclerView.setVisibility(View.VISIBLE);
             }
+            if (isOnlyShow) {
+                txtTitulo.setText("Datos del cliente");
+                ((Button) view.findViewById(R.id.btnGuardar)).setText("CERRAR");
+                ocultaCampo(txtNombre);
+                ocultaCampo(txtApellidos);
+                ocultaCampo(txtTelefono);
+                ocultaCampo(txtPseudonimo);
+                ocultaCampo(txtCalle);
+                ocultaCampo(txtNumeroExterior);
+                ocultaCampo(txtNumeroInterior);
+                ocultaCampo(txtZona);
+                sPrecio.setClickable(false);
+            }
         } else {
             txtTitulo.setText("Agregar cliente");
         }
 
         ((Button) view.findViewById(R.id.btnGuardar))
                 .setOnClickListener(view1 -> {
+                    if (((Button) view.findViewById(R.id.btnGuardar)).getText().equals("CERRAR")) {
+                        dismiss();
+                        return;
+                    }
                     isError = false;
                     if (!validaCampo(lytNombre,txtNombre,"Ingrese el nombre")
                         | !validaCampo(lytApellidos,txtApellidos,"Ingrese el apellido(s)")
@@ -264,6 +290,13 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
     public void onStart() {
         super.onStart();
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+
+    private void ocultaCampo(TextInputEditText txt) {
+        txt.setCursorVisible(false);
+        txt.setLongClickable(false);
+        txt.setFocusable(false);
+        txt.setClickable(false);
     }
 
     private boolean validaCampo(TextInputLayout lyt,TextInputEditText txt, String error) {
