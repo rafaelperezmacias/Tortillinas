@@ -1,5 +1,6 @@
 package com.zamnadev.tortillinas.Firma;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -19,6 +20,10 @@ public class Canvas extends View {
 
     private boolean clearCanvas = false;
 
+    private FirmaActivity activity;
+
+    private boolean showBtnGuardar;
+
     public Canvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         paint = new Paint();
@@ -28,6 +33,7 @@ public class Canvas extends View {
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(5f);
+        showBtnGuardar = false;
     }
 
     @Override
@@ -42,6 +48,9 @@ public class Canvas extends View {
             clearCanvas = false;
         } else {
             canvas.drawPath(path, paint);
+            if (showBtnGuardar) {
+                activity.showBtnGuardar();
+            }
         }
     }
 
@@ -56,6 +65,7 @@ public class Canvas extends View {
             }
             case MotionEvent.ACTION_MOVE: {
                 path.lineTo(xPos, yPos);
+                showBtnGuardar = true;
                 break;
             }
             case MotionEvent.ACTION_UP: {
@@ -72,5 +82,9 @@ public class Canvas extends View {
     public void clear() {
         clearCanvas = true;
         invalidate();
+    }
+
+    public void setFirmaActivity(FirmaActivity activity) {
+        this.activity = activity;
     }
 }

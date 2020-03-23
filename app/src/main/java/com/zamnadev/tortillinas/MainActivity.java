@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements
             listenerEmpleado = refEmpleado.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Log.e("Data", dataSnapshot.toString());
                     Empleado empleado = dataSnapshot.getValue(Empleado.class);
                     getMe().empleado = empleado;
                     switch (empleado.getTipo()) {

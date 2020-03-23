@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,7 +45,9 @@ public class LoginActivity extends AppCompatActivity {
 
         MaterialCardView mcvError = findViewById(R.id.card_error);
 
-        //TODO Usuario y contraseña para el acceso admin , admin
+        //TODO Usuario y contraseña para el acceso admin , admin modo admin
+        //TODO modo repartidor: repartidor,repartidor
+        //TODO modo mostrador: mostrador, mostrador
 
         btnIngresar.setOnClickListener(view -> {
             if (!validaUsuario() | !validaPassword()) return;

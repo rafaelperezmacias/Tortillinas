@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,6 +30,7 @@ import com.zamnadev.tortillinas.Moldes.Sucursal;
 import com.zamnadev.tortillinas.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AdaptadorEmpleado extends RecyclerView.Adapter<AdaptadorEmpleado.ViewHolder> {
     private Context context;
@@ -137,13 +140,18 @@ public class AdaptadorEmpleado extends RecyclerView.Adapter<AdaptadorEmpleado.Vi
                                     .child(empleado.getIdEmpleado())
                                     .child("eliminado");
                             refEmpleado.setValue(true).addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(context, "Empleado eliminado con exito",
-                                            Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(context, "Error, intentelo mas tarde",
-                                            Toast.LENGTH_SHORT).show();
-                                }
+                                DatabaseReference refCuenta = FirebaseDatabase.getInstance()
+                                        .getReference("Cuentas")
+                                        .child(empleado.getIdEmpleado());
+                                refCuenta.removeValue().addOnCompleteListener(task1 -> {
+                                    if (task1.isSuccessful()) {
+                                        Toast.makeText(context, "Empleado eliminado con exito",
+                                                Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(context, "Error, intentelo mas tarde",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             });
                             dialog.dismiss();
                         });

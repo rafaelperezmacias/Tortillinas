@@ -27,6 +27,9 @@ public class VentasFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ventas, container, false);
 
+
+        //Una venta por dia por cada sucursal, si el usuario tiene 2 sucursales a su nombre, este puede generar une venta
+        //por cada sucursal al dia
         FloatingActionButton fabAgregarVenta = view.findViewById(R.id.fab_ventas);
         fabAgregarVenta.setOnClickListener((v) -> {
             if (mainActivity.getEmpleado().getTipo() == Empleado.TIPO_MOSTRADOR) {

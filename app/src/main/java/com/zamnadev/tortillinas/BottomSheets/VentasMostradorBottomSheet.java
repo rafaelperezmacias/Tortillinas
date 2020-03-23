@@ -6,15 +6,10 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
-import androidx.fragment.app.Fragment;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.ImageButton;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -42,7 +37,7 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         BottomSheetDialog bottomSheet = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
-        View view = View.inflate(getContext(), R.layout.fragment_ventas_bottom_sheet, null);
+        View view = View.inflate(getContext(), R.layout.fragment_ventas_mostrador_bottom_sheet, null);
         bottomSheet.setContentView(view);
         bottomSheetBehavior = BottomSheetBehavior.from((View) (view.getParent()));
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {

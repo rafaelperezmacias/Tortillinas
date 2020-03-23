@@ -27,16 +27,23 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
 
     private TextInputEditText txtFecha;
 
+    private boolean isEditable;
+
     public VentasRepartidorBottomSheet()
     {
 
+    }
+
+    public VentasRepartidorBottomSheet(boolean isEditable)
+    {
+        this.isEditable = isEditable;
     }
 
     @Override
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         BottomSheetDialog bottomSheet = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
-        View view = View.inflate(getContext(), R.layout.fragment_ventas_bottom_sheet, null);
+        View view = View.inflate(getContext(), R.layout.fragment_ventas_repartidor_bottom_sheet, null);
         bottomSheet.setContentView(view);
         bottomSheetBehavior = BottomSheetBehavior.from((View) (view.getParent()));
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
