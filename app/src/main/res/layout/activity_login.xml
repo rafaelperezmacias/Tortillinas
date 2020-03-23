@@ -1,101 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".LoginActivity">
 
-    <LinearLayout
-        android:layout_weight="1"
+    <ProgressBar
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:id="@+id/progressbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="16dp"
+        android:indeterminate="true"
+        android:layout_marginTop="-6dp"
+        android:visibility="gone"/>
 
     <LinearLayout
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <!-- TODO Aquí debería ir el logo o el nombre -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Iniciar sesión"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:textSize="26sp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="16dp"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_error"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/blanco"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="5dp"
-            app:cardPreventCornerOverlap="true"
-            app:cardUseCompatPadding="true">
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/error"
+            app:cardBackgroundColor="@color/error"
+            app:cardCornerRadius="8dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/error_text"
+            app:contentPadding="16dp"
+            app:cardElevation="0dp"
+            android:visibility="gone">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:text="Usuario o contraseña incorrectos"
+                android:textColor="@color/error_text"/>
 
-                <TextView
-                    android:gravity="center"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="18sp"
-                    android:padding="10dp"
-                    android:textStyle="bold"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Inicio de sesión"/>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/lytUsuario"
-                    app:errorEnabled="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+        </com.google.android.material.card.MaterialCardView>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/txtUsuario"
-                        android:hint="Ingrese su usuario"
-                        android:inputType="text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/lytUsuario"
+            app:errorEnabled="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
 
-                </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtUsuario"
+                android:hint="Usuario"
+                android:drawableStart="@drawable/ic_account_24dp"
+                android:drawablePadding="16dp"
+                android:inputType="text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/lytPassword"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:passwordToggleEnabled="true"
-                    app:errorEnabled="true">
+        </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/txtPassword"
-                        android:hint="Ingrese su password"
-                        android:inputType="textPassword"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/lytPassword"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:passwordToggleEnabled="true"
+            app:errorEnabled="true">
 
-                </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtPassword"
+                android:drawableStart="@drawable/ic_password_24dp"
+                android:drawablePadding="16dp"
+                android:hint="Contraseña"
+                android:inputType="textPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-                <Button
-                    android:id="@+id/btnIngresar"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/fondo_boton_login_ingresar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textColor="@color/blanco"
-                    android:text="Ingresar"
-                    android:textAllCaps="false"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-            </LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/btnIngresar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="INGRESAR"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_gravity="end"/>
 
-        </androidx.cardview.widget.CardView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</LinearLayout>
+</RelativeLayout>
