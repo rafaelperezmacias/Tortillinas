@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private ValueEventListener listenerEmpleado;
 
-    private Empleado empleado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements
 
         fragmentHome = new HomeFragment();
         fragmentClientes = new ClientesFragment();
-        fragmentVentas = new VentasFragment(getMe());
+        fragmentVentas = new VentasFragment();
         fragmentAdministrador = new AdminFragment();
         currentFragment = fragmentHome;
 
@@ -74,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     Empleado empleado = dataSnapshot.getValue(Empleado.class);
-                    getMe().empleado = empleado;
                     switch (empleado.getTipo()) {
                         case Empleado.TIPO_ADMIN: {
                             fragmentClientes = new ClientesFragment();
@@ -143,13 +141,5 @@ public class MainActivity extends AppCompatActivity implements
     private void showFragment(Fragment fragment) {
         fm.beginTransaction().hide(currentFragment).show(fragment).commit();
         currentFragment = fragment;
-    }
-
-    public Empleado getEmpleado() {
-        return empleado;
-    }
-
-    private MainActivity getMe() {
-        return this;
     }
 }

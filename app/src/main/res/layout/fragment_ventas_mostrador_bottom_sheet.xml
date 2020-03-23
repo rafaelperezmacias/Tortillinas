@@ -24,23 +24,38 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:paddingEnd="16dp"
-                android:background="@color/blanco"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_close_black_24dp"/>
 
-            <TextView
+            <LinearLayout
+                android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Agregar una venta"
-                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtTitulo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Agregar venta"
+                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+
+                <TextView
+                    android:id="@+id/txtSucursal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="+523327201710"/>
+
+            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
-                style="@style/Widget.AppCompat.Button.Borderless"
+                android:id="@+id/btnGuardar"
+                android:text="GUARDAR"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:gravity="center"
-                android:text="GUARDAR"/>
+                style="@style/Widget.AppCompat.Button.Borderless"/>
 
         </LinearLayout>
 
@@ -83,8 +98,13 @@
                     app:errorEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtDomicilio"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:longClickable="false"
+                        android:cursorVisible="false">
 
                     </com.google.android.material.textfield.TextInputEditText>
 
@@ -118,7 +138,7 @@
                         android:id="@+id/txt_fecha"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:clickable="true"
+                        android:clickable="false"
                         android:focusable="false"
                         android:longClickable="false"
                         android:cursorVisible="false">
