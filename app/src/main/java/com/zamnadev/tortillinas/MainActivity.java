@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private ValueEventListener listenerEmpleado;
 
+    private Empleado empleado;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements
 
         fragmentHome = new HomeFragment();
         fragmentClientes = new ClientesFragment();
-        fragmentVentas = new VentasFragment();
+        fragmentVentas = new VentasFragment(getMe());
         fragmentAdministrador = new AdminFragment();
         currentFragment = fragmentHome;
 
@@ -73,18 +75,19 @@ public class MainActivity extends AppCompatActivity implements
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     Log.e("Data", dataSnapshot.toString());
                     Empleado empleado = dataSnapshot.getValue(Empleado.class);
+                    getMe().empleado = empleado;
                     switch (empleado.getTipo()) {
                         case Empleado.TIPO_ADMIN: {
+                            fragmentClientes = new ClientesFragment();
+                            fragmentAdministrador = new AdminFragment();
+                            fm.beginTransaction().add(R.id.container, fragmentClientes).hide(fragmentClientes).commit();
+                            fm.beginTransaction().add(R.id.container, fragmentAdministrador).hide(fragmentAdministrador).commit();
                             break;
                         }
-                        case Empleado.TIPO_REPARTIDOR: {
-                            /*((Button) findViewById(R.id.btnEmpleados)).setVisibility(View.GONE);
-                            ((Button) findViewById(R.id.btnSucursales)).setVisibility(View.GONE);*/
-                            break;
-                        }
+                        case Empleado.TIPO_REPARTIDOR:
                         case Empleado.TIPO_MOSTRADOR: {
-                            /*((Button) findViewById(R.id.btnEmpleados)).setVisibility(View.GONE);
-                            ((Button) findViewById(R.id.btnSucursales)).setVisibility(View.GONE);*/
+                            bottomNavigationView.getMenu().removeItem(R.id.navigation_clientes);
+                            bottomNavigationView.getMenu().removeItem(R.id.navigation_administrador);
                             break;
                         }
                     }
@@ -141,5 +144,13 @@ public class MainActivity extends AppCompatActivity implements
     private void showFragment(Fragment fragment) {
         fm.beginTransaction().hide(currentFragment).show(fragment).commit();
         currentFragment = fragment;
+    }
+
+    public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    private MainActivity getMe() {
+        return this;
     }
 }
