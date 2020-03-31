@@ -1,98 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:padding="10dp"
-    android:orientation="horizontal">
+    android:paddingTop="8dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center">
 
     <LinearLayout
-        android:layout_weight="1"
-        android:gravity="center"
+        android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingBottom="8dp">
 
         <TextView
             android:id="@+id/txtNombre"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@android:color/black"
+            android:textSize="22sp"
+            android:layout_marginEnd="8dp"
+            tools:text="Pablo Alexis Padilla Maldonado"/>
 
         <ImageButton
             android:id="@+id/btnMostrarCliente"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_more_vert_24dp"
+            android:src="@drawable/ic_info_24dp"
             android:contentDescription="@string/icon"/>
 
     </LinearLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_weight="1"
+    <LinearLayout
+        android:id="@+id/layout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:hint="1er Vuelta"
-        app:errorEnabled="true">
+        android:orientation="horizontal"
+        android:layout_below="@+id/layout">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:hint="Primer vuelta"
+                android:layout_marginEnd="8dp"
+                app:errorEnabled="true">
 
-            </com.google.android.material.textfield.TextInputEditText>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-    </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputEditText>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_weight="1"
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:hint="Segunda vuelta"
+                android:layout_marginStart="8dp"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:hint="2da Vuelta"
-        app:errorEnabled="true">
+        android:orientation="horizontal"
+        android:layout_below="@+id/layout2">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:hint="Tercer vuelta"
+                android:layout_marginEnd="8dp"
+                app:errorEnabled="true">
 
-        </com.google.android.material.textfield.TextInputEditText>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-    </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputEditText>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:hint="3er Vuelta"
-        app:errorEnabled="true">
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:hint="Total"
+                android:layout_marginStart="8dp"
+                app:errorEnabled="true">
 
-        </com.google.android.material.textfield.TextInputEditText>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-    </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputEditText>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:hint="Total"
-        app:errorEnabled="true">
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    </LinearLayout>
 
-        </com.google.android.material.textfield.TextInputEditText>
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-</LinearLayout>
+</RelativeLayout>

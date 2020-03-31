@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -81,10 +80,10 @@ public class AdaptadorVenta extends RecyclerView.Adapter<AdaptadorVenta.ViewHold
             holder.lytMain.setBackgroundColor(Color.GREEN);
             holder.itemView.setOnClickListener(view -> {
                 if (isMostrador) {
-                    VentasMostradorBottomSheet bottomSheet = new VentasMostradorBottomSheet(venta.getIdVenta(),empleado,venta.getIdSucursal());
+                    VentasMostradorBottomSheet bottomSheet = new VentasMostradorBottomSheet(venta.getIdVenta(),empleado,venta.getIdSucursal(), true);
                     bottomSheet.show(fragmentManager, bottomSheet.getTag());
                 } else {
-                    VentasRepartidorBottomSheet bottomSheet = new VentasRepartidorBottomSheet(venta.getIdVenta(),empleado,venta.getIdSucursal());
+                    VentasRepartidorBottomSheet bottomSheet = new VentasRepartidorBottomSheet(venta.getIdVenta(),empleado,venta.getIdSucursal(), true);
                     bottomSheet.show(fragmentManager, bottomSheet.getTag());
                 }
             });
