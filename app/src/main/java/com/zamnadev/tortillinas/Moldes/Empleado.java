@@ -20,18 +20,22 @@ public class Empleado {
     private int tipo;
     private HashMap<String, String> sucursales;
     private boolean eliminado;
+    private long time;
+    private boolean conexion;
 
     public Empleado() {
 
     }
 
-    public Empleado(String idEmpleado, Nombre nombre, String telefono, int tipo, HashMap<String, String> sucursales, boolean eliminado) {
+    public Empleado(String idEmpleado, Nombre nombre, String telefono, int tipo, HashMap<String, String> sucursales, boolean eliminado, long time, boolean conexion) {
         this.idEmpleado = idEmpleado;
         this.nombre = nombre;
         this.telefono = telefono;
         this.tipo = tipo;
         this.sucursales = sucursales;
         this.eliminado = eliminado;
+        this.time = time;
+        this.conexion = conexion;
     }
 
     public String getIdEmpleado() {
@@ -82,15 +86,33 @@ public class Empleado {
         this.eliminado = eliminado;
     }
 
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+    public boolean isConexion() {
+        return conexion;
+    }
+
+    public void setConexion(boolean conexion) {
+        this.conexion = conexion;
+    }
+
     @Override
     public String toString() {
         return "Empleado{" +
                 "idEmpleado='" + idEmpleado + '\'' +
-                ", nombre=" + nombre.toString() +
+                ", nombre=" + nombre +
                 ", telefono='" + telefono + '\'' +
                 ", tipo=" + tipo +
                 ", sucursales=" + sucursales +
                 ", eliminado=" + eliminado +
+                ", time=" + time +
+                ", conexion=" + conexion +
                 '}';
     }
 }

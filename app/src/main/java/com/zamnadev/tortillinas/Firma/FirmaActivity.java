@@ -9,7 +9,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.zamnadev.tortillinas.R;
+
+import java.util.HashMap;
 
 public class FirmaActivity extends AppCompatActivity {
 
@@ -38,6 +43,26 @@ public class FirmaActivity extends AppCompatActivity {
         });
         MaterialButton btnCancelar = findViewById(R.id.btn_cancelar);
         btnCancelar.setOnClickListener((v) -> finish());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Empleados");
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("time", ServerValue.TIMESTAMP);
+        hashMap.put("conexion", true);
+        reference.updateChildren(hashMap);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Empleados");
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("time", ServerValue.TIMESTAMP);
+        hashMap.put("conexion", false);
+        reference.updateChildren(hashMap);
     }
 
     public void showBtnGuardar() {
