@@ -27,7 +27,6 @@ import com.zamnadev.tortillinas.Fragments.VentasFragment;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Notificaciones.Client;
 import com.zamnadev.tortillinas.Notificaciones.Data;
-import com.zamnadev.tortillinas.Notificaciones.FCMService;
 import com.zamnadev.tortillinas.Notificaciones.FCMServiceAPI;
 import com.zamnadev.tortillinas.Notificaciones.MyResponse;
 import com.zamnadev.tortillinas.Notificaciones.Sender;
@@ -83,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+        bottomNavigationView.getMenu().getItem(1).setEnabled(false);
+        bottomNavigationView.getMenu().getItem(3).setEnabled(false);
 
         if (ControlSesiones.ObtenerUsuarioActivo(getApplicationContext()) != null) {
             refEmpleado = FirebaseDatabase.getInstance().getReference("Empleados")
@@ -100,6 +101,8 @@ public class MainActivity extends AppCompatActivity implements
                             fragmentAdministrador = new AdminFragment();
                             fm.beginTransaction().add(R.id.container, fragmentClientes).hide(fragmentClientes).commit();
                             fm.beginTransaction().add(R.id.container, fragmentAdministrador).hide(fragmentAdministrador).commit();
+                            bottomNavigationView.getMenu().getItem(1).setEnabled(true);
+                            bottomNavigationView.getMenu().getItem(3).setEnabled(true);
                             break;
                         }
                         case Empleado.TIPO_REPARTIDOR:
