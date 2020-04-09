@@ -13,6 +13,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.zamnadev.tortillinas.R;
+import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 
 import java.util.HashMap;
 
@@ -48,7 +49,8 @@ public class FirmaActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Empleados");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Empleados")
+                .child(ControlSesiones.ObtenerUsuarioActivo(getApplicationContext()));
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("time", ServerValue.TIMESTAMP);
         hashMap.put("conexion", true);
@@ -58,7 +60,8 @@ public class FirmaActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Empleados");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Empleados")
+                .child(ControlSesiones.ObtenerUsuarioActivo(getApplicationContext()));
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("time", ServerValue.TIMESTAMP);
         hashMap.put("conexion", false);

@@ -26,7 +26,7 @@ import com.zamnadev.tortillinas.Adaptadores.AdaptadorRepartidorClientes;
 import com.zamnadev.tortillinas.Moldes.Cliente;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
-import com.zamnadev.tortillinas.Moldes.Venta;
+import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
 import com.zamnadev.tortillinas.R;
 
 import java.text.SimpleDateFormat;
@@ -128,7 +128,7 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
         listenerVenta = refVenta.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Venta venta = dataSnapshot.getValue(Venta.class);
+                VentaRepartidor venta = dataSnapshot.getValue(VentaRepartidor.class);
                 txtFecha.setText(venta.getFecha());
             }
 

@@ -99,10 +99,12 @@ public class MainActivity extends AppCompatActivity implements
                         case Empleado.TIPO_ADMIN: {
                             fragmentClientes = new ClientesFragment();
                             fragmentAdministrador = new AdminFragment();
-                            fm.beginTransaction().add(R.id.container, fragmentClientes).hide(fragmentClientes).commit();
-                            fm.beginTransaction().add(R.id.container, fragmentAdministrador).hide(fragmentAdministrador).commit();
-                            bottomNavigationView.getMenu().getItem(1).setEnabled(true);
-                            bottomNavigationView.getMenu().getItem(3).setEnabled(true);
+                            if (fm != null) {
+                                fm.beginTransaction().add(R.id.container, fragmentClientes).hide(fragmentClientes).commit();
+                                fm.beginTransaction().add(R.id.container, fragmentAdministrador).hide(fragmentAdministrador).commit();
+                                bottomNavigationView.getMenu().getItem(1).setEnabled(true);
+                                bottomNavigationView.getMenu().getItem(3).setEnabled(true);
+                            }
                             break;
                         }
                         case Empleado.TIPO_REPARTIDOR:

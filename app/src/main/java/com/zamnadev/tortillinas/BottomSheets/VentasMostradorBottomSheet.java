@@ -3,6 +3,7 @@ package com.zamnadev.tortillinas.BottomSheets;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -22,7 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
-import com.zamnadev.tortillinas.Moldes.Venta;
+import com.zamnadev.tortillinas.Moldes.VentaMostrador;
 import com.zamnadev.tortillinas.R;
 
 import java.text.SimpleDateFormat;
@@ -65,6 +66,11 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
         View view = View.inflate(getContext(), R.layout.fragment_ventas_mostrador_bottom_sheet, null);
         bottomSheet.setContentView(view);
 
+        TextInputEditText txtPrimerVueltaT = view.findViewById(R.id.txtPrimerVueltaTortilla);
+        TextInputEditText txtPrimerVueltaM = view.findViewById(R.id.txtPrimerVueltaMasa);
+        TextInputEditText txtSegundaVueltaT = view.findViewById(R.id.txtSegundaVueltaTortilla);
+        TextInputEditText txtSegundaVueltaM = view.findViewById(R.id.txtSegundaVueltaTortilla);
+
         bottomSheetBehavior = BottomSheetBehavior.from((View) (view.getParent()));
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -94,14 +100,14 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         String fecha = sdf.format(calendar.getTime());
 
-
-        refVenta = FirebaseDatabase.getInstance().getReference("Ventas")
+        refVenta = FirebaseDatabase.getInstance().getReference("VentasMostrador")
                 .child(empleado.getIdEmpleado())
                 .child(idVenta);
         listenerVenta = refVenta.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Venta venta = dataSnapshot.getValue(Venta.class);
+                Log.e("dsa",dataSnapshot.toString());
+                VentaMostrador venta = dataSnapshot.getValue(VentaMostrador.class);
                 txtFecha.setText(venta.getFecha());
             }
 

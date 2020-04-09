@@ -3,6 +3,7 @@ package com.zamnadev.tortillinas.Fragments;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +77,8 @@ public class EmpleadosFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 empleados.clear();
+                Log.e("dara",dataSnapshot.toString());
+                Log.e("#sdaasd","#sdaasd");
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Empleado empleado = snapshot.getValue(Empleado.class);
                     if (!(empleado != null && empleado.isEliminado()) &&

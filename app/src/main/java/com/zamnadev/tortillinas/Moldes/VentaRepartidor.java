@@ -1,6 +1,6 @@
 package com.zamnadev.tortillinas.Moldes;
 
-public class  Venta {
+public class VentaRepartidor {
 
     private String idVenta;
     private long tiempo;
@@ -8,10 +8,10 @@ public class  Venta {
     private String idSucursal;
     private String idEmpleado;
 
-    public Venta() {
+    public VentaRepartidor() {
     }
 
-    public Venta(String idVenta, long tiempo, String fecha, String idSucursal, String idEmpleado) {
+    public VentaRepartidor(String idVenta, long tiempo, String fecha, String idSucursal, String idEmpleado) {
         this.idVenta = idVenta;
         this.tiempo = tiempo;
         this.fecha = fecha;

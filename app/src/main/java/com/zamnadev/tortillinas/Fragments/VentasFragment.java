@@ -1,7 +1,6 @@
 package com.zamnadev.tortillinas.Fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,16 +21,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorVenta;
 import com.zamnadev.tortillinas.BottomSheets.VentasMostradorBottomSheet;
 import com.zamnadev.tortillinas.BottomSheets.VentasRepartidorBottomSheet;
-import com.zamnadev.tortillinas.Dialogos.DialogoEmpleadoSucursal;
 import com.zamnadev.tortillinas.Dialogos.DialogoVentaSucursal;
-import com.zamnadev.tortillinas.MainActivity;
 import com.zamnadev.tortillinas.Moldes.Empleado;
-import com.zamnadev.tortillinas.Moldes.Venta;
-import com.zamnadev.tortillinas.Moldes.VentaMostrador;
+import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
 import com.zamnadev.tortillinas.R;
 import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,8 +36,8 @@ import java.util.Locale;
 public class VentasFragment extends Fragment {
 
     private Empleado empleado;
-    private ArrayList<Venta> ventas;
-    private ArrayList<Venta> ventasDelDia;
+    private ArrayList<VentaRepartidor> ventas;
+    private ArrayList<VentaRepartidor> ventasDelDia;
     private String fecha;
 
     public VentasFragment()
@@ -81,9 +74,16 @@ public class VentasFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 empleado = dataSnapshot.getValue(Empleado.class);
                 if (empleado.getTipo() != Empleado.TIPO_ADMIN) {
-                    Query refVentas = FirebaseDatabase.getInstance().getReference("Ventas")
-                            .child(empleado.getIdEmpleado())
-                            .orderByChild("fecha");
+                    Query refVentas = null;
+                    if (empleado.getTipo() == Empleado.TIPO_MOSTRADOR) {
+                         refVentas = FirebaseDatabase.getInstance().getReference("VentasMostrador")
+                                .child(empleado.getIdEmpleado())
+                                .orderByChild("fecha");
+                    } else {
+                         refVentas = FirebaseDatabase.getInstance().getReference("VentasRepartidor")
+                                .child(empleado.getIdEmpleado())
+                                .orderByChild("fecha");
+                    }
 
                     refVentas.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -93,7 +93,7 @@ public class VentasFragment extends Fragment {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren())
                             {
                                 //Vamos a mostrar todas las ventas, solo podremos verlas
-                                Venta venta = snapshot.getValue(Venta.class);
+                                VentaRepartidor venta = snapshot.getValue(VentaRepartidor.class);
                                 ventas.add(venta);
                                 //Pero solo las del dia son las que podremos editar y/o agregar
                                 if (venta.getFecha().equals(fecha)) {
@@ -128,24 +128,12 @@ public class VentasFragment extends Fragment {
         fabAgregarVenta.setOnClickListener((v) -> {
             //TODO MOSTRADOR
             if (empleado.getTipo() == Empleado.TIPO_MOSTRADOR) {
-                if (empleado.getSucursales().size() == 1) {
-                    altaVentaMostrador(empleado.getSucursales().get("s"+0));
-                } else {
-                    //TODO Proceso para poder seleccionar la sucursal
-                    //Despues de seleccionarla se procedera en el metodo alta venta
-                    DialogoVentaSucursal dialog = new DialogoVentaSucursal(getMe(),empleado,ventasDelDia,true);
-                    dialog.show(getChildFragmentManager(),dialog.getTag());
-                }
+                DialogoVentaSucursal dialog = new DialogoVentaSucursal(getMe(),empleado,ventasDelDia,true);
+                dialog.show(getChildFragmentManager(),dialog.getTag());
             } //TODO REPARTIDOR
             else if (empleado.getTipo() == Empleado.TIPO_REPARTIDOR) {
-                if (empleado.getSucursales().size() == 1) {
-                    altaVentaRepartidor(empleado.getSucursales().get("s"+0));
-                } else {
-                    //TODO Proceso para poder seleccionar la sucursal
-                    //Despues de seleccionarla se procedera en el metodo alta venta
-                    DialogoVentaSucursal dialog = new DialogoVentaSucursal(getMe(),empleado,ventasDelDia,false);
-                    dialog.show(getChildFragmentManager(),dialog.getTag());
-                }
+                //TODO EL proceso se hace de manera diferente
+                fabAgregarVenta.hide();
             } else {
                 //TODO ADMIN
                 fabAgregarVenta.hide();
@@ -157,7 +145,7 @@ public class VentasFragment extends Fragment {
 
     //TODO Continuacion de alta venta
     public void altaVentaMostrador(String idSucursal) {
-        DatabaseReference refVenta = FirebaseDatabase.getInstance().getReference("Ventas")
+        DatabaseReference refVenta = FirebaseDatabase.getInstance().getReference("VentasMostrador")
                 .child(empleado.getIdEmpleado());
         HashMap<String, Object> hashMap = new HashMap<>();
         String id = refVenta.push().getKey();
@@ -166,11 +154,14 @@ public class VentasFragment extends Fragment {
         hashMap.put("fecha",fecha);
         hashMap.put("idSucursal",idSucursal);
         hashMap.put("idEmpleado",empleado.getIdEmpleado());
+        HashMap<String, String> repartidores = new HashMap<>();
+        repartidores.put("repartidor0","null");
+        hashMap.put("repartidores",repartidores);
         refVenta.child(id).updateChildren(hashMap)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful())
                     {
-                        Venta venta = new Venta();
+                        VentaRepartidor venta = new VentaRepartidor();
                         venta.setIdVenta(id);
                         VentasMostradorBottomSheet bottomSheet = new VentasMostradorBottomSheet(id,empleado,idSucursal);
                         bottomSheet.show(getFragmentManager(), bottomSheet.getTag());
@@ -179,7 +170,7 @@ public class VentasFragment extends Fragment {
     }
 
     public void altaVentaRepartidor(String idSucursal) {
-        DatabaseReference refVenta = FirebaseDatabase.getInstance().getReference("Ventas")
+        DatabaseReference refVenta = FirebaseDatabase.getInstance().getReference("VentasRepartidor")
                 .child(empleado.getIdEmpleado());
         HashMap<String, Object> hashMap = new HashMap<>();
         String id = refVenta.push().getKey();
@@ -192,7 +183,7 @@ public class VentasFragment extends Fragment {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful())
                     {
-                        Venta venta = new Venta();
+                        VentaRepartidor venta = new VentaRepartidor();
                         venta.setIdVenta(id);
                         VentasRepartidorBottomSheet bottomSheet = new VentasRepartidorBottomSheet(id,empleado,idSucursal);
                         bottomSheet.show(getFragmentManager(), bottomSheet.getTag());

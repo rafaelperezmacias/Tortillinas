@@ -317,6 +317,23 @@
                 android:textColor="@android:color/black"
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="16dp"
+                    android:text="Repartidor(es): "
+                    android:textColor="@android:color/black"
+                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+
+            </LinearLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -350,6 +367,7 @@
                     app:errorEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtPrimerVueltaTortilla"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -369,6 +387,7 @@
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtPrimerVueltaMasa"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -396,6 +415,7 @@
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtSegundaVueltaTortilla"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -413,9 +433,9 @@
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtSegundaVueltaMasa"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
                 </com.google.android.material.textfield.TextInputEditText>
 
             </com.google.android.material.textfield.TextInputLayout>

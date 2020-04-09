@@ -22,7 +22,7 @@ public class DialogoAddCampoVentas extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_dialogo_add_campo_ventas, container, false);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        // TODO que haga algo :v
+        // TODO que haga algo
         return view;
     }
 }

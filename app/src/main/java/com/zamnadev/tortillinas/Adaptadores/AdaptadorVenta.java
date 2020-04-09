@@ -21,7 +21,7 @@ import com.zamnadev.tortillinas.BottomSheets.VentasMostradorBottomSheet;
 import com.zamnadev.tortillinas.BottomSheets.VentasRepartidorBottomSheet;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
-import com.zamnadev.tortillinas.Moldes.Venta;
+import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
 import com.zamnadev.tortillinas.R;
 
 import java.util.ArrayList;
@@ -29,13 +29,13 @@ import java.util.ArrayList;
 public class AdaptadorVenta extends RecyclerView.Adapter<AdaptadorVenta.ViewHolder> {
 
     private Context context;
-    private ArrayList<Venta> ventas;
+    private ArrayList<VentaRepartidor> ventas;
     private String fecha;
     private Empleado empleado;
     private FragmentManager fragmentManager;
     private boolean isMostrador;
 
-    public AdaptadorVenta(Context context, ArrayList<Venta> ventas, String fecha, Empleado empleado, FragmentManager fragmentManager, int tipo)
+    public AdaptadorVenta(Context context, ArrayList<VentaRepartidor> ventas, String fecha, Empleado empleado, FragmentManager fragmentManager, int tipo)
     {
         this.context = context;
         this.ventas = ventas;
@@ -58,7 +58,7 @@ public class AdaptadorVenta extends RecyclerView.Adapter<AdaptadorVenta.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Venta venta = ventas.get(position);
+        VentaRepartidor venta = ventas.get(position);
 
         holder.txtFecha.setText(venta.getFecha());
         DatabaseReference refSucursal = FirebaseDatabase.getInstance().getReference("Sucursales")
