@@ -77,14 +77,15 @@ public class EmpleadosFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 empleados.clear();
-                Log.e("dara",dataSnapshot.toString());
-                Log.e("#sdaasd","#sdaasd");
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Empleado empleado = snapshot.getValue(Empleado.class);
                     if (!(empleado != null && empleado.isEliminado()) &&
                             !(empleado != null && empleado.getIdEmpleado().equals(ControlSesiones.ObtenerUsuarioActivo(activity)))) {
                         empleados.add(empleado);
                     }
+                }
+                if (!getMe().isAdded()) {
+                    return;
                 }
                 adaptadorEmpleado = new AdaptadorEmpleado(activity, empleados,getChildFragmentManager(),getMe());
                 recyclerView.setAdapter(adaptadorEmpleado);
