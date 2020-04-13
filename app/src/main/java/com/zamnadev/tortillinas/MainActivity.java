@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements
                 });
 
         //Envia un mensaje al mostrador
-        enviarMensaje("-M34EaQ4s_qTqP9ZdNHH");
+        //enviarMensaje("-M34EaQ4s_qTqP9ZdNHH");
     }
 
     @Override

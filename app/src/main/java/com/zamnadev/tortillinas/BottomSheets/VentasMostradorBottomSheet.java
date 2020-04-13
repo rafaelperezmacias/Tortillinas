@@ -20,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Dialogos.DialogoVentaRepartidor;
 import com.zamnadev.tortillinas.Moldes.Empleado;
@@ -173,6 +174,8 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
     }
 
     public void addRepartidor(String idRepartidor) {
+        //TODO Invocar otro dialogo para cantidad de masa y tortillas
+
         if (venta != null) {
             HashMap<String, String> repartidores = new HashMap<>();
             if (venta.getRepartidores().get("repartidor0").equals("null")) {
@@ -187,7 +190,21 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                     .child(empleado.getIdEmpleado())
                     .child(idVenta)
                     .updateChildren(hashMap);
+            enviarNotificacion(idRepartidor);
         }
+    }
+
+    private void enviarNotificacion(String idRepartidor) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("id",venta.getIdVenta());
+        hashMap.put("idRepartidor",idRepartidor);
+        hashMap.put("idMostrador",venta.getIdEmpleado());
+        hashMap.put("visto",false);
+        hashMap.put("confirmado",false);
+        hashMap.put("hora", ServerValue.TIMESTAMP);
+        FirebaseDatabase.getInstance().getReference("Confirmaciones")
+                .child(venta.getIdVenta())
+                .updateChildren(hashMap);
     }
 
     private void primeraVuelta(boolean visible) {
