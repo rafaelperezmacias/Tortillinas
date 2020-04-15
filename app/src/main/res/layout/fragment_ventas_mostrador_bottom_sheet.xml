@@ -343,7 +343,24 @@
                     android:padding="8dp"
                     android:src="@drawable/ic_add_black_24dp" />
 
+                <ImageButton
+                    android:id="@+id/btnMostrarRepartidores"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/btnOpciones"
+                    android:padding="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_arrow_down_24dp"
+                    android:contentDescription="@string/icon"/>
+
             </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerviewRepartidores"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -379,6 +396,11 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtPrimerVueltaTortilla"
+                        android:text="0.0"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:longClickable="false"
+                        android:clickable="false"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -399,6 +421,11 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtPrimerVueltaMasa"
+                    android:text="0.0"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:longClickable="false"
+                    android:clickable="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -427,6 +454,11 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtSegundaVueltaTortilla"
+                    android:text="0.0"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:longClickable="false"
+                    android:clickable="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -445,6 +477,11 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtSegundaVueltaMasa"
+                    android:text="0.0"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:longClickable="false"
+                    android:clickable="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </com.google.android.material.textfield.TextInputEditText>

@@ -1,5 +1,6 @@
 package com.zamnadev.tortillinas.Notificaciones;
 
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -19,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.zamnadev.tortillinas.Dialogos.DialogoAddCampoVentas;
 import com.zamnadev.tortillinas.MainActivity;
 import com.zamnadev.tortillinas.R;
 import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
@@ -49,11 +51,11 @@ public class FCMService extends FirebaseMessagingService {
 
         if (ControlSesiones.ValidaUsuarioActivo(getApplicationContext()))
         {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 enviarOreoNotificacion(remoteMessage);
             } else {
                 enviarNotificacion(remoteMessage);
-            }
+            } */
         }
     }
 

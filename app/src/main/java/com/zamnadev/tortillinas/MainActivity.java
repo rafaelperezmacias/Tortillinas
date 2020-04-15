@@ -1,10 +1,12 @@
 package com.zamnadev.tortillinas;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -52,10 +54,10 @@ public class MainActivity extends AppCompatActivity implements
     private FragmentManager fm;
 
     private DatabaseReference refEmpleado;
+    private DatabaseReference refNotificaciones;
 
     private ValueEventListener listenerEmpleado;
-
-    private FCMServiceAPI api;
+    private ValueEventListener listenerNotificaciones;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +72,6 @@ public class MainActivity extends AppCompatActivity implements
         fragmentVentas = new VentasFragment();
         fragmentAdministrador = new AdminFragment();
         currentFragment = fragmentHome;
-
-        api = Client.getClient("https://fcm.googleapis.com/").create(FCMServiceAPI.class);
 
         fm = getSupportFragmentManager();
         fm.beginTransaction().add(R.id.container, fragmentHome).commit();
@@ -122,6 +122,20 @@ public class MainActivity extends AppCompatActivity implements
 
         }
 
+        refNotificaciones = FirebaseDatabase.getInstance().getReference("Confirmaciones")
+                .child(ControlSesiones.ObtenerUsuarioActivo(getApplicationContext()));
+        listenerNotificaciones = refNotificaciones.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Log.e("Data",dataSnapshot.toString());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
         //Valida la primera clave para enviar el mensaje, genera el token por primera vez
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(task -> {
@@ -137,9 +151,6 @@ public class MainActivity extends AppCompatActivity implements
 
                     reference.setValue(token);
                 });
-
-        //Envia un mensaje al mostrador
-        //enviarMensaje("-M34EaQ4s_qTqP9ZdNHH");
     }
 
     @Override
@@ -153,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements
         if (item.getItemId() == R.id.menuCerrarSesion) {
             ControlSesiones.EliminaUsuario(getApplicationContext());
             refEmpleado.removeEventListener(listenerEmpleado);
+            refNotificaciones.removeEventListener(listenerNotificaciones);
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
             return true;
@@ -181,44 +193,6 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
         return true;
-    }
-
-    //Para enviar un mensaje ocupasmos el id del receptor
-    public void enviarMensaje(final String receptor) {
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens")
-                .child(receptor);
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Token token = dataSnapshot.getValue(Token.class);
-                Data data = new Data(receptor,ControlSesiones.ObtenerUsuarioActivo(getApplicationContext()));
-                Sender sender  = new Sender(data,token.getToken());
-
-                api.enviarNotificacion(sender)
-                        .enqueue(new Callback<MyResponse>() {
-                            @Override
-                            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                                if (response.code() == 200) {
-                                    assert response.body() != null;
-                                    if (response.body().success != 1) {
-                                        Log.e("NOTIFICACION","Error con la notificacion");
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<MyResponse> call, Throwable t) {
-
-                            }
-                        });
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     private void showFragment(Fragment fragment) {

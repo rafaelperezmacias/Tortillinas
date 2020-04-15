@@ -2,16 +2,31 @@ package com.zamnadev.tortillinas.Notificaciones;
 
 public class Data {
 
+    public static final int TIPO_CONFIRMACION_REPARTIDOR_PRIMER_VUELTA = 10;
+    public static final int TIPO_CONFIRMACION_REPARTIDOR_SEGUNDA_VUELTA = 11;
+
     //Caracteristicas que deseamos pasar entre mensajes, por mientras esto
+    private int tipo;
     private String receptor;
     private String emisor;
+    private String idVenta;
 
     public Data() {
     }
 
-    public Data(String receptor, String emisor) {
+    public Data(int tipo, String receptor, String emisor, String idVenta) {
+        this.tipo = tipo;
         this.receptor = receptor;
         this.emisor = emisor;
+        this.idVenta = idVenta;
+    }
+
+    public int getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
     }
 
     public String getReceptor() {
@@ -30,11 +45,21 @@ public class Data {
         this.emisor = emisor;
     }
 
+    public String getIdVenta() {
+        return idVenta;
+    }
+
+    public void setIdVenta(String idVenta) {
+        this.idVenta = idVenta;
+    }
+
     @Override
     public String toString() {
         return "Data{" +
-                "receptor='" + receptor + '\'' +
+                "tipo=" + tipo +
+                ", receptor='" + receptor + '\'' +
                 ", emisor='" + emisor + '\'' +
+                ", idVenta='" + idVenta + '\'' +
                 '}';
     }
 }
