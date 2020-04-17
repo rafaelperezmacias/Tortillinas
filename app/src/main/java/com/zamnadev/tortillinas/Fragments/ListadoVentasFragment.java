@@ -174,28 +174,6 @@ public class ListadoVentasFragment extends Fragment {
                 });
     }
 
-    public void altaVentaRepartidor(String idSucursal) {
-        DatabaseReference refVenta = FirebaseDatabase.getInstance().getReference("VentasRepartidor")
-                .child(empleado.getIdEmpleado());
-        HashMap<String, Object> hashMap = new HashMap<>();
-        String id = refVenta.push().getKey();
-        hashMap.put("idVenta",id);
-        hashMap.put("tiempo", ServerValue.TIMESTAMP);
-        hashMap.put("fecha",fecha);
-        hashMap.put("idSucursal",idSucursal);
-        hashMap.put("idEmpleado",empleado.getIdEmpleado());
-        refVenta.child(id).updateChildren(hashMap)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful())
-                    {
-                        VentaRepartidor venta = new VentaRepartidor();
-                        venta.setIdVenta(id);
-                        VentasRepartidorBottomSheet bottomSheet = new VentasRepartidorBottomSheet(id,empleado,idSucursal);
-                        bottomSheet.show(getFragmentManager(), bottomSheet.getTag());
-                    }
-                });
-    }
-
     private ListadoVentasFragment getMe() {
         return this;
     }

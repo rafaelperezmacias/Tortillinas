@@ -80,7 +80,7 @@ public class DialogoVentaSucursal extends DialogFragment {
             if (isMostrador) {
                 ventasFragment.altaVentaMostrador(adaptador.getIdSucursalActiva());
             } else {
-                ventasFragment.altaVentaRepartidor(adaptador.getIdSucursalActiva());
+                //TODO proceso de inicio de venta de tipo repartidor
             }
             dismiss();
         });

@@ -3,6 +3,7 @@ package com.zamnadev.tortillinas.BottomSheets;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -99,11 +100,12 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         String fecha = sdf.format(calendar.getTime());
 
-        ArrayList<Cliente> clientes = new ArrayList<>();
+        //TODO muestra los clientes a los que repartira producto
         DatabaseReference refClientes = FirebaseDatabase.getInstance().getReference("Clientes");
         refClientes.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<Cliente> clientes = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren())
                 {
                     Cliente cliente = snapshot.getValue(Cliente.class);
@@ -122,7 +124,8 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
             }
         });
 
-        refVenta = FirebaseDatabase.getInstance().getReference("Ventas")
+        //TODO muestra la informacion de la venta de tipo repartidor
+        refVenta = FirebaseDatabase.getInstance().getReference("VentasRepartidor")
                 .child(empleado.getIdEmpleado())
                 .child(idVenta);
         listenerVenta = refVenta.addValueEventListener(new ValueEventListener() {

@@ -19,12 +19,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorConfirmaciones;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorVenta;
+import com.zamnadev.tortillinas.BottomSheets.VentasRepartidorBottomSheet;
 import com.zamnadev.tortillinas.Firma.FirmaActivity;
 import com.zamnadev.tortillinas.Moldes.Confirmacion;
 import com.zamnadev.tortillinas.Moldes.Empleado;
+import com.zamnadev.tortillinas.Moldes.Sucursal;
+import com.zamnadev.tortillinas.Moldes.VentaMostrador;
 import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
 import com.zamnadev.tortillinas.Moldes.Vuelta;
 import com.zamnadev.tortillinas.R;
@@ -169,6 +173,21 @@ public class ConfirmacionesFragment extends Fragment {
                         .child("vuelta1")
                         .child("confirmado")
                         .setValue(true);
+                FirebaseDatabase.getInstance().getReference("VentasMostrador")
+                        .child(confirmacion.getIdEmpleado())
+                        .child(confirmacion.getIdVenta())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                VentaMostrador ventaMostrador = dataSnapshot.getValue(VentaMostrador.class);
+                                altaVentaRepartidor(ventaMostrador.getIdSucursal(),confirmacion.getIdVenta(),confirmacion.getVuelta1(),true);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
             } else {
                 FirebaseDatabase.getInstance().getReference("AuxVentaMostrador")
                         .child(confirmacion.getIdVenta())
@@ -182,8 +201,50 @@ public class ConfirmacionesFragment extends Fragment {
                         .child("vuelta2")
                         .child("confirmado")
                         .setValue(true);
-            }
+                FirebaseDatabase.getInstance().getReference("VentasMostrador")
+                        .child(confirmacion.getIdEmpleado())
+                        .child(confirmacion.getIdVenta())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                VentaMostrador ventaMostrador = dataSnapshot.getValue(VentaMostrador.class);
+                                altaVentaRepartidor(ventaMostrador.getIdSucursal(),confirmacion.getIdVenta(),confirmacion.getVuelta2(),false);
+                            }
 
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+            }
         }
+    }
+
+    public void altaVentaRepartidor(String idSucursal, String idVenta, Vuelta vuelta, boolean primero) {
+        DatabaseReference refVenta = FirebaseDatabase.getInstance().getReference("VentasRepartidor")
+                .child(empleado.getIdEmpleado());
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("idVenta",idVenta);
+        HashMap<String, Object> vueltaMap = new HashMap<>();
+        vueltaMap.put("masa",vuelta.getMasa());
+        vueltaMap.put("tortillas",vuelta.getTortillas());
+        vueltaMap.put("totopos",vuelta.getTotopos());
+        vueltaMap.put("time",ServerValue.TIMESTAMP);
+        if (primero) {
+            hashMap.put("vuelta1",vueltaMap);
+        } else {
+            hashMap.put("vuelta2",vueltaMap);
+        }
+        hashMap.put("tiempo", ServerValue.TIMESTAMP);
+        hashMap.put("fecha",fecha);
+        hashMap.put("idSucursal",idSucursal);
+        hashMap.put("idEmpleado",empleado.getIdEmpleado());
+        refVenta.child(idVenta).updateChildren(hashMap)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        Toast.makeText(getContext(), "Venta agrega con éxito", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

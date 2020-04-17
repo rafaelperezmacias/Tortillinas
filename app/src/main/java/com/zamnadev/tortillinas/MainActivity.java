@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.zamnadev.tortillinas.BottomSheets.VentasRepartidorBottomSheet;
 import com.zamnadev.tortillinas.Dialogos.DialogoAddCampoVentas;
 import com.zamnadev.tortillinas.Dialogos.DialogoVentaRepartidor;
 import com.zamnadev.tortillinas.Dialogs.MessageDialog;
@@ -35,6 +36,7 @@ import com.zamnadev.tortillinas.Fragments.VentasFragment;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
 import com.zamnadev.tortillinas.Moldes.VentaMostrador;
+import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
 import com.zamnadev.tortillinas.Moldes.Vuelta;
 import com.zamnadev.tortillinas.Notificaciones.Client;
 import com.zamnadev.tortillinas.Notificaciones.Data;
@@ -45,7 +47,10 @@ import com.zamnadev.tortillinas.Notificaciones.Sender;
 import com.zamnadev.tortillinas.Notificaciones.Token;
 import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -69,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private String idVenta;
     private int tipo;
+    private String idSucursal;
+    private Vuelta vuelta;
 
     private static final int CODE_INTENT = 100;
 
@@ -244,6 +251,7 @@ public class MainActivity extends AppCompatActivity implements
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             VentaMostrador ventaMostrador = dataSnapshot.getValue(VentaMostrador.class);
+                            idSucursal = ventaMostrador.getIdSucursal();
                             FirebaseDatabase.getInstance().getReference("Sucursales")
                                     .child(ventaMostrador.getIdSucursal())
                                     .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -258,6 +266,7 @@ public class MainActivity extends AppCompatActivity implements
                                                         @Override
                                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                             Vuelta vuelta = dataSnapshot.getValue(Vuelta.class);
+                                                            getMe().vuelta = vuelta;
                                                             String text = "";
                                                             text += sucursal.getNombre() + "\n";
                                                             text += "Primer vuelta";
@@ -311,6 +320,7 @@ public class MainActivity extends AppCompatActivity implements
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             VentaMostrador ventaMostrador = dataSnapshot.getValue(VentaMostrador.class);
+                            idSucursal = ventaMostrador.getIdSucursal();
                             FirebaseDatabase.getInstance().getReference("Sucursales")
                                     .child(ventaMostrador.getIdSucursal())
                                     .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -325,6 +335,7 @@ public class MainActivity extends AppCompatActivity implements
                                                         @Override
                                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                             Vuelta vuelta = dataSnapshot.getValue(Vuelta.class);
+                                                            getMe().vuelta = vuelta;
                                                             String text = "";
                                                             text += sucursal.getNombre() + "\n";
                                                             text += "Segunda vuelta";
@@ -373,6 +384,10 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    private MainActivity getMe() {
+        return this;
+    }
+
     private void alta() {
         if (idVenta == null) {
             return;
@@ -390,6 +405,7 @@ public class MainActivity extends AppCompatActivity implements
                     .child("vuelta1")
                     .child("confirmado")
                     .setValue(true);
+            altaVentaRepartidor(idSucursal,idVenta,vuelta,true);
         } else if (tipo == Data.TIPO_CONFIRMACION_REPARTIDOR_SEGUNDA_VUELTA) {
             FirebaseDatabase.getInstance().getReference("AuxVentaMostrador")
                     .child(idVenta)
@@ -403,7 +419,43 @@ public class MainActivity extends AppCompatActivity implements
                     .child("vuelta2")
                     .child("confirmado")
                     .setValue(true);
+            altaVentaRepartidor(idSucursal,idVenta,vuelta,false);
         }
+    }
+
+    public void altaVentaRepartidor(String idSucursal, String idVenta, Vuelta vuelta, boolean primero) {
+        DatabaseReference refVenta = FirebaseDatabase.getInstance().getReference("VentasRepartidor")
+                .child(ControlSesiones.ObtenerUsuarioActivo(getApplicationContext()));
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("idVenta",idVenta);
+        HashMap<String, Object> vueltaMap = new HashMap<>();
+        vueltaMap.put("masa",vuelta.getMasa());
+        vueltaMap.put("tortillas",vuelta.getTortillas());
+        vueltaMap.put("totopos",vuelta.getTotopos());
+        vueltaMap.put("time",ServerValue.TIMESTAMP);
+        if (primero) {
+            hashMap.put("vuelta1",vueltaMap);
+        } else {
+            hashMap.put("vuelta2",vueltaMap);
+        }
+        String fecha;
+        hashMap.put("tiempo", ServerValue.TIMESTAMP);
+        final Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH));
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        fecha = sdf.format(calendar.getTime());
+        hashMap.put("fecha",fecha);
+        hashMap.put("idSucursal",idSucursal);
+        hashMap.put("idEmpleado",ControlSesiones.ObtenerUsuarioActivo(getApplicationContext()));
+        refVenta.child(idVenta).updateChildren(hashMap)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        Toast.makeText(this, "Venta agrega con éxito", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override

@@ -35,6 +35,7 @@ import com.zamnadev.tortillinas.Moldes.Concepto;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Producto;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
+import com.zamnadev.tortillinas.Moldes.VentaDelDia;
 import com.zamnadev.tortillinas.Moldes.VentaMostrador;
 import com.zamnadev.tortillinas.Moldes.Vuelta;
 import com.zamnadev.tortillinas.R;
@@ -61,10 +62,12 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
     private DatabaseReference refGastos;
     private DatabaseReference refVentaMostrador;
     private DatabaseReference refProductos;
+    private DatabaseReference refVentasDia;
     private ValueEventListener listenerVenta;
     private ValueEventListener listenerGastos;
     private ValueEventListener listenerVentaMostrador;
     private ValueEventListener listenerProductos;
+    private ValueEventListener listenerVentasDia;
 
     private TextInputEditText txtPrimerVueltaT;
     private TextInputEditText txtPrimerVueltaM;
@@ -72,6 +75,8 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
     private TextInputEditText txtSegundaVueltaT;
     private TextInputEditText txtSegundaVueltaM;
     private TextInputEditText txtSegundaVueltaTo;
+
+    private AdaptadorVentasExtras adaptadorVentasExtra;
 
     private ImageButton btnRepartidores;
 
@@ -252,14 +257,16 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                 } else {
                     recyclerView.setVisibility(View.VISIBLE);
                     ArrayList<Producto> productos = new ArrayList<>();
+                    ArrayList<VentaDelDia> ventaDelDia = new ArrayList<>();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         Producto producto = snapshot.getValue(Producto.class);
                         if (!producto.isEliminado() && producto.isFormulario()) {
+                            ventaDelDia.add(new VentaDelDia(producto.getIdProducto(),0));
                             productos.add(producto);
                         }
                     }
-                    AdaptadorVentasExtras adaptador = new AdaptadorVentasExtras(getContext(),productos);
-                    recyclerView.setAdapter(adaptador);
+                    adaptadorVentasExtra = new AdaptadorVentasExtras(getContext(),productos,ventaDelDia,getMe());
+                    recyclerView.setAdapter(adaptadorVentasExtra);
                 }
             }
 
@@ -287,10 +294,49 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
             }
         });
 
+        //TODO muestra la cantidad de conceptos alamcenados en las cventas de mostrador
+        refVentasDia = FirebaseDatabase.getInstance().getReference("VentasDelDia")
+                .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
+                .child(idVenta);
+        listenerVentasDia = refVentasDia.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    ArrayList<VentaDelDia> productosMostrador = new ArrayList<>();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        VentaDelDia venta = snapshot.getValue(VentaDelDia.class);
+                        productosMostrador.add(venta);
+                    }
+                    if (adaptadorVentasExtra != null) {
+                        adaptadorVentasExtra.addVenta(productosMostrador);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         //TODO Guarda la informacion de la venta
         ((MaterialButton) view.findViewById(R.id.btnGuardar))
                 .setOnClickListener(view1 -> {
-
+                    if (adaptadorVentasExtra != null) {
+                        for (VentaDelDia ventaDelDia : adaptadorVentasExtra.getVentasMotrador()) {
+                            HashMap<String, Object> hashMap = new HashMap<>();
+                            hashMap.put("idProducto",ventaDelDia.getIdProducto());
+                            hashMap.put("cantidad",ventaDelDia.getCantidad());
+                            FirebaseDatabase.getInstance().getReference("VentasDelDia")
+                                    .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
+                                    .child(idVenta)
+                                    .child(ventaDelDia.getIdProducto())
+                                    .updateChildren(hashMap);
+                        }
+                        dismiss();
+                    } else {
+                        dismiss();
+                    }
                 });
 
         //TODO añadir un repartidor a la venta
@@ -440,6 +486,7 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
         refGastos.removeEventListener(listenerGastos);
         refVentaMostrador.removeEventListener(listenerVentaMostrador);
         refProductos.removeEventListener(listenerProductos);
+        refVentasDia.removeEventListener(listenerVentasDia);
     }
 
     @Override

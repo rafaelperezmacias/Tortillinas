@@ -16,7 +16,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.zamnadev.tortillinas.BottomSheets.VentasRepartidorBottomSheet;
 import com.zamnadev.tortillinas.Dialogs.MessageDialog;
 import com.zamnadev.tortillinas.Dialogs.MessageDialogBuilder;
 import com.zamnadev.tortillinas.Firma.FirmaActivity;
@@ -25,10 +27,13 @@ import com.zamnadev.tortillinas.Moldes.Confirmacion;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
 import com.zamnadev.tortillinas.Moldes.VentaMostrador;
+import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
 import com.zamnadev.tortillinas.Moldes.Vuelta;
 import com.zamnadev.tortillinas.R;
+import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AdaptadorConfirmaciones extends RecyclerView.Adapter<AdaptadorConfirmaciones.ViewHolder> {
 
@@ -152,8 +157,6 @@ public class AdaptadorConfirmaciones extends RecyclerView.Adapter<AdaptadorConfi
             dialog.setNegativeButtonListener(v -> dialog.dismiss());
         });
     }
-
-
 
     @Override
     public int getItemCount() {
