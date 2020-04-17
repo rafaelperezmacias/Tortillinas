@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:paddingTop="8dp"
     android:paddingStart="16dp"
     android:paddingEnd="8dp"
@@ -20,38 +20,29 @@
 
         <TextView
             android:id="@+id/txtNombre"
+            android:textColor="@color/negro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/negro"
-            android:layout_marginBottom="6dp"
-            tools:text="Tortillas"/>
+            android:textSize="16sp"
+            tools:text="Pablo Alexis Padilla Maldonado"/>
 
         <TextView
             android:id="@+id/txtPrecio"
+            android:textSize="14sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtNombre"
-            android:layout_marginBottom="6dp"
-            tools:text="$ 12.23" />
-
-        <TextView
-            android:id="@+id/txtFormulario"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txtPrecio"
-            android:layout_marginBottom="6dp"
-            tools:text="$ 12.23" />
+            tools:text="+523327201710"/>
 
     </RelativeLayout>
 
     <ImageButton
-        android:id="@+id/btnOpciones"
+        android:id="@+id/btnRemove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_more_vert_24dp"
-        android:contentDescription="@string/icon"/>
+        android:contentDescription="@string/icon"
+        android:padding="8dp"
+        android:src="@drawable/ic_remove_black_24dp" />
 
 </LinearLayout>

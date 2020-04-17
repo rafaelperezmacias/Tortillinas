@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -22,13 +23,22 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.zamnadev.tortillinas.Dialogos.DialogoAddCampoVentas;
+import com.zamnadev.tortillinas.Dialogos.DialogoVentaRepartidor;
+import com.zamnadev.tortillinas.Dialogs.MessageDialog;
+import com.zamnadev.tortillinas.Dialogs.MessageDialogBuilder;
+import com.zamnadev.tortillinas.Firma.FirmaActivity;
 import com.zamnadev.tortillinas.Fragments.AdminFragment;
 import com.zamnadev.tortillinas.Fragments.ClientesFragment;
 import com.zamnadev.tortillinas.Fragments.HomeFragment;
 import com.zamnadev.tortillinas.Fragments.VentasFragment;
 import com.zamnadev.tortillinas.Moldes.Empleado;
+import com.zamnadev.tortillinas.Moldes.Sucursal;
+import com.zamnadev.tortillinas.Moldes.VentaMostrador;
+import com.zamnadev.tortillinas.Moldes.Vuelta;
 import com.zamnadev.tortillinas.Notificaciones.Client;
 import com.zamnadev.tortillinas.Notificaciones.Data;
+import com.zamnadev.tortillinas.Notificaciones.FCMService;
 import com.zamnadev.tortillinas.Notificaciones.FCMServiceAPI;
 import com.zamnadev.tortillinas.Notificaciones.MyResponse;
 import com.zamnadev.tortillinas.Notificaciones.Sender;
@@ -42,7 +52,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements
-        BottomNavigationView.OnNavigationItemSelectedListener {
+        BottomNavigationView.OnNavigationItemSelectedListener, FCMService.onConfirmacion {
     private Toolbar toolbar;
 
     private Fragment fragmentHome;
@@ -54,10 +64,13 @@ public class MainActivity extends AppCompatActivity implements
     private FragmentManager fm;
 
     private DatabaseReference refEmpleado;
-    private DatabaseReference refNotificaciones;
 
     private ValueEventListener listenerEmpleado;
-    private ValueEventListener listenerNotificaciones;
+
+    private String idVenta;
+    private int tipo;
+
+    private static final int CODE_INTENT = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +80,23 @@ public class MainActivity extends AppCompatActivity implements
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        boolean notificacion = getIntent().getBooleanExtra("notificacion",false);
+        if (notificacion) {
+            String idVenta = getIntent().getStringExtra("idVenta");
+            int tipo = getIntent().getIntExtra("tipo",-1);
+            String emisor = getIntent().getStringExtra("emisor");
+            if (tipo == -1 || idVenta == null || emisor == null) {
+                return;
+            }
+            mostrarAlertaVenta(idVenta,tipo,emisor);
+        }
+
         fragmentHome = new HomeFragment();
         fragmentClientes = new ClientesFragment();
         fragmentVentas = new VentasFragment();
         fragmentAdministrador = new AdminFragment();
         currentFragment = fragmentHome;
+        FCMService.setLISTENER(MainActivity.this);
 
         fm = getSupportFragmentManager();
         fm.beginTransaction().add(R.id.container, fragmentHome).commit();
@@ -122,20 +147,6 @@ public class MainActivity extends AppCompatActivity implements
 
         }
 
-        refNotificaciones = FirebaseDatabase.getInstance().getReference("Confirmaciones")
-                .child(ControlSesiones.ObtenerUsuarioActivo(getApplicationContext()));
-        listenerNotificaciones = refNotificaciones.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Log.e("Data",dataSnapshot.toString());
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
         //Valida la primera clave para enviar el mensaje, genera el token por primera vez
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(task -> {
@@ -164,7 +175,6 @@ public class MainActivity extends AppCompatActivity implements
         if (item.getItemId() == R.id.menuCerrarSesion) {
             ControlSesiones.EliminaUsuario(getApplicationContext());
             refEmpleado.removeEventListener(listenerEmpleado);
-            refNotificaciones.removeEventListener(listenerNotificaciones);
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
             return true;
@@ -216,5 +226,195 @@ public class MainActivity extends AppCompatActivity implements
         hashMap.put("time", ServerValue.TIMESTAMP);
         hashMap.put("conexion", false);
         refEmpleado.updateChildren(hashMap);
+    }
+
+    @Override
+    public void enviarMensaje(String idVenta, int tipo, String emisor) {
+        mostrarAlertaVenta(idVenta, tipo, emisor);
+    }
+
+    public void mostrarAlertaVenta(String idVenta, int tipo, String emisor) {
+        this.idVenta = idVenta;
+        this.tipo = tipo;
+        if (tipo == Data.TIPO_CONFIRMACION_REPARTIDOR_PRIMER_VUELTA) {
+            FirebaseDatabase.getInstance().getReference("VentasMostrador")
+                    .child(emisor)
+                    .child(idVenta)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            VentaMostrador ventaMostrador = dataSnapshot.getValue(VentaMostrador.class);
+                            FirebaseDatabase.getInstance().getReference("Sucursales")
+                                    .child(ventaMostrador.getIdSucursal())
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            Sucursal sucursal = dataSnapshot.getValue(Sucursal.class);
+                                            FirebaseDatabase.getInstance().getReference("AuxVentaMostrador")
+                                                    .child(idVenta)
+                                                    .child(ControlSesiones.ObtenerUsuarioActivo(getApplicationContext()))
+                                                    .child("vuelta1")
+                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                            Vuelta vuelta = dataSnapshot.getValue(Vuelta.class);
+                                                            String text = "";
+                                                            text += sucursal.getNombre() + "\n";
+                                                            text += "Primer vuelta";
+                                                            if (vuelta.getTortillas() > 0) {
+                                                                text += "\n\t\tTortillas: " +  vuelta.getTortillas() + " kgs.";
+                                                            }
+                                                            if (vuelta.getMasa() > 0) {
+                                                                text += "\n\t\tMasa: " +  vuelta.getMasa() + " kgs.";
+                                                            }
+                                                            if (vuelta.getTotopos() > 0) {
+                                                                text += "\n\t\tTotopos: " +  vuelta.getTotopos() + " kgs.";
+                                                            }
+                                                            MessageDialog dialog = new MessageDialog(MainActivity.this, new MessageDialogBuilder()
+                                                                    .setTitle("Alerta")
+                                                                    .setMessage(text + "\nIngrese su firma para confirmar")
+                                                                    .setPositiveButtonText("Firmar")
+                                                                    .setNegativeButtonText("Cancelar")
+                                                            );
+                                                            dialog.show();
+                                                            dialog.setPositiveButtonListener(v -> {
+                                                                startActivityForResult(new Intent(MainActivity.this, FirmaActivity.class),CODE_INTENT);
+                                                                dialog.dismiss();
+                                                            });
+                                                            dialog.setNegativeButtonListener(v -> dialog.dismiss());
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                        }
+                                                    });
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+        } else if (tipo == Data.TIPO_CONFIRMACION_REPARTIDOR_SEGUNDA_VUELTA) {
+            FirebaseDatabase.getInstance().getReference("VentasMostrador")
+                    .child(emisor)
+                    .child(idVenta)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            VentaMostrador ventaMostrador = dataSnapshot.getValue(VentaMostrador.class);
+                            FirebaseDatabase.getInstance().getReference("Sucursales")
+                                    .child(ventaMostrador.getIdSucursal())
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            Sucursal sucursal = dataSnapshot.getValue(Sucursal.class);
+                                            FirebaseDatabase.getInstance().getReference("AuxVentaMostrador")
+                                                    .child(idVenta)
+                                                    .child(ControlSesiones.ObtenerUsuarioActivo(getApplicationContext()))
+                                                    .child("vuelta2")
+                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                            Vuelta vuelta = dataSnapshot.getValue(Vuelta.class);
+                                                            String text = "";
+                                                            text += sucursal.getNombre() + "\n";
+                                                            text += "Segunda vuelta";
+                                                            if (vuelta.getTortillas() > 0) {
+                                                                text += "\n\t\tTortillas: " +  vuelta.getTortillas() + " kgs.";
+                                                            }
+                                                            if (vuelta.getMasa() > 0) {
+                                                                text += "\n\t\tMasa: " +  vuelta.getMasa() + " kgs.";
+                                                            }
+                                                            if (vuelta.getTotopos() > 0) {
+                                                                text += "\n\t\tTotopos: " +  vuelta.getTotopos() + " kgs.";
+                                                            }
+                                                            MessageDialog dialog = new MessageDialog(MainActivity.this, new MessageDialogBuilder()
+                                                                    .setTitle("Alerta")
+                                                                    .setMessage(text + "\nIngrese su firma para confirmar")
+                                                                    .setPositiveButtonText("Firmar")
+                                                                    .setNegativeButtonText("Cancelar")
+                                                            );
+                                                            dialog.show();
+                                                            dialog.setPositiveButtonListener(v -> {
+                                                                startActivityForResult(new Intent(MainActivity.this, FirmaActivity.class),CODE_INTENT);
+                                                                dialog.dismiss();
+                                                            });
+                                                            dialog.setNegativeButtonListener(v -> dialog.dismiss());
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                        }
+                                                    });
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+        }
+    }
+
+    private void alta() {
+        if (idVenta == null) {
+            return;
+        }
+        if (tipo == Data.TIPO_CONFIRMACION_REPARTIDOR_PRIMER_VUELTA) {
+            FirebaseDatabase.getInstance().getReference("AuxVentaMostrador")
+                    .child(idVenta)
+                    .child(ControlSesiones.ObtenerUsuarioActivo(getApplicationContext()))
+                    .child("vuelta1")
+                    .child("confirmado")
+                    .setValue(true);
+            FirebaseDatabase.getInstance().getReference("Confirmaciones")
+                    .child(ControlSesiones.ObtenerUsuarioActivo(getApplicationContext()))
+                    .child(idVenta)
+                    .child("vuelta1")
+                    .child("confirmado")
+                    .setValue(true);
+        } else if (tipo == Data.TIPO_CONFIRMACION_REPARTIDOR_SEGUNDA_VUELTA) {
+            FirebaseDatabase.getInstance().getReference("AuxVentaMostrador")
+                    .child(idVenta)
+                    .child(ControlSesiones.ObtenerUsuarioActivo(getApplicationContext()))
+                    .child("vuelta2")
+                    .child("confirmado")
+                    .setValue(true);
+            FirebaseDatabase.getInstance().getReference("Confirmaciones")
+                    .child(ControlSesiones.ObtenerUsuarioActivo(getApplicationContext()))
+                    .child(idVenta)
+                    .child("vuelta2")
+                    .child("confirmado")
+                    .setValue(true);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CODE_INTENT) {
+            if (resultCode == FirmaActivity.FIRMA_ACEPTADA) {
+                alta();
+            } else {
+                Toast.makeText(this, "Error al firmar la entrega", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

@@ -22,6 +22,9 @@ public class FirmaActivity extends AppCompatActivity {
     private Canvas mCanvas;
     private MaterialButton btnGuardar;
 
+    public static final int FIRMA_CANCELADA = 300;
+    public static final int FIRMA_ACEPTADA = 301;
+
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +38,8 @@ public class FirmaActivity extends AppCompatActivity {
         mCanvas.setFirmaActivity(getMe());
         btnGuardar = findViewById(R.id.btn_guardar);
         btnGuardar.setOnClickListener((v) -> {
-
+            setResult(FIRMA_ACEPTADA);
+            finish();
         });
         MaterialButton btnBorrar = findViewById(R.id.btn_borrar);
         btnBorrar.setOnClickListener((v) -> {
@@ -43,7 +47,10 @@ public class FirmaActivity extends AppCompatActivity {
             mCanvas.clear();
         });
         MaterialButton btnCancelar = findViewById(R.id.btn_cancelar);
-        btnCancelar.setOnClickListener((v) -> finish());
+        btnCancelar.setOnClickListener((v) -> {
+            setResult(FIRMA_CANCELADA);
+            finish();
+        });
     }
 
     @Override

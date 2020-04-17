@@ -15,8 +15,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
-
-
         <TextView
             android:id="@+id/txtNombre"
             android:layout_width="match_parent"
@@ -31,6 +29,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtNombre"
+            android:layout_marginBottom="6dp"
+            tools:text="$ 12.23" />
+
+        <TextView
+            android:id="@+id/txtFormulario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtPrecio"
             android:layout_marginBottom="6dp"
             tools:text="$ 12.23" />
 

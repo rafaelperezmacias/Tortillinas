@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorVentaSucursales;
+import com.zamnadev.tortillinas.Fragments.ListadoVentasFragment;
 import com.zamnadev.tortillinas.Fragments.VentasFragment;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
@@ -28,12 +29,12 @@ public class DialogoVentaSucursal extends DialogFragment {
 
     private AdaptadorVentaSucursales adaptador;
 
-    private VentasFragment ventasFragment;
+    private ListadoVentasFragment ventasFragment;
     private Empleado empleado;
     private ArrayList<VentaRepartidor> ventas;
     private boolean isMostrador;
 
-    public DialogoVentaSucursal(VentasFragment ventasFragment, Empleado empleado, ArrayList<VentaRepartidor> ventas, boolean isMostrador) {
+    public DialogoVentaSucursal(ListadoVentasFragment ventasFragment, Empleado empleado, ArrayList<VentaRepartidor> ventas, boolean isMostrador) {
         this.ventasFragment = ventasFragment;
         this.empleado = empleado;
         this.ventas = ventas;

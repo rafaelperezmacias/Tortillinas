@@ -21,6 +21,8 @@ import com.zamnadev.tortillinas.Dialogs.MessageDialogBuilder;
 import com.zamnadev.tortillinas.Moldes.Producto;
 import com.zamnadev.tortillinas.R;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.ViewHolder> {
@@ -59,11 +61,32 @@ public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.
         Producto producto = productos.get(position);
         holder.txtNombre.setText(producto.getNombre());
         holder.txtPrecio.setText("$ " + producto.getPrecio());
+        PopupMenu popupMenu = new PopupMenu(context, holder.btnOpciones);
+        popupMenu.inflate(R.menu.menu_productos);
+        if (producto.isFormulario()) {
+            holder.txtFormulario.setText("Agregado al formulario");
+            popupMenu.getMenu().getItem(0).setTitle("Eliminar del formulario");
+        } else {
+            holder.txtFormulario.setText("Eliminado del formulario");
+            popupMenu.getMenu().getItem(0).setTitle("Agregar al formulario");
+        }
         holder.btnOpciones.setOnClickListener(view -> {
-            PopupMenu popupMenu = new PopupMenu(context, holder.btnOpciones);
-            popupMenu.inflate(R.menu.menu_productos);
             popupMenu.setOnMenuItemClickListener(menuItem -> {
                 switch (menuItem.getItemId()) {
+                    case R.id.menuMostrar: {
+                        if (producto.isFormulario()) {
+                            FirebaseDatabase.getInstance().getReference("Productos")
+                                    .child(producto.getIdProducto())
+                                    .child("formulario")
+                                    .setValue(false);
+                        } else {
+                            FirebaseDatabase.getInstance().getReference("Productos")
+                                    .child(producto.getIdProducto())
+                                    .child("formulario")
+                                    .setValue(true);
+                        }
+                        return true;
+                    }
                     case R.id.menuEditar: {
                         ProductosBottomSheet bottomSheet = new ProductosBottomSheet(producto);
                         bottomSheet.show(fragmentManager, bottomSheet.getTag());
@@ -105,8 +128,10 @@ public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.
     public int getItemCount() { return productos.size(); }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
+
         private TextView txtNombre;
         private TextView txtPrecio;
+        private TextView txtFormulario;
 
         private ImageButton btnOpciones;
 
@@ -115,6 +140,7 @@ public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.
             txtNombre = itemView.findViewById(R.id.txtNombre);
             txtPrecio = itemView.findViewById(R.id.txtPrecio);
             btnOpciones = itemView.findViewById(R.id.btnOpciones);
+            txtFormulario = itemView.findViewById(R.id.txtFormulario);
         }
     }
 }

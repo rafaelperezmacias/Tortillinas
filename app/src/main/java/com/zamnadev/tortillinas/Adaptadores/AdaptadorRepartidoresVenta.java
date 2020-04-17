@@ -32,12 +32,14 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
     private ArrayList<String> ids;
     private FragmentManager fragmentManager;
     private String idVenta;
+    private String nombreSucursal;
 
-    public AdaptadorRepartidoresVenta(Context context, ArrayList<String> ids, FragmentManager fragmentManager, String idVenta) {
+    public AdaptadorRepartidoresVenta(Context context, ArrayList<String> ids, FragmentManager fragmentManager, String idVenta, String nombreSucursal) {
         this.context = context;
         this.ids = ids;
         this.fragmentManager = fragmentManager;
         this.idVenta = idVenta;
+        this.nombreSucursal = nombreSucursal;
     }
 
     @NonNull
@@ -59,12 +61,12 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
                 holder.txtNombre.setText(empleado.getNombre().getNombres() + " " + empleado.getNombre().getApellidos());
 
                 holder.btnPrimero.setOnClickListener(view -> {
-                    VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(true, empleado,idVenta, context);
+                    VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(true, empleado,idVenta, context, nombreSucursal);
                     vueltaBottomSheet.show(fragmentManager,vueltaBottomSheet.getTag());
                 });
 
                 holder.btnSegundo.setOnClickListener(view -> {
-                    VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(false, empleado,idVenta, context);
+                    VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(false, empleado,idVenta, context, nombreSucursal);
                     vueltaBottomSheet.show(fragmentManager,vueltaBottomSheet.getTag());
                 });
             }
@@ -91,9 +93,16 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
                 } else {
                     holder.btnPrimero.setVisibility(View.GONE);
                     holder.txtEstadoUno.setVisibility(View.VISIBLE);
-                    String text = "Tortillas: ";
-                    text += auxVenta.getVuelta1().getTortillas() + " kgs.\nMasa: ";
-                    text += auxVenta.getVuelta1().getMasa() + " kgs. ";
+                    String text = "";
+                    if (auxVenta.getVuelta1().getTortillas() > 0) {
+                        text += "\t\tTortillas: " +  auxVenta.getVuelta1().getTortillas() + " kgs.\n";
+                    }
+                    if (auxVenta.getVuelta1().getMasa() > 0) {
+                        text += "\t\tMasa: " +  auxVenta.getVuelta1().getMasa() + " kgs.\n";
+                    }
+                    if (auxVenta.getVuelta1().getTotopos() > 0) {
+                        text += "\t\tTotopos: " +  auxVenta.getVuelta1().getTotopos() + " kgs.\n";
+                    }
                     holder.txtPrimeraVuelta.setText(text);
                     if (auxVenta.getVuelta1().isConfirmado()) {
                         holder.txtEstadoUno.setText("Confirmado");
@@ -108,9 +117,16 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
                 } else {
                     holder.btnSegundo.setVisibility(View.GONE);
                     holder.txtEstadoDos.setVisibility(View.VISIBLE);
-                    String text = "Tortillas: ";
-                    text += auxVenta.getVuelta2().getTortillas() + " kgs.\nMasa: ";
-                    text += auxVenta.getVuelta2().getMasa() + " kgs. ";
+                    String text = "";
+                    if (auxVenta.getVuelta2().getTortillas() > 0) {
+                        text += "\t\tTortillas: " +  auxVenta.getVuelta2().getTortillas() + " kgs.\n";
+                    }
+                    if (auxVenta.getVuelta2().getMasa() > 0) {
+                        text += "\t\tMasa: " +  auxVenta.getVuelta2().getMasa() + " kgs.\n";
+                    }
+                    if (auxVenta.getVuelta2().getTotopos() > 0) {
+                        text += "\t\tTotopos: " +  auxVenta.getVuelta2().getTotopos() + " kgs.\n";
+                    }
                     holder.txtSegundaVuelta.setText(text);
                     if (auxVenta.getVuelta2().isConfirmado()) {
                         holder.txtEstadoDos.setText("Confirmado");

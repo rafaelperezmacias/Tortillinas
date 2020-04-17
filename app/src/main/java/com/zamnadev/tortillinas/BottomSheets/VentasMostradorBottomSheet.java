@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,14 +27,20 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorRepartidoresVenta;
+import com.zamnadev.tortillinas.Adaptadores.AdaptadorVentasExtras;
 import com.zamnadev.tortillinas.Dialogos.DialogoAddCampoVentas;
 import com.zamnadev.tortillinas.Dialogos.DialogoVentaRepartidor;
 import com.zamnadev.tortillinas.Moldes.AuxVenta;
+import com.zamnadev.tortillinas.Moldes.Concepto;
 import com.zamnadev.tortillinas.Moldes.Empleado;
+import com.zamnadev.tortillinas.Moldes.Producto;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
 import com.zamnadev.tortillinas.Moldes.VentaMostrador;
 import com.zamnadev.tortillinas.Moldes.Vuelta;
 import com.zamnadev.tortillinas.R;
+import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,12 +58,20 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
     private String idVenta;
 
     private DatabaseReference refVenta;
+    private DatabaseReference refGastos;
+    private DatabaseReference refVentaMostrador;
+    private DatabaseReference refProductos;
     private ValueEventListener listenerVenta;
+    private ValueEventListener listenerGastos;
+    private ValueEventListener listenerVentaMostrador;
+    private ValueEventListener listenerProductos;
 
     private TextInputEditText txtPrimerVueltaT;
     private TextInputEditText txtPrimerVueltaM;
+    private TextInputEditText txtPrimerVueltaTo;
     private TextInputEditText txtSegundaVueltaT;
     private TextInputEditText txtSegundaVueltaM;
+    private TextInputEditText txtSegundaVueltaTo;
 
     private ImageButton btnRepartidores;
 
@@ -65,6 +80,8 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
     private int controladorRepartidores;
 
     private RecyclerView recyclerViewRepartidores;
+
+    private Sucursal sucursal;
 
     public VentasMostradorBottomSheet(String idVenta, Empleado empleado, String idSucursal)
     {
@@ -92,8 +109,13 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
 
         txtPrimerVueltaT = view.findViewById(R.id.txtPrimerVueltaTortilla);
         txtPrimerVueltaM = view.findViewById(R.id.txtPrimerVueltaMasa);
+        txtPrimerVueltaTo = view.findViewById(R.id.txtPrimerVueltaTotopos);
         txtSegundaVueltaT = view.findViewById(R.id.txtSegundaVueltaTortilla);
         txtSegundaVueltaM = view.findViewById(R.id.txtSegundaVueltaMasa);
+        txtSegundaVueltaTo = view.findViewById(R.id.txtSegundaVueltaTotopos);
+
+        TextInputEditText txtGastos = view.findViewById(R.id.txtGastos);
+        TextInputEditText txtVentasMostrador = view.findViewById(R.id.txtVentasMostrador);
 
         btnRepartidores = view.findViewById(R.id.btnMostrarRepartidores);
 
@@ -110,6 +132,9 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
             @Override public void onSlide(@NonNull View view, float v) { }
         });
 
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true);
 
         ImageButton btnCerrar = view.findViewById(R.id.btn_cerrar);
         btnCerrar.setOnClickListener((v -> dismiss()));
@@ -156,15 +181,33 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
             }
         });
 
-        //TODO muestra por primera vez los datos de la sucursal
-        DatabaseReference refSucursal = FirebaseDatabase.getInstance().getReference("Sucursales")
-                .child(idSucursal);
-        refSucursal.addListenerForSingleValueEvent(new ValueEventListener() {
+        txtGastos.setOnClickListener(view12 -> {
+            VentasAdicionalesBottomSheet ventas = new VentasAdicionalesBottomSheet(VentasAdicionalesBottomSheet.TIPO_GASTOS,idVenta);
+            ventas.show(getChildFragmentManager(),ventas.getTag());
+        });
+
+        txtVentasMostrador.setOnClickListener(view12 -> {
+            VentasAdicionalesBottomSheet ventas = new VentasAdicionalesBottomSheet(VentasAdicionalesBottomSheet.TIPO_VENTAS_MOSTRADOR,idVenta);
+            ventas.show(getChildFragmentManager(),ventas.getTag());
+        });
+
+        //TODO muestra la cantidad de conceptos que se muestra en la seccion de ventas extra (gastos, especificar en qué)
+        refGastos = FirebaseDatabase.getInstance().getReference("Gastos")
+                .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
+                .child(idVenta);
+        listenerGastos = refGastos.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Sucursal sucursal = dataSnapshot.getValue(Sucursal.class);
-                txtSucursal.setText(sucursal.getNombre());
-                txtDomicilio.setText(sucursal.getDireccion().toRecyclerView());
+                if (!dataSnapshot.exists()) {
+                    txtGastos.setText("");
+                } else {
+                    double total = 0.0;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Concepto concepto = snapshot.getValue(Concepto.class);
+                        total += concepto.getPrecio();
+                    }
+                    txtGastos.setText("$" + total);
+                }
             }
 
             @Override
@@ -172,6 +215,83 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
 
             }
         });
+
+        //TODO muestra la cantidad de conceptos alamcenados en las cventas de mostrador
+        refVentaMostrador = FirebaseDatabase.getInstance().getReference("Mostrador")
+                .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
+                .child(idVenta);
+        listenerVentaMostrador = refVentaMostrador.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    txtVentasMostrador.setText("");
+                } else {
+                    double total = 0.0;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Concepto concepto = snapshot.getValue(Concepto.class);
+                        total += concepto.getPrecio();
+                    }
+                    txtVentasMostrador.setText("$" + total);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        //TODO muestra los productos de la seccion de ventas extra
+        refProductos = FirebaseDatabase.getInstance().getReference("Productos");
+        listenerProductos = refProductos.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    //
+                    recyclerView.setVisibility(View.GONE);
+                } else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    ArrayList<Producto> productos = new ArrayList<>();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Producto producto = snapshot.getValue(Producto.class);
+                        if (!producto.isEliminado() && producto.isFormulario()) {
+                            productos.add(producto);
+                        }
+                    }
+                    AdaptadorVentasExtras adaptador = new AdaptadorVentasExtras(getContext(),productos);
+                    recyclerView.setAdapter(adaptador);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        //TODO muestra por primera vez los datos de la sucursal
+        DatabaseReference refSucursal = FirebaseDatabase.getInstance().getReference("Sucursales")
+                .child(idSucursal);
+        refSucursal.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                sucursal = dataSnapshot.getValue(Sucursal.class);
+                txtSucursal.setText(sucursal.getNombre());
+                txtDomicilio.setText(sucursal.getDireccion().toRecyclerView());
+                mostrarRepartidores();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        //TODO Guarda la informacion de la venta
+        ((MaterialButton) view.findViewById(R.id.btnGuardar))
+                .setOnClickListener(view1 -> {
+
+                });
 
         //TODO añadir un repartidor a la venta
         ((ImageButton) view.findViewById(R.id.btnAddRepartidor))
@@ -215,12 +335,15 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
 
     //TODO muestra los repartidores en el recyclerview
     private void mostrarRepartidores() {
+        if (sucursal == null) {
+            return;
+        }
         if (venta != null) {
             ArrayList<String> arrayList = new ArrayList<>();
             for (int x = 0; x < venta.getRepartidores().size(); x++) {
                 arrayList.add(venta.getRepartidores().get("repartidor"+x));
             }
-            AdaptadorRepartidoresVenta adaptador = new AdaptadorRepartidoresVenta(getContext(),arrayList,getChildFragmentManager(),idVenta);
+            AdaptadorRepartidoresVenta adaptador = new AdaptadorRepartidoresVenta(getContext(),arrayList,getChildFragmentManager(),idVenta,sucursal.getNombre());
             recyclerViewRepartidores.setAdapter(adaptador);
         }
     }
@@ -228,30 +351,45 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
     //TODO muestra la sumatoria de las ventas de los repartidores
     private void mostrarVentasRepartidor() {
         if (venta != null) {
-            ArrayList<String> arrayList = new ArrayList<>();
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AuxVentaMostrador")
                     .child(idVenta);
             reference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    double masaUno = 0.0, tortillasUno = 0.0;
-                    double masaDos = 0.0, tortillasDos = 0.0;
+                    double masaUno = 0.0, tortillasUno = 0.0, totoposUno = 0.0;
+                    double masaDos = 0.0, tortillasDos = 0.0, totoposDos = 0.0;
                     for (DataSnapshot snapshot : dataSnapshot.getChildren())
                     {
                         AuxVenta auxVenta = snapshot.getValue(AuxVenta.class);
                         if (auxVenta.getVuelta1().isConfirmado()) {
-                            masaUno += auxVenta.getVuelta1().getMasa();
-                            tortillasUno += auxVenta.getVuelta1().getTortillas();
+                            if (auxVenta.getVuelta1().getMasa() > 0) {
+                                masaUno += auxVenta.getVuelta1().getMasa();
+                            }
+                            if (auxVenta.getVuelta1().getTortillas() > 0) {
+                                tortillasUno += auxVenta.getVuelta1().getTortillas();
+                            }
+                            if (auxVenta.getVuelta1().getTotopos() > 0 ) {
+                                totoposUno += auxVenta.getVuelta1().getTotopos();
+                            }
                         }
                         if (auxVenta.getVuelta2().isConfirmado()) {
-                            masaDos += auxVenta.getVuelta2().getMasa();
-                            tortillasDos += auxVenta.getVuelta2().getTortillas();
+                            if (auxVenta.getVuelta2().getMasa() > 0) {
+                                masaDos += auxVenta.getVuelta2().getMasa();
+                            }
+                            if (auxVenta.getVuelta2().getTortillas() > 0) {
+                                tortillasDos += auxVenta.getVuelta2().getTortillas();
+                            }
+                            if (auxVenta.getVuelta2().getTotopos() > 0) {
+                                totoposDos += auxVenta.getVuelta2().getTotopos();
+                            }
                         }
                     }
                     txtPrimerVueltaM.setText("" + masaUno);
                     txtPrimerVueltaT.setText("" + tortillasUno);
+                    txtPrimerVueltaTo.setText("" + totoposUno);
                     txtSegundaVueltaM.setText("" + masaDos);
                     txtSegundaVueltaT.setText("" + tortillasDos);
+                    txtSegundaVueltaTo.setText("" + totoposDos);
                 }
 
                 @Override
@@ -270,6 +408,10 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
             HashMap<String, Object> hashMap = new HashMap<>();
             Vuelta vuelta = new Vuelta();
             vuelta.setRegistrada(false);
+            vuelta.setMasa(-1.0);
+            vuelta.setTotopos(-1.0);
+            vuelta.setTortillas(-1.0);
+            vuelta.setHora(-1);
             hashMap.put("vuelta1",vuelta);
             hashMap.put("vuelta2",vuelta);
             reference.child(venta.getIdVenta()).child(idRepartidor).updateChildren(hashMap);
@@ -295,6 +437,9 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
     public void onDestroy() {
         super.onDestroy();
         refVenta.removeEventListener(listenerVenta);
+        refGastos.removeEventListener(listenerGastos);
+        refVentaMostrador.removeEventListener(listenerVentaMostrador);
+        refProductos.removeEventListener(listenerProductos);
     }
 
     @Override

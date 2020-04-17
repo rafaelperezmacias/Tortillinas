@@ -28,7 +28,7 @@
             tools:text="Tortillas"/>
 
         <TextView
-            android:id="@+id/txtPrecio"
+            android:id="@+id/txtMostrador"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtNombre"
@@ -36,22 +36,12 @@
             tools:text="$ 12.23" />
 
         <TextView
-            android:id="@+id/txtFormulario"
+            android:id="@+id/txtInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txtPrecio"
-            android:layout_marginBottom="6dp"
+            android:layout_below="@+id/txtMostrador"
             tools:text="$ 12.23" />
 
     </RelativeLayout>
-
-    <ImageButton
-        android:id="@+id/btnOpciones"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_more_vert_24dp"
-        android:contentDescription="@string/icon"/>
 
 </LinearLayout>

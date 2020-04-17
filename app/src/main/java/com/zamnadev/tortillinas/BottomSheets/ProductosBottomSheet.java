@@ -106,6 +106,7 @@ public class ProductosBottomSheet extends BottomSheetDialogFragment {
                         productoMap.put("idProducto",id);
                         productoMap.put("modificado",false);
                         productoMap.put("alta",ServerValue.TIMESTAMP);
+                        productoMap.put("formulario",false);
                     }
 
                     productoMap.put("nombre",txtNombre.getText().toString().trim());

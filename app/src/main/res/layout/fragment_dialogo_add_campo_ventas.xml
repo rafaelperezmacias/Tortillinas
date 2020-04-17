@@ -6,8 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="16dp"
     android:paddingStart="24dp"
-    android:paddingEnd="8dp"
-    android:paddingBottom="8dp"
+    android:paddingEnd="24dp"
+    android:paddingBottom="16dp"
     android:background="@drawable/dialog_background"
     tools:context=".Dialogos.DialogoAddCampoVentas">
 
@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="16dp"
-        android:text="Agregar campo"
+        android:text="Agregar concepto"
         android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -50,7 +50,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/txt_precio"
-            android:inputType="textCapWords"
+            android:inputType="numberSigned"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

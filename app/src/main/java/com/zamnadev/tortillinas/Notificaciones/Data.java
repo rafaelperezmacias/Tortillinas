@@ -10,15 +10,17 @@ public class Data {
     private String receptor;
     private String emisor;
     private String idVenta;
+    private String texto;
 
     public Data() {
     }
 
-    public Data(int tipo, String receptor, String emisor, String idVenta) {
+    public Data(int tipo, String receptor, String emisor, String idVenta, String texto) {
         this.tipo = tipo;
         this.receptor = receptor;
         this.emisor = emisor;
         this.idVenta = idVenta;
+        this.texto = texto;
     }
 
     public int getTipo() {
@@ -53,6 +55,14 @@ public class Data {
         this.idVenta = idVenta;
     }
 
+    public String getTexto() {
+        return texto;
+    }
+
+    public void setTexto(String texto) {
+        this.texto = texto;
+    }
+
     @Override
     public String toString() {
         return "Data{" +
@@ -60,6 +70,7 @@ public class Data {
                 ", receptor='" + receptor + '\'' +
                 ", emisor='" + emisor + '\'' +
                 ", idVenta='" + idVenta + '\'' +
+                ", texto='" + texto + '\'' +
                 '}';
     }
 }
