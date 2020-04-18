@@ -47,6 +47,9 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
     private DatabaseReference refVenta;
     private ValueEventListener listenerVenta;
 
+    private VentaRepartidor ventaRepartidor;
+    private AdaptadorRepartidorClientes adaptador;
+
     public VentasRepartidorBottomSheet(String idVenta, Empleado empleado, String idSucursal)
     {
         this.idVenta = idVenta;
@@ -100,30 +103,6 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         String fecha = sdf.format(calendar.getTime());
 
-        //TODO muestra los clientes a los que repartira producto
-        DatabaseReference refClientes = FirebaseDatabase.getInstance().getReference("Clientes");
-        refClientes.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<Cliente> clientes = new ArrayList<>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren())
-                {
-                    Cliente cliente = snapshot.getValue(Cliente.class);
-                    if (!cliente.isEliminado())
-                    {
-                        clientes.add(cliente);
-                    }
-                }
-                AdaptadorRepartidorClientes adaptador = new AdaptadorRepartidorClientes(getContext(),clientes,getChildFragmentManager());
-                recyclerView.setAdapter(adaptador);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
         //TODO muestra la informacion de la venta de tipo repartidor
         refVenta = FirebaseDatabase.getInstance().getReference("VentasRepartidor")
                 .child(empleado.getIdEmpleado())
@@ -131,8 +110,8 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
         listenerVenta = refVenta.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                VentaRepartidor venta = dataSnapshot.getValue(VentaRepartidor.class);
-                txtFecha.setText(venta.getFecha());
+                ventaRepartidor = dataSnapshot.getValue(VentaRepartidor.class);
+                txtFecha.setText(ventaRepartidor.getFecha());
             }
 
             @Override
@@ -148,6 +127,30 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Sucursal sucursal = dataSnapshot.getValue(Sucursal.class);
                 txtSucursal.setText(sucursal.getNombre());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        //TODO muestra los clientes a los que repartira producto
+        DatabaseReference refClientes = FirebaseDatabase.getInstance().getReference("Clientes");
+        refClientes.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<Cliente> clientes = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                {
+                    Cliente cliente = snapshot.getValue(Cliente.class);
+                    if (!cliente.isEliminado())
+                    {
+                        clientes.add(cliente);
+                    }
+                }
+                adaptador = new AdaptadorRepartidorClientes(getContext(),clientes, idVenta, getChildFragmentManager());
+                recyclerView.setAdapter(adaptador);
             }
 
             @Override

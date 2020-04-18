@@ -99,6 +99,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtTortilla"
+                        android:inputType="numberDecimal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -119,6 +120,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtMasa"
+                    android:inputType="numberDecimal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -137,6 +139,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtTotopos"
+                    android:inputType="numberDecimal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 

@@ -29,20 +29,38 @@
 
         <ImageButton
             android:id="@+id/btnMostrarCliente"
+            android:layout_marginStart="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_info_24dp"
             android:contentDescription="@string/icon"/>
 
+        <ImageButton
+            android:id="@+id/btnMostarFormulario"
+            android:tag="down"
+            android:layout_marginStart="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_up_24dp"
+            android:contentDescription="@string/icon"/>
+
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/layout2"
+    <RelativeLayout
+        android:id="@+id/lytBody"
+        android:visibility="gone"
+        android:layout_below="@+id/layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@+id/layout">
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/layout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/layout">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
@@ -54,6 +72,7 @@
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtPrimer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -71,6 +90,7 @@
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtSegunda"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -78,24 +98,27 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-    </LinearLayout>
+        </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@+id/layout2">
+        <LinearLayout
+            android:id="@+id/layout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/layout1">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="Tercer vuelta"
+                android:hint="Devolución"
                 android:layout_marginEnd="8dp"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtDevolucion"
+                    android:enabled="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -108,11 +131,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="Total"
+                android:hint="Pago"
                 android:layout_marginStart="8dp"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtPago"
+                    android:inputType="numberSigned"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -120,6 +145,19 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-    </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtPendiente"
+            android:paddingRight="10dp"
+            android:gravity="right"
+            android:textStyle="bold"
+            android:textColor="@color/error_text"
+            tools:text="Pendiente"
+            android:layout_below="@+id/layout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

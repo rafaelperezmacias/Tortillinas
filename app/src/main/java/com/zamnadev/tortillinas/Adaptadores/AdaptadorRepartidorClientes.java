@@ -1,19 +1,28 @@
 package com.zamnadev.tortillinas.Adaptadores;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.BottomSheets.ClientesBottomSheet;
 import com.zamnadev.tortillinas.Moldes.Cliente;
+import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
 import com.zamnadev.tortillinas.R;
+import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 
 import java.util.ArrayList;
 
@@ -21,13 +30,29 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
 
     private Context context;
     private ArrayList<Cliente> clientes;
+    private VentaRepartidor venta;
     private FragmentManager fragmentManager;
 
-    public AdaptadorRepartidorClientes(Context context, ArrayList<Cliente> clientes, FragmentManager fragmentManager)
-    {
+    public AdaptadorRepartidorClientes(Context context, ArrayList<Cliente> clientes, String idVenta, FragmentManager fragmentManager) {
         this.context = context;
         this.clientes = clientes;
         this.fragmentManager = fragmentManager;
+        FirebaseDatabase.getInstance().getReference("VentasRepartidor")
+                .child(ControlSesiones.ObtenerUsuarioActivo(context))
+                .child(idVenta)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        venta = dataSnapshot.getValue(VentaRepartidor.class);
+                        Log.e("da",venta.toString());
+                        notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     @NonNull
@@ -42,9 +67,43 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
         Cliente cliente = clientes.get(position);
         holder.txtNombre.setText(cliente.getNombre().getNombres() + " " + cliente.getNombre().getApellidos());
 
+        holder.txtPendiente.setText("Pendiente: $0");
+
+        if (venta != null) {
+            if (venta.getVuelta1() == null && venta.getVuelta2() == null) {
+                holder.txtDevolucion.setEnabled(false);
+            }
+
+            if (venta.getVuelta1() == null) {
+                holder.txtPrimer.setEnabled(false);
+            } else {
+                holder.txtDevolucion.setEnabled(true);
+                holder.txtPrimer.setEnabled(true);
+            }
+
+            if (venta.getVuelta2() == null) {
+                holder.txtSegunda.setEnabled(false);
+            } else {
+                holder.txtDevolucion.setEnabled(true);
+                holder.txtSegunda.setEnabled(true);
+            }
+        }
+
         holder.btnCliente.setOnClickListener(view -> {
             ClientesBottomSheet bottomSheet = new ClientesBottomSheet(cliente,true);
             bottomSheet.show(fragmentManager,bottomSheet.getTag());
+        });
+
+        holder.btnFormulario.setOnClickListener(view -> {
+            if (holder.btnFormulario.getTag().equals("down")) {
+                holder.btnFormulario.setTag("up");
+                holder.btnFormulario.setImageResource(R.drawable.ic_arrow_down_24dp);
+                holder.lytBody.setVisibility(View.VISIBLE);
+            } else {
+                holder.btnFormulario.setTag("down");
+                holder.btnFormulario.setImageResource(R.drawable.ic_arrow_up_24dp);
+                holder.lytBody.setVisibility(View.GONE);
+            }
         });
     }
 
@@ -58,11 +117,25 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
 
         private TextView txtNombre;
         private ImageButton btnCliente;
+        private ImageButton btnFormulario;
+        private RelativeLayout lytBody;
+        private TextView txtPendiente;
+        private TextInputEditText txtPrimer;
+        private TextInputEditText txtSegunda;
+        private TextInputEditText txtPago;
+        private TextInputEditText txtDevolucion;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            txtNombre = (TextView) itemView.findViewById(R.id.txtNombre);
-            btnCliente = (ImageButton) itemView.findViewById(R.id.btnMostrarCliente);
+            txtNombre = itemView.findViewById(R.id.txtNombre);
+            btnCliente = itemView.findViewById(R.id.btnMostrarCliente);
+            btnFormulario = itemView.findViewById(R.id.btnMostarFormulario);
+            lytBody = itemView.findViewById(R.id.lytBody);
+            txtPendiente = itemView.findViewById(R.id.txtPendiente);
+            txtPrimer = itemView.findViewById(R.id.txtPrimer);
+            txtSegunda = itemView.findViewById(R.id.txtSegunda);
+            txtPago = itemView.findViewById(R.id.txtPago);
+            txtDevolucion = itemView.findViewById(R.id.txtDevolucion);
         }
 
     }
