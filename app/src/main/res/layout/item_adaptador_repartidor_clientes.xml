@@ -17,15 +17,28 @@
         android:gravity="center"
         android:paddingBottom="8dp">
 
-        <TextView
-            android:id="@+id/txtNombre"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@android:color/black"
-            android:textSize="22sp"
-            android:layout_marginEnd="8dp"
-            tools:text="Pablo Alexis Padilla Maldonado"/>
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/txtNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="22sp"
+                android:layout_marginEnd="8dp"
+                tools:text="Pablo Alexis Padilla Maldonado"/>
+
+            <TextView
+                android:id="@+id/txtPseudonimo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="+523327201710"/>
+
+        </LinearLayout>
 
         <ImageButton
             android:id="@+id/btnMostrarCliente"
@@ -73,6 +86,10 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtPrimer"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:longClickable="false"
+                    android:cursorVisible="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -91,6 +108,10 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtSegunda"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:longClickable="false"
+                    android:cursorVisible="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -119,6 +140,10 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtDevolucion"
                     android:enabled="false"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:longClickable="false"
+                    android:cursorVisible="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 

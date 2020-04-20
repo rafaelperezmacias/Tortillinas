@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -19,7 +20,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.BottomSheets.ClientesBottomSheet;
+import com.zamnadev.tortillinas.BottomSheets.VentasClienteBottomSheet;
 import com.zamnadev.tortillinas.Moldes.Cliente;
+import com.zamnadev.tortillinas.Moldes.VentaCliente;
 import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
 import com.zamnadev.tortillinas.R;
 import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
@@ -32,6 +35,7 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
     private ArrayList<Cliente> clientes;
     private VentaRepartidor venta;
     private FragmentManager fragmentManager;
+    private ArrayList<VentaCliente> ventaClientes;
 
     public AdaptadorRepartidorClientes(Context context, ArrayList<Cliente> clientes, String idVenta, FragmentManager fragmentManager) {
         this.context = context;
@@ -44,7 +48,6 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         venta = dataSnapshot.getValue(VentaRepartidor.class);
-                        Log.e("da",venta.toString());
                         notifyDataSetChanged();
                     }
 
@@ -66,25 +69,94 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Cliente cliente = clientes.get(position);
         holder.txtNombre.setText(cliente.getNombre().getNombres() + " " + cliente.getNombre().getApellidos());
-
+        holder.txtPseudonimo.setText(cliente.getPseudonimo());
         holder.txtPendiente.setText("Pendiente: $0");
+        VentaCliente ventaCliente = null;
+
+        if (ventaClientes != null && ventaClientes.size() > 0) {
+            for (VentaCliente v : ventaClientes) {
+                if (v.getIdCliente().equals(cliente.getIdCliente())) {
+                    ventaCliente = v;
+                    if (v.getVuelta1() != null) {
+                        String text = "";
+                        if (v.getVuelta1().getTortillas() >= 0) {
+                            text += ", " + v.getVuelta1().getTortillas();
+                        }
+                        if (v.getVuelta1().getMasa() >= 0) {
+                            text += ", " + v.getVuelta1().getMasa();
+                        }
+                        if (v.getVuelta1().getTotopos() >= 0) {
+                            text += ", " + v.getVuelta1().getTotopos();
+                        }
+                        text = text.replaceFirst(",","");
+                        text = text.replaceFirst(" ","");
+                        holder.txtPrimer.setText(text);
+                    }
+                    if (v.getVuelta2() != null) {
+                        String text = "";
+                        if (v.getVuelta2().getTortillas() >= 0) {
+                            text += ", " + v.getVuelta2().getTortillas();
+                        }
+                        if (v.getVuelta2().getMasa() >= 0) {
+                            text += ", " + v.getVuelta2().getMasa();
+                        }
+                        if (v.getVuelta2().getTotopos() >= 0) {
+                            text += ", " + v.getVuelta2().getTotopos();
+                        }
+                        text = text.replaceFirst(",","");
+                        text = text.replaceFirst(" ","");
+                        holder.txtSegunda.setText(text);
+                    }
+                    if (v.getDevolucion() != null) {
+                        String text = "";
+                        if (v.getDevolucion().getTortillas() >= 0) {
+                            text += ", " + v.getDevolucion().getTortillas();
+                        }
+                        if (v.getDevolucion().getMasa() >= 0) {
+                            text += ", " + v.getDevolucion().getMasa();
+                        }
+                        if (v.getDevolucion().getTotopos() >= 0) {
+                            text += ", " + v.getDevolucion().getTotopos();
+                        }
+                        text = text.replaceFirst(",","");
+                        text = text.replaceFirst(" ","");
+                        holder.txtDevolucion.setText(text);
+                    }
+                }
+            }
+        }
 
         if (venta != null) {
             if (venta.getVuelta1() == null && venta.getVuelta2() == null) {
-                holder.txtDevolucion.setEnabled(false);
+                //TODO algo
+            } else {
+                holder.txtDevolucion.setEnabled(true);
+                VentaCliente finalVentaCliente = ventaCliente;
+                holder.txtDevolucion.setOnClickListener(view -> {
+                    VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(true,cliente,venta, finalVentaCliente,true);
+                    ventas.show(fragmentManager,ventas.getTag());
+                });
             }
 
             if (venta.getVuelta1() == null) {
-                holder.txtPrimer.setEnabled(false);
+                holder.txtPrimer.setVisibility(View.GONE);
             } else {
-                holder.txtDevolucion.setEnabled(true);
+                VentaCliente finalVentaCliente = ventaCliente;
+                holder.txtPrimer.setOnClickListener(view -> {
+                    VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(true,cliente,venta, finalVentaCliente);
+                    ventas.show(fragmentManager,ventas.getTag());
+                });
                 holder.txtPrimer.setEnabled(true);
             }
 
             if (venta.getVuelta2() == null) {
-                holder.txtSegunda.setEnabled(false);
+                holder.txtSegunda.setVisibility(View.GONE);
             } else {
-                holder.txtDevolucion.setEnabled(true);
+                VentaCliente finalVentaCliente = ventaCliente;
+                holder.txtSegunda.setOnClickListener(view -> {
+                    VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(false,cliente,venta, finalVentaCliente);
+                    ventas.show(fragmentManager,ventas.getTag());
+                });
                 holder.txtSegunda.setEnabled(true);
             }
         }
@@ -112,6 +184,14 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
         return clientes.size();
     }
 
+    public ArrayList<VentaCliente> getVentaClientes() {
+        return ventaClientes;
+    }
+
+    public void addVentas(ArrayList<VentaCliente> ventaClientes) {
+        this.ventaClientes = ventaClientes;
+        notifyDataSetChanged();
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -124,6 +204,7 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
         private TextInputEditText txtSegunda;
         private TextInputEditText txtPago;
         private TextInputEditText txtDevolucion;
+        private TextView txtPseudonimo;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -136,6 +217,7 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
             txtSegunda = itemView.findViewById(R.id.txtSegunda);
             txtPago = itemView.findViewById(R.id.txtPago);
             txtDevolucion = itemView.findViewById(R.id.txtDevolucion);
+            txtPseudonimo = itemView.findViewById(R.id.txtPseudonimo);
         }
 
     }

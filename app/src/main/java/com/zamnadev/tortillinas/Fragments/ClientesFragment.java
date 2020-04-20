@@ -71,7 +71,7 @@ public class ClientesFragment extends Fragment {
                         clientes.add(cliente);
                     }
                 }
-                AdaptadorClientes adaptadorClientes = new AdaptadorClientes(activity, clientes,getChildFragmentManager());
+                AdaptadorClientes adaptadorClientes = new AdaptadorClientes(activity, clientes,getFragmentManager());
                 recyclerView.setAdapter(adaptadorClientes);
             }
 

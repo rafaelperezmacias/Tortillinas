@@ -27,13 +27,17 @@ import com.zamnadev.tortillinas.Adaptadores.AdaptadorRepartidorClientes;
 import com.zamnadev.tortillinas.Moldes.Cliente;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
+import com.zamnadev.tortillinas.Moldes.VentaCliente;
 import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
+import com.zamnadev.tortillinas.Notificaciones.Data;
 import com.zamnadev.tortillinas.R;
+import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 
 public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
 
@@ -102,6 +106,7 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
         calendar.set(Calendar.DAY_OF_MONTH, Calendar.DAY_OF_MONTH);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         String fecha = sdf.format(calendar.getTime());
+        ArrayList<VentaCliente> ventaClientes = new ArrayList<>();
 
         //TODO muestra la informacion de la venta de tipo repartidor
         refVenta = FirebaseDatabase.getInstance().getReference("VentasRepartidor")
@@ -151,6 +156,33 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
                 }
                 adaptador = new AdaptadorRepartidorClientes(getContext(),clientes, idVenta, getChildFragmentManager());
                 recyclerView.setAdapter(adaptador);
+                if (adaptador.getVentaClientes() == null && ventaClientes.size() > 0) {
+                    adaptador.addVentas(ventaClientes);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        DatabaseReference refAuxVenta = FirebaseDatabase.getInstance().getReference("AuxVentaRepartidor")
+                .child(ControlSesiones.ObtenerUsuarioActivo(Objects.requireNonNull(getContext())))
+                .child(idVenta);
+
+        refAuxVenta.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ventaClientes.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                {
+                    VentaCliente ventaCliente = snapshot.getValue(VentaCliente.class);
+                    ventaClientes.add(ventaCliente);
+                }
+                if (adaptador != null) {
+                    adaptador.addVentas(ventaClientes);
+                }
             }
 
             @Override

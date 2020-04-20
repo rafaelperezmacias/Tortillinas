@@ -87,8 +87,8 @@ public class VentaRepartidor {
                 ", fecha='" + fecha + '\'' +
                 ", idSucursal='" + idSucursal + '\'' +
                 ", idEmpleado='" + idEmpleado + '\'' +
-                ", vuelta1=" + vuelta1.toString() +
-                ", vuelta2=" + vuelta2.toString() +
+                ", vuelta1=" + vuelta1 +
+                ", vuelta2=" + vuelta2 +
                 '}';
     }
 }
