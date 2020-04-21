@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -356,6 +357,21 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
 
             }
         });
+
+        ((MaterialButton) view.findViewById(R.id.btnGuardar))
+                .setOnClickListener(view1 -> {
+                    if (adaptador != null) {
+                        for (VentaCliente ventaCliente : adaptador.getPagos()) {
+                            FirebaseDatabase.getInstance().getReference("AuxVentaRepartidor")
+                                    .child(empleado.getIdEmpleado())
+                                    .child(idVenta)
+                                    .child(ventaCliente.getIdCliente())
+                                    .child("pago")
+                                    .setValue(ventaCliente.getPago());
+                        }
+                        dismiss();
+                    }
+                });
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Toolbar toolbar = view.findViewById(R.id.toolbar);

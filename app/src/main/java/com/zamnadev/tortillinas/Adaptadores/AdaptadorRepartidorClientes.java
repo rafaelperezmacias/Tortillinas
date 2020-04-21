@@ -1,6 +1,8 @@
 package com.zamnadev.tortillinas.Adaptadores;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,7 @@ import com.zamnadev.tortillinas.R;
 import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorRepartidorClientes.ViewHolder> {
 
@@ -36,11 +39,13 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
     private VentaRepartidor venta;
     private FragmentManager fragmentManager;
     private ArrayList<VentaCliente> ventaClientes;
+    private ArrayList<VentaCliente> pagos;
 
     public AdaptadorRepartidorClientes(Context context, ArrayList<Cliente> clientes, String idVenta, FragmentManager fragmentManager) {
         this.context = context;
         this.clientes = clientes;
         this.fragmentManager = fragmentManager;
+        pagos = new ArrayList<>();
         FirebaseDatabase.getInstance().getReference("VentasRepartidor")
                 .child(ControlSesiones.ObtenerUsuarioActivo(context))
                 .child(idVenta)
@@ -71,6 +76,7 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
         holder.txtNombre.setText(cliente.getNombre().getNombres() + " " + cliente.getNombre().getApellidos());
         holder.txtPseudonimo.setText(cliente.getPseudonimo());
         VentaCliente ventaCliente = null;
+        holder.total = 0.0;
 
         if (ventaClientes != null && ventaClientes.size() > 0) {
             for (VentaCliente v : ventaClientes) {
@@ -125,10 +131,9 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
             }
         }
 
-        double total = 0;
-        if (venta != null) {
+        if (venta != null && ventaCliente != null) {
             if (venta.getVuelta1() == null && venta.getVuelta2() == null) {
-                //TODO algo
+
             } else {
                 holder.txtDevolucion.setEnabled(true);
                 VentaCliente finalVentaCliente = ventaCliente;
@@ -144,15 +149,15 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
                 VentaCliente finalVentaCliente = ventaCliente;
                 if (ventaCliente.getVuelta1() != null) {
                     if (ventaCliente.getVuelta1().getMasaVenta() >= 0.0) {
-                        total += ventaCliente.getVuelta1().getMasaVenta();
+                        holder.total += ventaCliente.getVuelta1().getMasaVenta();
                     }
                     if (ventaCliente.getVuelta1().getTortillaVenta() >= 0.0) {
-                        total += ventaCliente.getVuelta1().getTortillaVenta();
+                        holder.total += ventaCliente.getVuelta1().getTortillaVenta();
                     }
                     if (ventaCliente.getVuelta1().getTotoposVenta() >= 0.0) {
-                        total += ventaCliente.getVuelta1().getTotoposVenta();
+                        holder.total += ventaCliente.getVuelta1().getTotoposVenta();
                     }
-                    holder.txtPendiente.setText("Pendiente: $" + total);
+                    holder.txtPendiente.setText("Pendiente: $" + holder.total);
                 }
                 holder.txtPrimer.setOnClickListener(view -> {
                     VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(true,cliente,venta, finalVentaCliente);
@@ -167,15 +172,15 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
                 VentaCliente finalVentaCliente = ventaCliente;
                 if (ventaCliente.getVuelta2() != null) {
                     if (ventaCliente.getVuelta2().getMasaVenta() >= 0.0) {
-                        total += ventaCliente.getVuelta2().getMasaVenta();
+                        holder.total += ventaCliente.getVuelta2().getMasaVenta();
                     }
                     if (ventaCliente.getVuelta2().getTortillaVenta() >= 0.0) {
-                        total += ventaCliente.getVuelta2().getTortillaVenta();
+                        holder.total += ventaCliente.getVuelta2().getTortillaVenta();
                     }
                     if (ventaCliente.getVuelta2().getTotoposVenta() >= 0.0) {
-                        total += ventaCliente.getVuelta2().getTotoposVenta();
+                        holder.total += ventaCliente.getVuelta2().getTotoposVenta();
                     }
-                    holder.txtPendiente.setText("Pendiente: $" + total);
+                    holder.txtPendiente.setText("Pendiente: $" + holder.total);
                 }
                 holder.txtSegunda.setOnClickListener(view -> {
                     VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(false,cliente,venta, finalVentaCliente);
@@ -184,17 +189,56 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
                 holder.txtSegunda.setEnabled(true);
             }
 
+            if (ventaCliente.getVuelta1() != null || ventaCliente.getVuelta2() != null) {
+                VentaCliente finalVentaCliente1 = ventaCliente;
+                holder.txtPago.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        double pago = 0.0;
+                        try {
+                             pago = Double.parseDouble(holder.txtPago.getText().toString());
+                        } catch (Exception ignored) {
+
+                        }
+                        holder.total = holder.totalFinal;
+                        holder.total -= pago;
+                        holder.txtPendiente.setText("Pendiente: $" + holder.total);
+                        for (int x = 0; x < pagos.size(); x++) {
+                            if (finalVentaCliente1.getIdCliente().equals(pagos.get(x).getIdCliente())) {
+                                pagos.get(x).setPago(pago);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                    }
+                });
+            }
+
             if (ventaCliente.getDevolucion() != null) {
                 if (ventaCliente.getDevolucion().getMasaVenta() >= 0.0) {
-                    total -= ventaCliente.getDevolucion().getMasaVenta();
+                    holder.total -= ventaCliente.getDevolucion().getMasaVenta();
                 }
                 if (ventaCliente.getDevolucion().getTortillaVenta() >= 0.0) {
-                    total -= ventaCliente.getDevolucion().getTortillaVenta();
+                    holder.total -= ventaCliente.getDevolucion().getTortillaVenta();
                 }
                 if (ventaCliente.getDevolucion().getTotoposVenta() >= 0.0) {
-                    total -= ventaCliente.getDevolucion().getTotoposVenta();
+                    holder.total -= ventaCliente.getDevolucion().getTotoposVenta();
                 }
-                holder.txtPendiente.setText("Pendiente: $" + total);
+                holder.txtPendiente.setText("Pendiente: $" + holder.total);
+            }
+            if (ventaCliente.getPago() >= 0.0) {
+                holder.totalFinal = holder.total;
+                holder.total -= ventaCliente.getPago();
+                holder.txtPendiente.setText("Pendiente: $" + holder.total);
+                holder.txtPago.setText("" + ventaCliente.getPago());
             }
         }
 
@@ -216,6 +260,10 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
         });
     }
 
+    public ArrayList<VentaCliente> getPagos() {
+        return pagos;
+    }
+
     @Override
     public int getItemCount() {
         return clientes.size();
@@ -227,6 +275,7 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
 
     public void addVentas(ArrayList<VentaCliente> ventaClientes) {
         this.ventaClientes = ventaClientes;
+        pagos.addAll(ventaClientes);
         notifyDataSetChanged();
     }
 
@@ -242,6 +291,8 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
         private TextInputEditText txtPago;
         private TextInputEditText txtDevolucion;
         private TextView txtPseudonimo;
+        private double total;
+        private double totalFinal;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -255,6 +306,8 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
             txtPago = itemView.findViewById(R.id.txtPago);
             txtDevolucion = itemView.findViewById(R.id.txtDevolucion);
             txtPseudonimo = itemView.findViewById(R.id.txtPseudonimo);
+            total = 0.0;
+            totalFinal = 0.0;
         }
 
     }

@@ -6,15 +6,17 @@ public class VentaCliente {
     private VueltaRepartidor vuelta1;
     private VueltaRepartidor vuelta2;
     private VueltaRepartidor devolucion;
+    private double pago;
 
     public VentaCliente() {
     }
 
-    public VentaCliente(String idCliente, VueltaRepartidor vuelta1, VueltaRepartidor vuelta2, VueltaRepartidor devolucion) {
+    public VentaCliente(String idCliente, VueltaRepartidor vuelta1, VueltaRepartidor vuelta2, VueltaRepartidor devolucion, double pago) {
         this.idCliente = idCliente;
         this.vuelta1 = vuelta1;
         this.vuelta2 = vuelta2;
         this.devolucion = devolucion;
+        this.pago = pago;
     }
 
     public String getIdCliente() {
@@ -49,6 +51,14 @@ public class VentaCliente {
         this.devolucion = devolucion;
     }
 
+    public double getPago() {
+        return pago;
+    }
+
+    public void setPago(double pago) {
+        this.pago = pago;
+    }
+
     @Override
     public String toString() {
         return "VentaCliente{" +
@@ -56,6 +66,7 @@ public class VentaCliente {
                 ", vuelta1=" + vuelta1 +
                 ", vuelta2=" + vuelta2 +
                 ", devolucion=" + devolucion +
+                ", pago=" + pago +
                 '}';
     }
 }
