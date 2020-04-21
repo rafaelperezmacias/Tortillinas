@@ -20,9 +20,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Moldes.Cliente;
+import com.zamnadev.tortillinas.Moldes.Producto;
 import com.zamnadev.tortillinas.Moldes.VentaCliente;
 import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
 import com.zamnadev.tortillinas.R;
@@ -30,6 +34,7 @@ import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.StringTokenizer;
 
 public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
 
@@ -194,10 +199,82 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
                     } else {
                         hashMap.put("vuelta2",vueltaMap);
                     }
+                    double finalTortilla = tortilla;
+                    double finalMasa = masa;
+                    double finalTotopos = totopos;
                     ref.updateChildren(hashMap)
                             .addOnCompleteListener(task -> {
-                                if (task.isSuccessful()){
-                                    dismiss();
+                                if (task.isSuccessful()) {
+                                    FirebaseDatabase.getInstance().getReference("Productos")
+                                            .addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    double tortillaVenta = 0.0, totoposVenta = 0.0, masaVenta = 0.0;
+                                                    for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                                                    {
+                                                        Producto p = snapshot.getValue(Producto.class);
+                                                        if (p.getNombre().toUpperCase().contains("TORTILLA")) {
+                                                            if (cliente.isPreferencial()) {
+                                                                for (int x = 0; x < cliente.getPrecios().size(); x++) {
+                                                                    StringTokenizer a = new StringTokenizer(cliente.getPrecios().get("p"+x),"?");
+                                                                    double precio = Double.parseDouble(a.nextToken());
+                                                                    String id = a.nextToken();
+                                                                    if (id.equals(p.getIdProducto())) {
+                                                                        tortillaVenta = precio * finalTortilla;
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                tortillaVenta = p.getPrecio() * finalTortilla;
+                                                            }
+                                                        }
+                                                        if (p.getNombre().toUpperCase().contains("MASA")) {
+                                                            if (cliente.isPreferencial()) {
+                                                                for (int x = 0; x < cliente.getPrecios().size(); x++) {
+                                                                    StringTokenizer a = new StringTokenizer(cliente.getPrecios().get("p"+x),"?");
+                                                                    double precio = Double.parseDouble(a.nextToken());
+                                                                    String id = a.nextToken();
+                                                                    if (id.equals(p.getIdProducto())) {
+                                                                        masaVenta = precio * finalMasa;
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                masaVenta = p.getPrecio() * finalMasa;
+                                                            }
+                                                        }
+                                                        if (p.getNombre().toUpperCase().contains("TOTOPO")) {
+                                                            if (cliente.isPreferencial()) {
+                                                                for (int x = 0; x < cliente.getPrecios().size(); x++) {
+                                                                    StringTokenizer a = new StringTokenizer(cliente.getPrecios().get("p"+x),"?");
+                                                                    double precio = Double.parseDouble(a.nextToken());
+                                                                    String id = a.nextToken();
+                                                                    if (id.equals(p.getIdProducto())) {
+                                                                        totoposVenta = precio * finalTotopos;
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                totoposVenta = p.getPrecio() * finalTotopos;
+                                                            }
+                                                        }
+                                                        vueltaMap.put("totoposVenta",totoposVenta);
+                                                        vueltaMap.put("masaVenta",masaVenta);
+                                                        vueltaMap.put("tortillaVenta",tortillaVenta);
+                                                        if (devolucion) {
+                                                            hashMap.put("devolucion",vueltaMap);
+                                                        } else if (primero) {
+                                                            hashMap.put("vuelta1",vueltaMap);
+                                                        } else {
+                                                            hashMap.put("vuelta2",vueltaMap);
+                                                        }
+                                                        ref.updateChildren(hashMap);
+                                                    }
+                                                    dismiss();
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                }
+                                            });
                                 }
                             });
                 });

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -36,6 +37,7 @@ public class VentasAdicionalesBottomSheet extends BottomSheetDialogFragment {
 
     public static final int TIPO_GASTOS = 1000;
     public static final int TIPO_VENTAS_MOSTRADOR = 1001;
+    public static final int TIPO_GASTOS_REPARTIDOR = 1002;
 
     private BottomSheetBehavior bottomSheetBehavior;
 
@@ -134,6 +136,36 @@ public class VentasAdicionalesBottomSheet extends BottomSheetDialogFragment {
 
                         }
                     });
+        } else if (tipo == TIPO_GASTOS_REPARTIDOR) {
+            FirebaseDatabase.getInstance().getReference("Gastos")
+                    .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
+                    .child(idVenta)
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (!dataSnapshot.exists()) {
+                                txtTotal.setText("Total: $0");
+                                recyclerView.setVisibility(View.GONE);
+                            } else {
+                                recyclerView.setVisibility(View.VISIBLE);
+                                double total = 0.0;
+                                ArrayList<Concepto> conceptos = new ArrayList<>();
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    Concepto concepto = snapshot.getValue(Concepto.class);
+                                    conceptos.add(concepto);
+                                    total += concepto.getPrecio();
+                                }
+                                txtTotal.setText("Total: $" + total);
+                                AdaptadorConceptos adaptador = new AdaptadorConceptos(getContext(),conceptos,getFragmentManager(),tipo,idVenta);
+                                recyclerView.setAdapter(adaptador);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
         }
 
         ((ImageButton) view.findViewById(R.id.btnAddConcepto))
@@ -148,6 +180,9 @@ public class VentasAdicionalesBottomSheet extends BottomSheetDialogFragment {
         } else if (tipo == TIPO_VENTAS_MOSTRADOR) {
             ((TextView) view.findViewById(R.id.txtTitulo))
                     .setText("Venta de mostrador");
+        } else if (tipo == TIPO_GASTOS_REPARTIDOR) {
+            ((TextView) view.findViewById(R.id.txtTitulo))
+                    .setText("Gastos");
         }
 
         ((ImageButton) view.findViewById(R.id.btn_cerrar))

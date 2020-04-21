@@ -7,13 +7,13 @@ public class VentaRepartidor {
     private String fecha;
     private String idSucursal;
     private String idEmpleado;
-    private VueltaRepartidor vuelta1;
-    private VueltaRepartidor vuelta2;
+    private Vuelta vuelta1;
+    private Vuelta vuelta2;
 
     public VentaRepartidor() {
     }
 
-    public VentaRepartidor(String idVenta, long tiempo, String fecha, String idSucursal, String idEmpleado, VueltaRepartidor vuelta1, VueltaRepartidor vuelta2) {
+    public VentaRepartidor(String idVenta, long tiempo, String fecha, String idSucursal, String idEmpleado, Vuelta vuelta1, Vuelta vuelta2) {
         this.idVenta = idVenta;
         this.tiempo = tiempo;
         this.fecha = fecha;
@@ -63,19 +63,19 @@ public class VentaRepartidor {
         this.idEmpleado = idEmpleado;
     }
 
-    public VueltaRepartidor getVuelta1() {
+    public Vuelta getVuelta1() {
         return vuelta1;
     }
 
-    public void setVuelta1(VueltaRepartidor vuelta1) {
+    public void setVuelta1(Vuelta vuelta1) {
         this.vuelta1 = vuelta1;
     }
 
-    public VueltaRepartidor getVuelta2() {
+    public Vuelta getVuelta2() {
         return vuelta2;
     }
 
-    public void setVuelta2(VueltaRepartidor vuelta2) {
+    public void setVuelta2(Vuelta vuelta2) {
         this.vuelta2 = vuelta2;
     }
 

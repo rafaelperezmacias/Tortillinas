@@ -5,16 +5,20 @@ public class VueltaRepartidor {
     private double masa;
     private double tortillas;
     private double totopos;
-    private Long time;
+    private double tortillaVenta;
+    private double masaVenta;
+    private double totoposVenta;
 
     public VueltaRepartidor() {
     }
 
-    public VueltaRepartidor(double masa, double tortillas, double totopos, Long time) {
+    public VueltaRepartidor(double masa, double tortillas, double totopos, double tortillaVenta, double masaVenta, double totoposVenta) {
         this.masa = masa;
         this.tortillas = tortillas;
         this.totopos = totopos;
-        this.time = time;
+        this.tortillaVenta = tortillaVenta;
+        this.masaVenta = masaVenta;
+        this.totoposVenta = totoposVenta;
     }
 
     public double getMasa() {
@@ -41,21 +45,27 @@ public class VueltaRepartidor {
         this.totopos = totopos;
     }
 
-    public Long getTime() {
-        return time;
+    public double getTortillaVenta() {
+        return tortillaVenta;
     }
 
-    public void setTime(Long time) {
-        this.time = time;
+    public void setTortillaVenta(double tortillaVenta) {
+        this.tortillaVenta = tortillaVenta;
     }
 
-    @Override
-    public String toString() {
-        return "VueltaRepartidor{" +
-                "masa=" + masa +
-                ", tortillas=" + tortillas +
-                ", totopos=" + totopos +
-                ", time=" + time +
-                '}';
+    public double getMasaVenta() {
+        return masaVenta;
+    }
+
+    public void setMasaVenta(double masaVenta) {
+        this.masaVenta = masaVenta;
+    }
+
+    public double getTotoposVenta() {
+        return totoposVenta;
+    }
+
+    public void setTotoposVenta(double totoposVenta) {
+        this.totoposVenta = totoposVenta;
     }
 }

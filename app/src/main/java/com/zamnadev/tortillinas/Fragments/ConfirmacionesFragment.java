@@ -230,6 +230,8 @@ public class ConfirmacionesFragment extends Fragment {
         vueltaMap.put("tortillas",vuelta.getTortillas());
         vueltaMap.put("totopos",vuelta.getTotopos());
         vueltaMap.put("time",ServerValue.TIMESTAMP);
+        vueltaMap.put("registrada",true);
+        vueltaMap.put("confirmado",true);
         if (primero) {
             hashMap.put("vuelta1",vueltaMap);
         } else {

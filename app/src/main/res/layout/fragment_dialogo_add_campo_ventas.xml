@@ -50,7 +50,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/txt_precio"
-            android:inputType="numberSigned"
+            android:inputType="numberDecimal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

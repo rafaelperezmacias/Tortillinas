@@ -3,15 +3,14 @@ package com.zamnadev.tortillinas.Moldes;
 public class VentaCliente {
 
     private String idCliente;
-    private Vuelta vuelta1;
-    private Vuelta vuelta2;
-    private Vuelta devolucion;
+    private VueltaRepartidor vuelta1;
+    private VueltaRepartidor vuelta2;
+    private VueltaRepartidor devolucion;
 
     public VentaCliente() {
-
     }
 
-    public VentaCliente(String idCliente, Vuelta vuelta1, Vuelta vuelta2, Vuelta devolucion) {
+    public VentaCliente(String idCliente, VueltaRepartidor vuelta1, VueltaRepartidor vuelta2, VueltaRepartidor devolucion) {
         this.idCliente = idCliente;
         this.vuelta1 = vuelta1;
         this.vuelta2 = vuelta2;
@@ -22,16 +21,32 @@ public class VentaCliente {
         return idCliente;
     }
 
-    public Vuelta getVuelta1() {
+    public void setIdCliente(String idCliente) {
+        this.idCliente = idCliente;
+    }
+
+    public VueltaRepartidor getVuelta1() {
         return vuelta1;
     }
 
-    public Vuelta getVuelta2() {
+    public void setVuelta1(VueltaRepartidor vuelta1) {
+        this.vuelta1 = vuelta1;
+    }
+
+    public VueltaRepartidor getVuelta2() {
         return vuelta2;
     }
 
-    public Vuelta getDevolucion() {
+    public void setVuelta2(VueltaRepartidor vuelta2) {
+        this.vuelta2 = vuelta2;
+    }
+
+    public VueltaRepartidor getDevolucion() {
         return devolucion;
+    }
+
+    public void setDevolucion(VueltaRepartidor devolucion) {
+        this.devolucion = devolucion;
     }
 
     @Override

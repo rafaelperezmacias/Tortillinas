@@ -70,7 +70,6 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
         Cliente cliente = clientes.get(position);
         holder.txtNombre.setText(cliente.getNombre().getNombres() + " " + cliente.getNombre().getApellidos());
         holder.txtPseudonimo.setText(cliente.getPseudonimo());
-        holder.txtPendiente.setText("Pendiente: $0");
         VentaCliente ventaCliente = null;
 
         if (ventaClientes != null && ventaClientes.size() > 0) {
@@ -126,6 +125,7 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
             }
         }
 
+        double total = 0;
         if (venta != null) {
             if (venta.getVuelta1() == null && venta.getVuelta2() == null) {
                 //TODO algo
@@ -142,6 +142,18 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
                 holder.txtPrimer.setVisibility(View.GONE);
             } else {
                 VentaCliente finalVentaCliente = ventaCliente;
+                if (ventaCliente.getVuelta1() != null) {
+                    if (ventaCliente.getVuelta1().getMasaVenta() >= 0.0) {
+                        total += ventaCliente.getVuelta1().getMasaVenta();
+                    }
+                    if (ventaCliente.getVuelta1().getTortillaVenta() >= 0.0) {
+                        total += ventaCliente.getVuelta1().getTortillaVenta();
+                    }
+                    if (ventaCliente.getVuelta1().getTotoposVenta() >= 0.0) {
+                        total += ventaCliente.getVuelta1().getTotoposVenta();
+                    }
+                    holder.txtPendiente.setText("Pendiente: $" + total);
+                }
                 holder.txtPrimer.setOnClickListener(view -> {
                     VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(true,cliente,venta, finalVentaCliente);
                     ventas.show(fragmentManager,ventas.getTag());
@@ -153,11 +165,36 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
                 holder.txtSegunda.setVisibility(View.GONE);
             } else {
                 VentaCliente finalVentaCliente = ventaCliente;
+                if (ventaCliente.getVuelta2() != null) {
+                    if (ventaCliente.getVuelta2().getMasaVenta() >= 0.0) {
+                        total += ventaCliente.getVuelta2().getMasaVenta();
+                    }
+                    if (ventaCliente.getVuelta2().getTortillaVenta() >= 0.0) {
+                        total += ventaCliente.getVuelta2().getTortillaVenta();
+                    }
+                    if (ventaCliente.getVuelta2().getTotoposVenta() >= 0.0) {
+                        total += ventaCliente.getVuelta2().getTotoposVenta();
+                    }
+                    holder.txtPendiente.setText("Pendiente: $" + total);
+                }
                 holder.txtSegunda.setOnClickListener(view -> {
                     VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(false,cliente,venta, finalVentaCliente);
                     ventas.show(fragmentManager,ventas.getTag());
                 });
                 holder.txtSegunda.setEnabled(true);
+            }
+
+            if (ventaCliente.getDevolucion() != null) {
+                if (ventaCliente.getDevolucion().getMasaVenta() >= 0.0) {
+                    total -= ventaCliente.getDevolucion().getMasaVenta();
+                }
+                if (ventaCliente.getDevolucion().getTortillaVenta() >= 0.0) {
+                    total -= ventaCliente.getDevolucion().getTortillaVenta();
+                }
+                if (ventaCliente.getDevolucion().getTotoposVenta() >= 0.0) {
+                    total -= ventaCliente.getDevolucion().getTotoposVenta();
+                }
+                holder.txtPendiente.setText("Pendiente: $" + total);
             }
         }
 

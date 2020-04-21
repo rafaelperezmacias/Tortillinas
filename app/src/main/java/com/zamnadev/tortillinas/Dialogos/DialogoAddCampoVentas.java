@@ -28,6 +28,7 @@ public class DialogoAddCampoVentas extends DialogFragment {
 
     public static final int TIPO_GASTOS = 1000;
     public static final int TIPO_VENTAS_MOSTRADOR = 1001;
+    public static final int TIPO_GASTOS_REPARTIDOR = 1002;
 
     private String idVenta;
     private int tipo;
@@ -77,6 +78,19 @@ public class DialogoAddCampoVentas extends DialogFragment {
                                 });
                     } else if (tipo == TIPO_VENTAS_MOSTRADOR) {
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Mostrador")
+                                .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
+                                .child(idVenta);
+                        String id = reference.push().getKey();
+                        hashMap.put("id",id);
+                        reference.child(id)
+                                .updateChildren(hashMap)
+                                .addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        dismiss();
+                                    }
+                                });
+                    } else if (tipo == TIPO_GASTOS_REPARTIDOR) {
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Gastos")
                                 .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
                                 .child(idVenta);
                         String id = reference.push().getKey();
