@@ -131,7 +131,7 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
             }
         }
 
-        if (venta != null && ventaCliente != null) {
+        if (venta != null) {
             if (venta.getVuelta1() == null && venta.getVuelta2() == null) {
 
             } else {
@@ -147,17 +147,19 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
                 holder.txtPrimer.setVisibility(View.GONE);
             } else {
                 VentaCliente finalVentaCliente = ventaCliente;
-                if (ventaCliente.getVuelta1() != null) {
-                    if (ventaCliente.getVuelta1().getMasaVenta() >= 0.0) {
-                        holder.total += ventaCliente.getVuelta1().getMasaVenta();
+                if (ventaCliente != null) {
+                    if (ventaCliente.getVuelta1() != null) {
+                        if (ventaCliente.getVuelta1().getMasaVenta() >= 0.0) {
+                            holder.total += ventaCliente.getVuelta1().getMasaVenta();
+                        }
+                        if (ventaCliente.getVuelta1().getTortillaVenta() >= 0.0) {
+                            holder.total += ventaCliente.getVuelta1().getTortillaVenta();
+                        }
+                        if (ventaCliente.getVuelta1().getTotoposVenta() >= 0.0) {
+                            holder.total += ventaCliente.getVuelta1().getTotoposVenta();
+                        }
+                        holder.txtPendiente.setText("Pendiente: $" + holder.total);
                     }
-                    if (ventaCliente.getVuelta1().getTortillaVenta() >= 0.0) {
-                        holder.total += ventaCliente.getVuelta1().getTortillaVenta();
-                    }
-                    if (ventaCliente.getVuelta1().getTotoposVenta() >= 0.0) {
-                        holder.total += ventaCliente.getVuelta1().getTotoposVenta();
-                    }
-                    holder.txtPendiente.setText("Pendiente: $" + holder.total);
                 }
                 holder.txtPrimer.setOnClickListener(view -> {
                     VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(true,cliente,venta, finalVentaCliente);
@@ -170,17 +172,19 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
                 holder.txtSegunda.setVisibility(View.GONE);
             } else {
                 VentaCliente finalVentaCliente = ventaCliente;
-                if (ventaCliente.getVuelta2() != null) {
-                    if (ventaCliente.getVuelta2().getMasaVenta() >= 0.0) {
-                        holder.total += ventaCliente.getVuelta2().getMasaVenta();
+                if (ventaCliente != null) {
+                    if (ventaCliente.getVuelta2() != null) {
+                        if (ventaCliente.getVuelta2().getMasaVenta() >= 0.0) {
+                            holder.total += ventaCliente.getVuelta2().getMasaVenta();
+                        }
+                        if (ventaCliente.getVuelta2().getTortillaVenta() >= 0.0) {
+                            holder.total += ventaCliente.getVuelta2().getTortillaVenta();
+                        }
+                        if (ventaCliente.getVuelta2().getTotoposVenta() >= 0.0) {
+                            holder.total += ventaCliente.getVuelta2().getTotoposVenta();
+                        }
+                        holder.txtPendiente.setText("Pendiente: $" + holder.total);
                     }
-                    if (ventaCliente.getVuelta2().getTortillaVenta() >= 0.0) {
-                        holder.total += ventaCliente.getVuelta2().getTortillaVenta();
-                    }
-                    if (ventaCliente.getVuelta2().getTotoposVenta() >= 0.0) {
-                        holder.total += ventaCliente.getVuelta2().getTotoposVenta();
-                    }
-                    holder.txtPendiente.setText("Pendiente: $" + holder.total);
                 }
                 holder.txtSegunda.setOnClickListener(view -> {
                     VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(false,cliente,venta, finalVentaCliente);
@@ -189,56 +193,59 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
                 holder.txtSegunda.setEnabled(true);
             }
 
-            if (ventaCliente.getVuelta1() != null || ventaCliente.getVuelta2() != null) {
-                VentaCliente finalVentaCliente1 = ventaCliente;
-                holder.txtPago.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        double pago = 0.0;
-                        try {
-                             pago = Double.parseDouble(holder.txtPago.getText().toString());
-                        } catch (Exception ignored) {
+            if (ventaCliente != null) {
+                if (ventaCliente.getVuelta1() != null || ventaCliente.getVuelta2() != null) {
+                    VentaCliente finalVentaCliente1 = ventaCliente;
+                    holder.txtPago.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
                         }
-                        holder.total = holder.totalFinal;
-                        holder.total -= pago;
-                        holder.txtPendiente.setText("Pendiente: $" + holder.total);
-                        for (int x = 0; x < pagos.size(); x++) {
-                            if (finalVentaCliente1.getIdCliente().equals(pagos.get(x).getIdCliente())) {
-                                pagos.get(x).setPago(pago);
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            double pago = 0.0;
+                            try {
+                                pago = Double.parseDouble(holder.txtPago.getText().toString());
+                            } catch (Exception ignored) {
+
+                            }
+                            holder.total = holder.totalFinal;
+                            holder.total -= pago;
+                            holder.txtPendiente.setText("Pendiente: $" + holder.total);
+                            for (int x = 0; x < pagos.size(); x++) {
+                                if (finalVentaCliente1.getIdCliente().equals(pagos.get(x).getIdCliente())) {
+                                    pagos.get(x).setPago(pago);
+                                }
                             }
                         }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+
+                        }
+                    });
+                }
+                if (ventaCliente.getDevolucion() != null) {
+                    if (ventaCliente.getDevolucion().getMasaVenta() >= 0.0) {
+                        holder.total -= ventaCliente.getDevolucion().getMasaVenta();
                     }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-
+                    if (ventaCliente.getDevolucion().getTortillaVenta() >= 0.0) {
+                        holder.total -= ventaCliente.getDevolucion().getTortillaVenta();
                     }
-                });
-            }
-
-            if (ventaCliente.getDevolucion() != null) {
-                if (ventaCliente.getDevolucion().getMasaVenta() >= 0.0) {
-                    holder.total -= ventaCliente.getDevolucion().getMasaVenta();
+                    if (ventaCliente.getDevolucion().getTotoposVenta() >= 0.0) {
+                        holder.total -= ventaCliente.getDevolucion().getTotoposVenta();
+                    }
+                    holder.txtPendiente.setText("Pendiente: $" + holder.total);
                 }
-                if (ventaCliente.getDevolucion().getTortillaVenta() >= 0.0) {
-                    holder.total -= ventaCliente.getDevolucion().getTortillaVenta();
+                if (ventaCliente.getPago() >= 0.0) {
+                    holder.totalFinal = holder.total;
+                    holder.total -= ventaCliente.getPago();
+                    holder.txtPendiente.setText("Pendiente: $" + holder.total);
+                    holder.txtPago.setText("" + ventaCliente.getPago());
                 }
-                if (ventaCliente.getDevolucion().getTotoposVenta() >= 0.0) {
-                    holder.total -= ventaCliente.getDevolucion().getTotoposVenta();
-                }
-                holder.txtPendiente.setText("Pendiente: $" + holder.total);
-            }
-            if (ventaCliente.getPago() >= 0.0) {
-                holder.totalFinal = holder.total;
-                holder.total -= ventaCliente.getPago();
-                holder.txtPendiente.setText("Pendiente: $" + holder.total);
-                holder.txtPago.setText("" + ventaCliente.getPago());
+            } else {
+                holder.txtPendiente.setText("Pendiente: $0");
             }
         }
 
