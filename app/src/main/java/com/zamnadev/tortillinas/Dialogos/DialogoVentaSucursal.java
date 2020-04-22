@@ -78,9 +78,7 @@ public class DialogoVentaSucursal extends DialogFragment {
         ((Button) view.findViewById(R.id.btnSiguiente)).setText("SIGUIENTE");
         (view.findViewById(R.id.btnSiguiente)).setOnClickListener(view1 -> {
             if (isMostrador) {
-                ventasFragment.altaVentaMostrador(adaptador.getIdSucursalActiva());
-            } else {
-                //TODO proceso de inicio de venta de tipo repartidor
+                ventasFragment.altaVentaMostrador(adaptador.getIdSucursalActiva(),null);
             }
             dismiss();
         });
