@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.zamnadev.tortillinas.Adaptadores.AdaptadorRepartidorClientes;
 import com.zamnadev.tortillinas.Moldes.Cliente;
 import com.zamnadev.tortillinas.Moldes.Producto;
 import com.zamnadev.tortillinas.Moldes.VentaCliente;
@@ -46,21 +47,34 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
     private VentaRepartidor ventaRepartidor;
     private VentaCliente ventaCliente;
     private boolean devolucion;
+    private AdaptadorRepartidorClientes adaptador;
 
-    public VentasClienteBottomSheet(boolean primero, Cliente cliente, VentaRepartidor ventaRepartidor, VentaCliente ventaCliente) {
+    private double masaAnterior;
+    private double tortillaAnterior;
+    private double totopoAnterior;
+
+    public VentasClienteBottomSheet(AdaptadorRepartidorClientes adaptador, boolean primero, Cliente cliente, VentaRepartidor ventaRepartidor, VentaCliente ventaCliente) {
         this.primero = primero;
         this.cliente = cliente;
         this.ventaRepartidor = ventaRepartidor;
         this.ventaCliente = ventaCliente;
         devolucion = false;
+        this.adaptador = adaptador;
+        masaAnterior = -1;
+        tortillaAnterior = -1;
+        totopoAnterior = -1;
     }
 
-    public VentasClienteBottomSheet(boolean primero, Cliente cliente, VentaRepartidor ventaRepartidor, VentaCliente ventaCliente, boolean devolucion) {
+    public VentasClienteBottomSheet(AdaptadorRepartidorClientes adaptador, boolean primero, Cliente cliente, VentaRepartidor ventaRepartidor, VentaCliente ventaCliente, boolean devolucion) {
         this.primero = primero;
         this.cliente = cliente;
         this.ventaRepartidor = ventaRepartidor;
         this.ventaCliente = ventaCliente;
         this.devolucion = devolucion;
+        this.adaptador = adaptador;
+        masaAnterior = -1;
+        tortillaAnterior = -1;
+        totopoAnterior = -1;
     }
 
 
@@ -109,24 +123,30 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
                 if (ventaCliente.getVuelta1() != null) {
                     if (ventaCliente.getVuelta1().getTortillas() >= 0) {
                         txtTortilla.setText("" + ventaCliente.getVuelta1().getTortillas());
+                        tortillaAnterior = ventaCliente.getVuelta1().getTortillas();
                     }
                     if (ventaCliente.getVuelta1().getTotopos() >= 0) {
                         txtTotopos.setText("" + ventaCliente.getVuelta1().getTotopos());
+                        totopoAnterior = ventaCliente.getVuelta1().getTotopos();
                     }
                     if (ventaCliente.getVuelta1().getMasa() >= 0) {
                         txtMasa.setText("" + ventaCliente.getVuelta1().getMasa());
+                        masaAnterior = ventaCliente.getVuelta1().getMasa();
                     }
                 }
             } else {
                 if (ventaCliente.getVuelta2() != null) {
                     if (ventaCliente.getVuelta2().getTortillas() >= 0) {
                         txtTortilla.setText("" + ventaCliente.getVuelta2().getTortillas());
+                        tortillaAnterior = ventaCliente.getVuelta2().getTortillas();
                     }
                     if (ventaCliente.getVuelta2().getTotopos() >= 0) {
                         txtTotopos.setText("" + ventaCliente.getVuelta2().getTotopos());
+                        totopoAnterior = ventaCliente.getVuelta2().getTotopos();
                     }
                     if (ventaCliente.getVuelta2().getMasa() >= 0) {
                         txtMasa.setText("" + ventaCliente.getVuelta2().getMasa());
+                        masaAnterior = ventaCliente.getVuelta2().getMasa();
                     }
                 }
             }
@@ -237,6 +257,54 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
                         }
                         if (isReturn) {
                             return;
+                        }
+                    } else {
+                        if (primero) {
+                            boolean isReturn = false;
+                            if (adaptador.getMasaVentaPrimerVuelta() >= 0 && masa != 0 && masa > adaptador.getMasaVentaPrimerVuelta() && masa > masaAnterior) {
+                                lytMasa.setError("Masa disponible ("+adaptador.getMasaVentaPrimerVuelta()+" kgs)");
+                                isReturn = true;
+                            } else {
+                                lytMasa.setError(null);
+                            }
+                            if (adaptador.getTortillasVentaPrimerVuelta() >= 0 && tortilla != 0 && tortilla > adaptador.getTortillasVentaPrimerVuelta() && tortilla > tortillaAnterior) {
+                                lytTortilla.setError("Tortilla disponible ("+adaptador.getTortillasVentaPrimerVuelta()+" kgs)");
+                                isReturn = true;
+                            } else {
+                                lytTortilla.setError(null);
+                            }
+                            if (adaptador.getTotoposVentaPrimerVuelta() >= 0 && totopos != 0 && totopos > adaptador.getTotoposVentaPrimerVuelta() && totopos > totopoAnterior) {
+                                lytTotopos.setError("Totopos disponible ("+adaptador.getTotoposVentaPrimerVuelta()+" kgs)");
+                                isReturn = true;
+                            } else {
+                                lytTotopos.setError(null);
+                            }
+                            if (isReturn) {
+                                return;
+                            }
+                        } else {
+                            boolean isReturn = false;
+                            if (adaptador.getMasaVentaSegundaVuelta() >= 0 && masa != 0 && masa > adaptador.getMasaVentaSegundaVuelta() && masa > masaAnterior) {
+                                lytMasa.setError("Masa disponible (" + adaptador.getMasaVentaSegundaVuelta() + " kgs)");
+                                isReturn = true;
+                            } else {
+                                lytMasa.setError(null);
+                            }
+                            if (adaptador.getTortillasVentaSegundaVuelta() >= 0 && tortilla != 0 && tortilla > adaptador.getTortillasVentaSegundaVuelta() && tortilla > tortillaAnterior) {
+                                lytTortilla.setError("Tortilla disponible (" + adaptador.getTortillasVentaSegundaVuelta() + " kgs)");
+                                isReturn = true;
+                            } else {
+                                lytTortilla.setError(null);
+                            }
+                            if (adaptador.getTotoposVentaSegundaVuelta() >= 0 && totopos != 0 && totopos > adaptador.getTotoposVentaSegundaVuelta() && totopos > totopoAnterior) {
+                                lytTotopos.setError("Totopos disponible ("+adaptador.getTotoposVentaSegundaVuelta()+" kgs)");
+                                isReturn = true;
+                            } else {
+                                lytTotopos.setError(null);
+                            }
+                            if (isReturn) {
+                                return;
+                            }
                         }
                     }
                     HashMap<String,Object> hashMap = new HashMap<>();

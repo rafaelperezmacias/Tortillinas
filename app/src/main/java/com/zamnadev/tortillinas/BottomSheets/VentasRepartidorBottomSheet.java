@@ -319,12 +319,21 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
                     } else {
                         if (tortillaP > 0.0) {
                             text += "\t\tTortillas: " + tortillaP + " kgs.\n";
+                            if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
+                                adaptador.setTortillasVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTortillas() - tortillaP);
+                            }
                         }
                         if (masaP > 0.0) {
                             text += "\t\tMasa: " + masaP + " kgs.\n";
+                            if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
+                                adaptador.setMasaVentaPrimerVuelta(ventaRepartidor.getVuelta1().getMasa() - masaP);
+                            }
                         }
                         if (totoposP > 0.0) {
                             text += "\t\tTotopos: " + totoposP + " kgs.\n";
+                            if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
+                                adaptador.setTotoposVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTotopos() - totoposP);
+                            }
                         }
                         txtVendidosUno.setVisibility(View.VISIBLE);
                         txtTituloVendidoUno.setVisibility(View.VISIBLE);
@@ -337,12 +346,21 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
                     } else {
                         if (tortillaS > 0.0) {
                             text += "\t\tTortillas: " + tortillaS + " kgs.\n";
+                            if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
+                                adaptador.setTortillasVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTortillas() - tortillaS);
+                            }
                         }
                         if (masaS > 0.0) {
                             text += "\t\tMasa: " + masaS + " kgs.\n";
+                            if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
+                                adaptador.setMasaVentaSegundaVuelta(ventaRepartidor.getVuelta2().getMasa() - masaS);
+                            }
                         }
                         if (totoposS > 0.0) {
                             text += "\t\tTotopos: " + totoposS + " kgs.\n";
+                            if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
+                                adaptador.setTotoposVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTotopos() - totoposS);
+                            }
                         }
                         txtVendidosDos.setVisibility(View.VISIBLE);
                         txtTituloVendidoDos.setVisibility(View.VISIBLE);

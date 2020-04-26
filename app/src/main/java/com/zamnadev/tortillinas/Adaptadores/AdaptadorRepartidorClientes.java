@@ -41,6 +41,13 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
     private ArrayList<VentaCliente> ventaClientes;
     private ArrayList<VentaCliente> pagos;
 
+    private double tortillasVentaPrimerVuelta;
+    private double masaVentaPrimerVuelta;
+    private double totoposVentaPrimerVuelta;
+    private double tortillasVentaSegundaVuelta;
+    private double masaVentaSegundaVuelta;
+    private double totoposVentaSegundaVuelta;
+
     public AdaptadorRepartidorClientes(Context context, ArrayList<Cliente> clientes, String idVenta, FragmentManager fragmentManager) {
         this.context = context;
         this.clientes = clientes;
@@ -61,6 +68,12 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
 
                     }
                 });
+        tortillasVentaPrimerVuelta = 0.0;
+        masaVentaPrimerVuelta = 0.0;
+        totoposVentaPrimerVuelta = 0.0;
+        tortillasVentaSegundaVuelta = 0.0;
+        masaVentaSegundaVuelta = 0.0;
+        totoposVentaSegundaVuelta = 0.0;
     }
 
     @NonNull
@@ -162,13 +175,13 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
                         holder.txtDevolucion.setEnabled(true);
                         holder.txtPago.setEnabled(true);
                         holder.txtDevolucion.setOnClickListener(view -> {
-                            VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(true,cliente,venta, finalVentaCliente,true);
+                            VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(getMe(),true,cliente,venta, finalVentaCliente,true);
                             ventas.show(fragmentManager,ventas.getTag());
                         });
                     }
                 }
                 holder.txtPrimer.setOnClickListener(view -> {
-                    VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(true,cliente,venta, finalVentaCliente);
+                    VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(getMe(), true,cliente,venta, finalVentaCliente);
                     ventas.show(fragmentManager,ventas.getTag());
                 });
                 holder.txtPrimer.setEnabled(true);
@@ -197,7 +210,7 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
                             holder.txtDevolucion.setEnabled(true);
                             holder.txtPago.setEnabled(true);
                             holder.txtDevolucion.setOnClickListener(view -> {
-                                VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(true,cliente,venta, finalVentaCliente,true);
+                                VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(getMe(), true,cliente,venta, finalVentaCliente,true);
                                 ventas.show(fragmentManager,ventas.getTag());
                             });
                         }
@@ -205,7 +218,7 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
                     }
                 }
                 holder.txtSegunda.setOnClickListener(view -> {
-                    VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(false,cliente,venta, finalVentaCliente);
+                    VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(getMe(), false,cliente,venta, finalVentaCliente);
                     ventas.show(fragmentManager,ventas.getTag());
                 });
                 holder.txtSegunda.setEnabled(true);
@@ -287,6 +300,10 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
         });
     }
 
+    private AdaptadorRepartidorClientes getMe() {
+        return this;
+    }
+
     public ArrayList<VentaCliente> getPagos() {
         return pagos;
     }
@@ -304,6 +321,54 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
         this.ventaClientes = ventaClientes;
         pagos.addAll(ventaClientes);
         notifyDataSetChanged();
+    }
+
+    public double getTortillasVentaPrimerVuelta() {
+        return tortillasVentaPrimerVuelta;
+    }
+
+    public double getMasaVentaPrimerVuelta() {
+        return masaVentaPrimerVuelta;
+    }
+
+    public double getTotoposVentaPrimerVuelta() {
+        return totoposVentaPrimerVuelta;
+    }
+
+    public double getTortillasVentaSegundaVuelta() {
+        return tortillasVentaSegundaVuelta;
+    }
+
+    public double getMasaVentaSegundaVuelta() {
+        return masaVentaSegundaVuelta;
+    }
+
+    public double getTotoposVentaSegundaVuelta() {
+        return totoposVentaSegundaVuelta;
+    }
+
+    public void setTortillasVentaPrimerVuelta(double tortillasVentaPrimerVuelta) {
+        this.tortillasVentaPrimerVuelta = tortillasVentaPrimerVuelta;
+    }
+
+    public void setMasaVentaPrimerVuelta(double masaVentaPrimerVuelta) {
+        this.masaVentaPrimerVuelta = masaVentaPrimerVuelta;
+    }
+
+    public void setTotoposVentaPrimerVuelta(double totoposVentaPrimerVuelta) {
+        this.totoposVentaPrimerVuelta = totoposVentaPrimerVuelta;
+    }
+
+    public void setTortillasVentaSegundaVuelta(double tortillasVentaSegundaVuelta) {
+        this.tortillasVentaSegundaVuelta = tortillasVentaSegundaVuelta;
+    }
+
+    public void setMasaVentaSegundaVuelta(double masaVentaSegundaVuelta) {
+        this.masaVentaSegundaVuelta = masaVentaSegundaVuelta;
+    }
+
+    public void setTotoposVentaSegundaVuelta(double totoposVentaSegundaVuelta) {
+        this.totoposVentaSegundaVuelta = totoposVentaSegundaVuelta;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
