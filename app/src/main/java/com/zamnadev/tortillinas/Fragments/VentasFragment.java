@@ -57,12 +57,15 @@ public class VentasFragment extends Fragment {
 
         tabLayout = view.findViewById(R.id.tab_layout);
         viewPager = view.findViewById(R.id.viewpager);
-        adapter.addFragment(new ListadoVentasFragment(), "Ventas realizadas");
-        adapter.addFragment(new ConfirmacionesFragment(getMe()), "Confirmaciones");
+        adapter.addFragment(new ListadoVentasFragment(getMe()), "Ventas realizadas");
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
         return view;
+    }
+
+    public ViewPagerAdapter getAdapter() {
+        return adapter;
     }
 
     private VentasFragment getMe() {

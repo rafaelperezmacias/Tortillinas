@@ -261,19 +261,19 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
                     } else {
                         if (primero) {
                             boolean isReturn = false;
-                            if (adaptador.getMasaVentaPrimerVuelta() >= 0 && masa != 0 && masa > adaptador.getMasaVentaPrimerVuelta() && masa > masaAnterior) {
+                            if (adaptador.getMasaVentaPrimerVuelta() >= 0 && masa != 0 && masa > adaptador.getMasaVentaPrimerVuelta() && masa > masaAnterior && (masa - masaAnterior) > adaptador.getMasaVentaPrimerVuelta()) {
                                 lytMasa.setError("Masa disponible ("+adaptador.getMasaVentaPrimerVuelta()+" kgs)");
                                 isReturn = true;
                             } else {
                                 lytMasa.setError(null);
                             }
-                            if (adaptador.getTortillasVentaPrimerVuelta() >= 0 && tortilla != 0 && tortilla > adaptador.getTortillasVentaPrimerVuelta() && tortilla > tortillaAnterior) {
+                            if (adaptador.getTortillasVentaPrimerVuelta() >= 0 && tortilla != 0 && tortilla > adaptador.getTortillasVentaPrimerVuelta() && tortilla > tortillaAnterior && (tortilla - tortillaAnterior) > adaptador.getTortillasVentaPrimerVuelta()) {
                                 lytTortilla.setError("Tortilla disponible ("+adaptador.getTortillasVentaPrimerVuelta()+" kgs)");
                                 isReturn = true;
                             } else {
                                 lytTortilla.setError(null);
                             }
-                            if (adaptador.getTotoposVentaPrimerVuelta() >= 0 && totopos != 0 && totopos > adaptador.getTotoposVentaPrimerVuelta() && totopos > totopoAnterior) {
+                            if (adaptador.getTotoposVentaPrimerVuelta() >= 0 && totopos != 0 && totopos > adaptador.getTotoposVentaPrimerVuelta() && totopos > totopoAnterior && (totopos - totopoAnterior) > adaptador.getTotoposVentaPrimerVuelta()) {
                                 lytTotopos.setError("Totopos disponible ("+adaptador.getTotoposVentaPrimerVuelta()+" kgs)");
                                 isReturn = true;
                             } else {
@@ -284,19 +284,19 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
                             }
                         } else {
                             boolean isReturn = false;
-                            if (adaptador.getMasaVentaSegundaVuelta() >= 0 && masa != 0 && masa > adaptador.getMasaVentaSegundaVuelta() && masa > masaAnterior) {
+                            if (adaptador.getMasaVentaSegundaVuelta() >= 0 && masa != 0 && masa > adaptador.getMasaVentaSegundaVuelta() && masa > masaAnterior && (masa - masaAnterior) > adaptador.getMasaVentaSegundaVuelta()) {
                                 lytMasa.setError("Masa disponible (" + adaptador.getMasaVentaSegundaVuelta() + " kgs)");
                                 isReturn = true;
                             } else {
                                 lytMasa.setError(null);
                             }
-                            if (adaptador.getTortillasVentaSegundaVuelta() >= 0 && tortilla != 0 && tortilla > adaptador.getTortillasVentaSegundaVuelta() && tortilla > tortillaAnterior) {
+                            if (adaptador.getTortillasVentaSegundaVuelta() >= 0 && tortilla != 0 && tortilla > adaptador.getTortillasVentaSegundaVuelta() && tortilla > tortillaAnterior && (tortilla - tortillaAnterior) > adaptador.getTortillasVentaSegundaVuelta()) {
                                 lytTortilla.setError("Tortilla disponible (" + adaptador.getTortillasVentaSegundaVuelta() + " kgs)");
                                 isReturn = true;
                             } else {
                                 lytTortilla.setError(null);
                             }
-                            if (adaptador.getTotoposVentaSegundaVuelta() >= 0 && totopos != 0 && totopos > adaptador.getTotoposVentaSegundaVuelta() && totopos > totopoAnterior) {
+                            if (adaptador.getTotoposVentaSegundaVuelta() >= 0 && totopos != 0 && totopos > adaptador.getTotoposVentaSegundaVuelta() && totopos > totopoAnterior && (totopos - totopoAnterior) > adaptador.getTotoposVentaSegundaVuelta()) {
                                 lytTotopos.setError("Totopos disponible ("+adaptador.getTotoposVentaSegundaVuelta()+" kgs)");
                                 isReturn = true;
                             } else {

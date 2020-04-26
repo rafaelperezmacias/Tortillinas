@@ -40,14 +40,16 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class ListadoVentasFragment extends Fragment {
-    
+
     private Empleado empleado;
     private ArrayList<VentaRepartidor> ventas;
     private ArrayList<VentaRepartidor> ventasDelDia;
     private String fecha;
+    private VentasFragment ventasFragment;
 
-    public ListadoVentasFragment()
+    public ListadoVentasFragment(VentasFragment ventasFragment)
     {
+        this.ventasFragment = ventasFragment;
         final Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
@@ -86,10 +88,13 @@ public class ListadoVentasFragment extends Fragment {
                                 .child(empleado.getIdEmpleado())
                                 .orderByChild("fecha");
                     } else {
-                         refVentas = FirebaseDatabase.getInstance().getReference("VentasRepartidor")
+                        refVentas = FirebaseDatabase.getInstance().getReference("VentasRepartidor")
                                 .child(empleado.getIdEmpleado())
                                 .orderByChild("fecha");
-                         fabAgregarVenta.hide();
+                        fabAgregarVenta.hide();
+                        if (ventasFragment.getAdapter().getCount() != 2) {
+                            ventasFragment.getAdapter().addFragment(new ConfirmacionesFragment(ventasFragment), "Confirmaciones");
+                        }
                     }
 
                     refVentas.addValueEventListener(new ValueEventListener() {

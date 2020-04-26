@@ -68,12 +68,12 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
 
                     }
                 });
-        tortillasVentaPrimerVuelta = 0.0;
-        masaVentaPrimerVuelta = 0.0;
-        totoposVentaPrimerVuelta = 0.0;
-        tortillasVentaSegundaVuelta = 0.0;
-        masaVentaSegundaVuelta = 0.0;
-        totoposVentaSegundaVuelta = 0.0;
+        tortillasVentaPrimerVuelta = -1;
+        masaVentaPrimerVuelta = -1;
+        totoposVentaPrimerVuelta = -1;
+        tortillasVentaSegundaVuelta = -1;
+        masaVentaSegundaVuelta = -1;
+        totoposVentaSegundaVuelta = -1;
     }
 
     @NonNull

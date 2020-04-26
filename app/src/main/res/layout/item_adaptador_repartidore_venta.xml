@@ -60,6 +60,15 @@
                 android:layout_height="wrap_content" />
 
             <ImageButton
+                android:id="@+id/btnEditarPrimero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/icon"
+                android:padding="8dp"
+                android:src="@drawable/ic_more_vert_24dp" />
+
+            <ImageButton
                 android:id="@+id/btnPrimero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

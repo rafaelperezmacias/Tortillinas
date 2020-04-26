@@ -252,7 +252,6 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()) {
-                    //
                     recyclerView.setVisibility(View.GONE);
                 } else {
                     recyclerView.setVisibility(View.VISIBLE);
