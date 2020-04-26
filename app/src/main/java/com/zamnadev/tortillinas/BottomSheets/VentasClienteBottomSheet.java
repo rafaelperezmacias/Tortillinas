@@ -20,6 +20,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -85,8 +86,11 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
         });
 
         TextInputEditText txtTortilla = view.findViewById(R.id.txtTortilla);
+        TextInputLayout lytTortilla = view.findViewById(R.id.lytTortilla);
         TextInputEditText txtMasa = view.findViewById(R.id.txtMasa);
+        TextInputLayout lytMasa = view.findViewById(R.id.lytMasa);
         TextInputEditText txtTotopos = view.findViewById(R.id.txtTotopos);
+        TextInputLayout lytTotopos = view.findViewById(R.id.lytTotopos);
 
         if (ventaCliente != null) {
             if (devolucion) {
@@ -181,6 +185,59 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
                     }
                     if (!txtTotopos.getText().toString().isEmpty()) {
                         totopos = Double.parseDouble(txtTotopos.getText().toString());
+                    }
+                    if (devolucion) {
+                        double tortillaCompra = 0.0, masaCompra = 0.0, totoposCompra = 0.0;
+                        if (ventaCliente.getVuelta1() != null) {
+                            if (ventaCliente.getVuelta1().getMasa() >= 0.0) {
+                                masaCompra += ventaCliente.getVuelta1().getMasa();
+                            }
+                            if (ventaCliente.getVuelta1().getTotopos() >= 0.0) {
+                                totoposCompra += ventaCliente.getVuelta1().getTotopos();
+                            }
+                            if (ventaCliente.getVuelta1().getTortillas() >= 0.0) {
+                                tortillaCompra += ventaCliente.getVuelta1().getTortillas();
+                            }
+                        }
+                        if (ventaCliente.getVuelta2() != null) {
+                            if (ventaCliente.getVuelta2().getMasa() >= 0.0) {
+                                masaCompra += ventaCliente.getVuelta2().getMasa();
+                            }
+                            if (ventaCliente.getVuelta2().getTotopos() >= 0.0) {
+                                totoposCompra += ventaCliente.getVuelta2().getTotopos();
+                            }
+                            if (ventaCliente.getVuelta2().getTortillas() >= 0.0) {
+                                tortillaCompra += ventaCliente.getVuelta2().getTortillas();
+                            }
+                        }
+                        boolean isReturn = false;
+                        if (!txtMasa.getText().toString().isEmpty()) {
+                            if (masa > masaCompra) {
+                                lytMasa.setError("No puede regresar más de lo que compro");
+                                isReturn = true;
+                            } else {
+                                lytMasa.setError(null);
+                            }
+                        }
+                        if (!txtTortilla.getText().toString().isEmpty()) {
+                            if (tortilla > tortillaCompra) {
+                                lytTortilla.setError("No puede regresar más de lo que compro");
+                                isReturn = true;
+                            } else {
+                                lytTortilla.setError(null);
+                            }
+                        }
+                        if (!txtTotopos.getText().toString().isEmpty()) {
+                            if (totopos > totoposCompra) {
+                                lytTotopos.setError("No puede regresar más de lo que compro");
+                                isReturn = true;
+                            } else {
+                                lytTotopos.setError(null);
+                            }
+                        }
+                        if (isReturn) {
+                            return;
+                        }
                     }
                     HashMap<String,Object> hashMap = new HashMap<>();
                     hashMap.put("idCliente",cliente.getIdCliente());

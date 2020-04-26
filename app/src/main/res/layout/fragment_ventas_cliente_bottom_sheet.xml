@@ -88,6 +88,7 @@
                     android:src="@drawable/ic_kg_24dp"/>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/lytTortilla"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/icon3"
@@ -110,6 +111,7 @@
             </RelativeLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/lytMasa"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -129,6 +131,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/lytTotopos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"

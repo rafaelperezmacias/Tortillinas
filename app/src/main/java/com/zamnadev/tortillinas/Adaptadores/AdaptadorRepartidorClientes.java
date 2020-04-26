@@ -133,32 +133,38 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
 
         if (venta != null) {
             if (venta.getVuelta1() == null && venta.getVuelta2() == null) {
-
-            } else {
-                holder.txtDevolucion.setEnabled(true);
-                VentaCliente finalVentaCliente = ventaCliente;
-                holder.txtDevolucion.setOnClickListener(view -> {
-                    VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(true,cliente,venta, finalVentaCliente,true);
-                    ventas.show(fragmentManager,ventas.getTag());
-                });
+                holder.txtDevolucion.setEnabled(false);
+                holder.txtPago.setEnabled(true);
+                return;
             }
-
             if (venta.getVuelta1() == null) {
                 holder.txtPrimer.setVisibility(View.GONE);
             } else {
                 VentaCliente finalVentaCliente = ventaCliente;
                 if (ventaCliente != null) {
+                    boolean mostrarDevolucion = false;
                     if (ventaCliente.getVuelta1() != null) {
-                        if (ventaCliente.getVuelta1().getMasaVenta() >= 0.0) {
+                        if (ventaCliente.getVuelta1().getMasa() >= 0.0) {
                             holder.total += ventaCliente.getVuelta1().getMasaVenta();
+                            mostrarDevolucion = true;
                         }
-                        if (ventaCliente.getVuelta1().getTortillaVenta() >= 0.0) {
+                        if (ventaCliente.getVuelta1().getTortillas() >= 0.0) {
                             holder.total += ventaCliente.getVuelta1().getTortillaVenta();
+                            mostrarDevolucion = true;
                         }
-                        if (ventaCliente.getVuelta1().getTotoposVenta() >= 0.0) {
+                        if (ventaCliente.getVuelta1().getTotopos() >= 0.0) {
                             holder.total += ventaCliente.getVuelta1().getTotoposVenta();
+                            mostrarDevolucion = true;
                         }
                         holder.txtPendiente.setText("Pendiente: $" + holder.total);
+                    }
+                    if (mostrarDevolucion) {
+                        holder.txtDevolucion.setEnabled(true);
+                        holder.txtPago.setEnabled(true);
+                        holder.txtDevolucion.setOnClickListener(view -> {
+                            VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(true,cliente,venta, finalVentaCliente,true);
+                            ventas.show(fragmentManager,ventas.getTag());
+                        });
                     }
                 }
                 holder.txtPrimer.setOnClickListener(view -> {
@@ -173,15 +179,27 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
             } else {
                 VentaCliente finalVentaCliente = ventaCliente;
                 if (ventaCliente != null) {
+                    boolean mostrarDevolucion = false;
                     if (ventaCliente.getVuelta2() != null) {
-                        if (ventaCliente.getVuelta2().getMasaVenta() >= 0.0) {
+                        if (ventaCliente.getVuelta2().getMasa() >= 0.0) {
                             holder.total += ventaCliente.getVuelta2().getMasaVenta();
+                            mostrarDevolucion = true;
                         }
-                        if (ventaCliente.getVuelta2().getTortillaVenta() >= 0.0) {
+                        if (ventaCliente.getVuelta2().getTortillas() >= 0.0) {
                             holder.total += ventaCliente.getVuelta2().getTortillaVenta();
+                            mostrarDevolucion = true;
                         }
-                        if (ventaCliente.getVuelta2().getTotoposVenta() >= 0.0) {
+                        if (ventaCliente.getVuelta2().getTotopos() >= 0.0) {
                             holder.total += ventaCliente.getVuelta2().getTotoposVenta();
+                            mostrarDevolucion = true;
+                        }
+                        if (mostrarDevolucion) {
+                            holder.txtDevolucion.setEnabled(true);
+                            holder.txtPago.setEnabled(true);
+                            holder.txtDevolucion.setOnClickListener(view -> {
+                                VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(true,cliente,venta, finalVentaCliente,true);
+                                ventas.show(fragmentManager,ventas.getTag());
+                            });
                         }
                         holder.txtPendiente.setText("Pendiente: $" + holder.total);
                     }
@@ -247,6 +265,8 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
             } else {
                 holder.txtPendiente.setText("Pendiente: $0");
             }
+        } else {
+            holder.txtDevolucion.setEnabled(false);
         }
 
         holder.btnCliente.setOnClickListener(view -> {
