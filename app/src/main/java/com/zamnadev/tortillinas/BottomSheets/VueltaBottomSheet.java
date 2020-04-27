@@ -28,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Dialogs.MessageDialog;
 import com.zamnadev.tortillinas.Dialogs.MessageDialogBuilder;
 import com.zamnadev.tortillinas.Moldes.Empleado;
+import com.zamnadev.tortillinas.Moldes.Vuelta;
 import com.zamnadev.tortillinas.Notificaciones.Client;
 import com.zamnadev.tortillinas.Notificaciones.Data;
 import com.zamnadev.tortillinas.Notificaciones.FCMServiceAPI;
@@ -56,6 +57,8 @@ public class VueltaBottomSheet extends BottomSheetDialogFragment {
     private FCMServiceAPI api;
     private Context context;
     private String nombreSucursal;
+    private boolean isEdit;
+    private Vuelta vuelta;
 
     public VueltaBottomSheet(boolean primero, Empleado empleado, String idVenta, Context context, String nombreSucursal)
     {
@@ -65,6 +68,19 @@ public class VueltaBottomSheet extends BottomSheetDialogFragment {
         api = Client.getClient("https://fcm.googleapis.com/").create(FCMServiceAPI.class);
         this.context = context;
         this.nombreSucursal = nombreSucursal;
+        isEdit = false;
+    }
+
+    public VueltaBottomSheet(boolean primero, Empleado empleado, String idVenta, Context context, String nombreSucursal, boolean isEdit, Vuelta vuelta)
+    {
+        this.primero = primero;
+        this.empleado = empleado;
+        this.idVenta = idVenta;
+        api = Client.getClient("https://fcm.googleapis.com/").create(FCMServiceAPI.class);
+        this.context = context;
+        this.nombreSucursal = nombreSucursal;
+        this.isEdit = isEdit;
+        this.vuelta = vuelta;
     }
 
     @Override
@@ -102,6 +118,20 @@ public class VueltaBottomSheet extends BottomSheetDialogFragment {
         }
 
         titulo += "vuelta";
+
+        if (isEdit) {
+            if (vuelta != null) {
+                if (vuelta.getMasa() > 0.0) {
+                    txtMasa.setText("" + vuelta.getMasa());
+                }
+                if (vuelta.getTotopos() > 0.0) {
+                    txtTotopos.setText("" + vuelta.getTotopos());
+                }
+                if (vuelta.getTortillas() > 0.0) {
+                    txtTortilla.setText("" + vuelta.getTortillas());
+                }
+            }
+        }
 
         ((TextView) view.findViewById(R.id.txtTitulo))
                 .setText(titulo);
@@ -233,6 +263,23 @@ public class VueltaBottomSheet extends BottomSheetDialogFragment {
         } else {
             hashMap.put("vuelta2",vueltaMap);
         }
+
+        if (isEdit) {
+            if (primero) {
+                FirebaseDatabase.getInstance().getReference("AuxVentaMostrador")
+                        .child(idVenta)
+                        .child(idRepartidor)
+                        .child("vuelta1")
+                        .updateChildren(vueltaMap);
+            } else {
+                FirebaseDatabase.getInstance().getReference("AuxVentaMostrador")
+                        .child(idVenta)
+                        .child(idRepartidor)
+                        .child("vuelta2")
+                        .updateChildren(vueltaMap);
+            }
+        }
+
         FirebaseDatabase.getInstance().getReference("Confirmaciones")
                 .child(idRepartidor)
                 .child(idVenta)

@@ -139,10 +139,23 @@ public class ConfirmacionesFragment extends Fragment {
         return this;
     }
 
-    public void addIntent(Confirmacion confirmacion, boolean primero) {
-        this.confirmacion = confirmacion;
-        this.primero = primero;
-        startActivityForResult(new Intent(getContext(), FirmaActivity.class), CODE_INTENT);
+    public void addIntent(String idVenta, boolean primero) {
+        FirebaseDatabase.getInstance().getReference("Confirmaciones")
+                .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
+                .child(idVenta)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        getMe().confirmacion = dataSnapshot.getValue(Confirmacion.class);
+                        getMe().primero = primero;
+                        startActivityForResult(new Intent(getContext(), FirmaActivity.class), CODE_INTENT);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     @Override

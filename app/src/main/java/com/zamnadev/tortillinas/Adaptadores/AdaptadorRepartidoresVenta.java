@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -57,16 +58,16 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
         refEmpleado.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Empleado empleado = dataSnapshot.getValue(Empleado.class);
-                holder.txtNombre.setText(empleado.getNombre().getNombres() + " " + empleado.getNombre().getApellidos());
+                holder.empleado = dataSnapshot.getValue(Empleado.class);
+                holder.txtNombre.setText(holder.empleado.getNombre().getNombres() + " " + holder.empleado.getNombre().getApellidos());
 
                 holder.btnPrimero.setOnClickListener(view -> {
-                    VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(true, empleado,idVenta, context, nombreSucursal);
+                    VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(true, holder.empleado,idVenta, context, nombreSucursal);
                     vueltaBottomSheet.show(fragmentManager,vueltaBottomSheet.getTag());
                 });
 
                 holder.btnSegundo.setOnClickListener(view -> {
-                    VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(false, empleado,idVenta, context, nombreSucursal);
+                    VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(false, holder.empleado,idVenta, context, nombreSucursal);
                     vueltaBottomSheet.show(fragmentManager,vueltaBottomSheet.getTag());
                 });
             }
@@ -89,6 +90,7 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
                 if (!auxVenta.getVuelta1().isRegistrada()) {
                     holder.txtPrimeraVuelta.setText("Sin registrar");
                     holder.txtEstadoUno.setVisibility(View.GONE);
+                    holder.btnEditarPrimer.setVisibility(View.GONE);
                     holder.btnPrimero.setVisibility(View.VISIBLE);
                 } else {
                     holder.btnPrimero.setVisibility(View.GONE);
@@ -106,13 +108,16 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
                     holder.txtPrimeraVuelta.setText(text);
                     if (auxVenta.getVuelta1().isConfirmado()) {
                         holder.txtEstadoUno.setText("Confirmado");
+                        holder.btnEditarPrimer.setVisibility(View.GONE);
                     } else {
                         holder.txtEstadoUno.setText("Esperando confirmación");
+                        holder.btnEditarPrimer.setVisibility(View.VISIBLE);
                     }
                 }
                 if (!auxVenta.getVuelta2().isRegistrada()) {
                     holder.txtSegundaVuelta.setText("Sin registrar");
                     holder.btnSegundo.setVisibility(View.VISIBLE);
+                    holder.btnEditarSegunda.setVisibility(View.GONE);
                     holder.txtEstadoDos.setVisibility(View.GONE);
                 } else {
                     holder.btnSegundo.setVisibility(View.GONE);
@@ -130,10 +135,26 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
                     holder.txtSegundaVuelta.setText(text);
                     if (auxVenta.getVuelta2().isConfirmado()) {
                         holder.txtEstadoDos.setText("Confirmado");
+                        holder.btnEditarSegunda.setVisibility(View.GONE);
                     } else {
                         holder.txtEstadoDos.setText("Esperando confirmación");
+                        holder.btnEditarSegunda.setVisibility(View.VISIBLE);
                     }
                 }
+
+                holder.btnEditarPrimer.setOnClickListener(view -> {
+                    if (holder.empleado != null) {
+                        VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(true, holder.empleado,idVenta, context, nombreSucursal, true, auxVenta.getVuelta1());
+                        vueltaBottomSheet.show(fragmentManager,vueltaBottomSheet.getTag());
+                    }
+                });
+
+                holder.btnEditarSegunda.setOnClickListener(view -> {
+                    if (holder.empleado != null) {
+                        VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(true, holder.empleado,idVenta, context, nombreSucursal, true, auxVenta.getVuelta2());
+                        vueltaBottomSheet.show(fragmentManager,vueltaBottomSheet.getTag());
+                    }
+                });
             }
 
             @Override
@@ -141,6 +162,7 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
 
             }
         });
+
     }
 
     @Override
@@ -157,6 +179,9 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
         private TextView txtSegundaVuelta;
         private TextView txtEstadoUno;
         private TextView txtEstadoDos;
+        private ImageButton btnEditarPrimer;
+        private ImageButton btnEditarSegunda;
+        private Empleado empleado;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -167,6 +192,8 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
             txtSegundaVuelta = itemView.findViewById(R.id.txtSegundaVuelta);
             txtEstadoUno = itemView.findViewById(R.id.txtEstadoUno);
             txtEstadoDos = itemView.findViewById(R.id.txtEstadoDos);
+            btnEditarPrimer = itemView.findViewById(R.id.btnEditarPrimero);
+            btnEditarSegunda = itemView.findViewById(R.id.btnEditarSegundo);
         }
     }
 }

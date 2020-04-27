@@ -56,20 +56,20 @@ public class AdaptadorConfirmaciones extends RecyclerView.Adapter<AdaptadorConfi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Confirmacion confirmacion = confirmaciones.get(position);
-        if (confirmacion.getVuelta1() != null && confirmacion.getVuelta2() != null) {
-            if (confirmacion.getVuelta1().isConfirmado()) {
-                pintarRecyclerView(holder,confirmacion,false);
-            } else if (confirmacion.getVuelta2().isConfirmado()) {
-                pintarRecyclerView(holder,confirmacion,true);
+        holder.confirmacion = confirmaciones.get(position);
+        if (holder.confirmacion.getVuelta1() != null && holder.confirmacion.getVuelta2() != null) {
+            if (holder.confirmacion.getVuelta1().isConfirmado()) {
+                pintarRecyclerView(holder,holder.confirmacion,false);
+            } else if (holder.confirmacion.getVuelta2().isConfirmado()) {
+                pintarRecyclerView(holder,holder.confirmacion,true);
             } else {
-                pintarRecyclerView(holder,confirmacion,false);
+                pintarRecyclerView(holder,holder.confirmacion,false);
                 confirmaciones.get(position-1).setVuelta2(null);
             }
-        } else if (confirmacion.getVuelta1() != null) {
-            pintarRecyclerView(holder, confirmacion, true);
-        } else if (confirmacion.getVuelta2() != null ) {
-            pintarRecyclerView(holder, confirmacion, false);
+        } else if (holder.confirmacion.getVuelta1() != null) {
+            pintarRecyclerView(holder, holder.confirmacion, true);
+        } else if (holder.confirmacion.getVuelta2() != null ) {
+            pintarRecyclerView(holder, holder.confirmacion, false);
         }
     }
 
@@ -151,7 +151,7 @@ public class AdaptadorConfirmaciones extends RecyclerView.Adapter<AdaptadorConfi
             );
             dialog.show();
             dialog.setPositiveButtonListener(v -> {
-                frmPadre.addIntent(confirmacion,primero);
+                frmPadre.addIntent(confirmacion.getIdVenta(),primero);
                 dialog.dismiss();
             });
             dialog.setNegativeButtonListener(v -> dialog.dismiss());
@@ -168,6 +168,7 @@ public class AdaptadorConfirmaciones extends RecyclerView.Adapter<AdaptadorConfi
         private TextView txtNombre;
         private TextView txtMostrador;
         private TextView txtInfo;
+        private Confirmacion confirmacion;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
