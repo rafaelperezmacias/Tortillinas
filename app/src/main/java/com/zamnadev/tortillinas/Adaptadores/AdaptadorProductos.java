@@ -34,12 +34,15 @@ public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.
 
     private FragmentManager fragmentManager;
 
+    private boolean isFormulario;
+
     public AdaptadorProductos(Context context, ArrayList<Producto> productos, boolean isEditable,
-                              FragmentManager fragmentManager) {
+                              FragmentManager fragmentManager, boolean isFormulario) {
         this.context = context;
         this.productos = productos;
         this.isEditable = isEditable;
         this.fragmentManager = fragmentManager;
+        this.isFormulario = isFormulario;
     }
 
     @NonNull
@@ -63,6 +66,11 @@ public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.
         holder.txtPrecio.setText("$ " + producto.getPrecio());
         PopupMenu popupMenu = new PopupMenu(context, holder.btnOpciones);
         popupMenu.inflate(R.menu.menu_productos);
+        if (isFormulario) {
+            holder.txtFormulario.setVisibility(View.VISIBLE);
+        } else {
+            holder.txtFormulario.setVisibility(View.GONE);
+        }
         if (producto.isFormulario()) {
             holder.txtFormulario.setText("Agregado al formulario");
             popupMenu.getMenu().getItem(0).setTitle("Eliminar del formulario");

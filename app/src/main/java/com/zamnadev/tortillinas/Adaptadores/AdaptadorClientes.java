@@ -152,7 +152,7 @@ public class AdaptadorClientes extends RecyclerView.Adapter<AdaptadorClientes.Vi
                             }
                         }
                         AdaptadorProductos adaptadorProductos =
-                                new AdaptadorProductos(context, productos,false, fragmentManager);
+                                new AdaptadorProductos(context, productos,false, fragmentManager, false);
                         holder.recyclerView.setAdapter(adaptadorProductos);
                     }
 
