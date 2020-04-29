@@ -67,7 +67,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
         android:paddingTop="16dp"
-        android:paddingBottom="16dp"
         android:clipToPadding="false">
 
         <LinearLayout
@@ -80,7 +79,7 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/icon3"
+                    android:id="@+id/icon1"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginTop="22dp"
@@ -91,7 +90,7 @@
                     android:id="@+id/lytTortilla"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/icon3"
+                    android:layout_toEndOf="@+id/icon1"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:hint="Kgs de tortilla"
                     android:paddingStart="16dp"
@@ -110,45 +109,77 @@
 
             </RelativeLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/lytMasa"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="Kgs de masa"
-                android:paddingStart="56dp"
-                android:paddingEnd="16dp"
-                app:errorEnabled="true">
+                android:layout_height="wrap_content">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txtMasa"
-                    android:inputType="numberDecimal"
+                <ImageView
+                    android:id="@+id/icon2"
+                    android:visibility="invisible"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_kg_24dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/lytMasa"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/icon2"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:hint="Kgs de masa"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    app:errorEnabled="true">
 
-                </com.google.android.material.textfield.TextInputEditText>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtMasa"
+                        android:inputType="numberDecimal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputEditText>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/lytTotopos"
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="Kgs de totopos"
-                android:paddingStart="56dp"
-                android:paddingEnd="16dp"
-                app:errorEnabled="true">
+                android:layout_height="wrap_content">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txtTotopos"
-                    android:inputType="numberDecimal"
+                <ImageView
+                    android:id="@+id/icon3"
+                    android:visibility="invisible"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_kg_24dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/lytTotopos"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/icon3"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:hint="Kgs de de totopos"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    app:errorEnabled="true">
 
-                </com.google.android.material.textfield.TextInputEditText>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtTotopos"
+                        android:inputType="numberDecimal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </RelativeLayout>
 
         </LinearLayout>
 

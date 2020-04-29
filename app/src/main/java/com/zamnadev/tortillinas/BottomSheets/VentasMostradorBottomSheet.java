@@ -29,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorRepartidoresVenta;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorVentasExtras;
 import com.zamnadev.tortillinas.Dialogos.DialogoAddCampoVentas;
+import com.zamnadev.tortillinas.Dialogos.DialogoMaizCocido;
 import com.zamnadev.tortillinas.Dialogos.DialogoVentaRepartidor;
 import com.zamnadev.tortillinas.Moldes.AuxVenta;
 import com.zamnadev.tortillinas.Moldes.Concepto;
@@ -122,6 +123,8 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
         TextInputEditText txtGastos = view.findViewById(R.id.txtGastos);
         TextInputEditText txtVentasMostrador = view.findViewById(R.id.txtVentasMostrador);
 
+        TextInputEditText txtMaizCocido = view.findViewById(R.id.txtMaizCocido);
+
         btnRepartidores = view.findViewById(R.id.btnMostrarRepartidores);
 
         bottomSheetBehavior = BottomSheetBehavior.from((View) (view.getParent()));
@@ -146,6 +149,10 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
 
         TextInputEditText txtFecha = view.findViewById(R.id.txt_fecha);
         TextInputEditText txtDomicilio = view.findViewById(R.id.txtDomicilio);
+        TextInputEditText txtNixtamalSobra = view.findViewById(R.id.txtNixtamalSobra);
+        TextInputEditText txtMermaMolino = view.findViewById(R.id.txtMermasMolino);
+        TextInputEditText txtMermaMaquina = view.findViewById(R.id.txtMermaMaquina);
+        TextInputEditText txtMermaTortilla = view.findViewById(R.id.txtMerMaTortilla);
 
         TextView txtSucursal = view.findViewById(R.id.txtSucursal);
 
@@ -170,6 +177,28 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                 venta = dataSnapshot.getValue(VentaMostrador.class);
                 txtFecha.setText(venta.getFecha());
 
+                String text = "";
+                if (venta.getCostales() >= 0.0) {
+                    text += venta.getCostales() + " costales ";
+                }
+                if (venta.getBotes() >= 0.0) {
+                    text += ", + " + venta.getBotes() +  " botes";
+                }
+                txtMaizCocido.setText(text);
+
+                if (venta.getMaizNixtamalizado() >= 0.0) {
+                    txtNixtamalSobra.setText("" + venta.getMaizNixtamalizado());
+                }
+                if (venta.getMaquinaMasa() >= 0.0) {
+                    txtMermaMaquina.setText("" + venta.getMaquinaMasa());
+                }
+                if (venta.getMolino() >= 0.0) {
+                    txtMermaMolino.setText("" + venta.getMolino());
+                }
+                if (venta.getMermaTortilla() >= 0.0) {
+                    txtMermaTortilla.setText("" + venta.getMermaTortilla());
+                }
+
                 if (venta.getRepartidores().get("repartidor0").equals("null")) {
                     btnRepartidores.setVisibility(View.GONE);
                 } else {
@@ -178,6 +207,11 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                     mostrarVentasRepartidor();
                     mostrarRepartidores();
                 }
+
+                txtMaizCocido.setOnClickListener(view1 -> {
+                    DialogoMaizCocido dialogoMaizCocido = new DialogoMaizCocido(getContext(),idVenta,venta.getCostales(),venta.getBotes());
+                    dialogoMaizCocido.show(getChildFragmentManager(),dialogoMaizCocido.getTag());
+                });
             }
 
             @Override
@@ -321,21 +355,38 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
         //TODO Guarda la informacion de la venta
         ((MaterialButton) view.findViewById(R.id.btnGuardar))
                 .setOnClickListener(view1 -> {
+                    HashMap<String,Object> hashMap = new HashMap<>();
+                    if (!txtNixtamalSobra.getText().toString().isEmpty()) {
+                        hashMap.put("maizNixtamalizado",Integer.parseInt(txtNixtamalSobra.getText().toString()));
+                    }
+                    if (!txtMermaMolino.getText().toString().isEmpty()) {
+                        hashMap.put("molino",Double.parseDouble(txtMermaMolino.getText().toString()));
+                    }
+                    if (!txtMermaTortilla.getText().toString().isEmpty()) {
+                        hashMap.put("mermaTortilla",Double.parseDouble(txtMermaTortilla.getText().toString()));
+                    }
+                    if (!txtMermaMaquina.getText().toString().isEmpty()) {
+                        hashMap.put("maquinaMasa",Double.parseDouble(txtMermaMaquina.getText().toString()));
+                    }
+                    if (hashMap.size() > 0) {
+                        FirebaseDatabase.getInstance().getReference("VentasMostrador")
+                                .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
+                                .child(idVenta)
+                                .updateChildren(hashMap);
+                    }
                     if (adaptadorVentasExtra != null) {
                         for (VentaDelDia ventaDelDia : adaptadorVentasExtra.getVentasMotrador()) {
-                            HashMap<String, Object> hashMap = new HashMap<>();
-                            hashMap.put("idProducto",ventaDelDia.getIdProducto());
-                            hashMap.put("cantidad",ventaDelDia.getCantidad());
+                            HashMap<String, Object> productoMap = new HashMap<>();
+                            productoMap.put("idProducto",ventaDelDia.getIdProducto());
+                            productoMap.put("cantidad",ventaDelDia.getCantidad());
                             FirebaseDatabase.getInstance().getReference("VentasDelDia")
                                     .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
                                     .child(idVenta)
                                     .child(ventaDelDia.getIdProducto())
-                                    .updateChildren(hashMap);
+                                    .updateChildren(productoMap);
                         }
-                        dismiss();
-                    } else {
-                        dismiss();
                     }
+                    dismiss();
                 });
 
         //TODO añadir un repartidor a la venta

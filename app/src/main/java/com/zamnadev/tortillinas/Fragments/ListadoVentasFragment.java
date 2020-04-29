@@ -165,6 +165,12 @@ public class ListadoVentasFragment extends Fragment {
         hashMap.put("fecha",fecha);
         hashMap.put("idSucursal",idSucursal);
         hashMap.put("idEmpleado",empleado.getIdEmpleado());
+        hashMap.put("costales",-1);
+        hashMap.put("botes",-1);
+        hashMap.put("maizNixtamalizado",-1);
+        hashMap.put("maquinaMasa",-1);
+        hashMap.put("molino",-1);
+        hashMap.put("mermaTortilla",-1);
         HashMap<String, String> repartidores = new HashMap<>();
         repartidores.put("repartidor0","null");
         hashMap.put("repartidores",repartidores);
