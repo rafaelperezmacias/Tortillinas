@@ -36,8 +36,10 @@ import com.zamnadev.tortillinas.Moldes.Concepto;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Producto;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
+import com.zamnadev.tortillinas.Moldes.VentaCliente;
 import com.zamnadev.tortillinas.Moldes.VentaDelDia;
 import com.zamnadev.tortillinas.Moldes.VentaMostrador;
+import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
 import com.zamnadev.tortillinas.Moldes.Vuelta;
 import com.zamnadev.tortillinas.R;
 import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
@@ -89,12 +91,19 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
 
     private Sucursal sucursal;
 
+    private Double masaDevolucion;
+    private Double tortillaDevolucion;
+    private Double totoposDevolucion;
+
     public VentasMostradorBottomSheet(String idVenta, Empleado empleado, String idSucursal)
     {
         this.idVenta = idVenta;
         this.empleado = empleado;
         this.idSucursal = idSucursal;
         isEditable = true;
+        masaDevolucion = 0.0;
+        tortillaDevolucion = 0.0;
+        totoposDevolucion = 0.0;
     }
 
     public VentasMostradorBottomSheet(String  idVenta, Empleado empleado, String idSucursal, boolean isEditable)
@@ -103,6 +112,9 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
         this.empleado = empleado;
         this.idSucursal = idSucursal;
         this.isEditable = isEditable;
+        masaDevolucion = 0.0;
+        tortillaDevolucion = 0.0;
+        totoposDevolucion = 0.0;
     }
 
 
@@ -153,6 +165,9 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
         TextInputEditText txtMermaMolino = view.findViewById(R.id.txtMermasMolino);
         TextInputEditText txtMermaMaquina = view.findViewById(R.id.txtMermaMaquina);
         TextInputEditText txtMermaTortilla = view.findViewById(R.id.txtMerMaTortilla);
+        TextInputEditText txtMasaVendia = view.findViewById(R.id.txtMasaVendida);
+        TextInputEditText txtTortillaSobra = view.findViewById(R.id.txtTortillaSobra);
+        TextInputEditText txtDevoluciones = view.findViewById(R.id.txtDevoluciones);
 
         TextView txtSucursal = view.findViewById(R.id.txtSucursal);
 
@@ -198,6 +213,12 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                 if (venta.getMermaTortilla() >= 0.0) {
                     txtMermaTortilla.setText("" + venta.getMermaTortilla());
                 }
+                if (venta.getTortillaSobra() >= 0.0) {
+                    txtTortillaSobra.setText("" + venta.getTortillaSobra());
+                }
+                if (venta.getMasaVendida() >= 0.0) {
+                    txtMasaVendia.setText("" + venta.getMasaVendida());
+                }
 
                 if (venta.getRepartidores().get("repartidor0").equals("null")) {
                     btnRepartidores.setVisibility(View.GONE);
@@ -212,6 +233,72 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                     DialogoMaizCocido dialogoMaizCocido = new DialogoMaizCocido(getContext(),idVenta,venta.getCostales(),venta.getBotes());
                     dialogoMaizCocido.show(getChildFragmentManager(),dialogoMaizCocido.getTag());
                 });
+
+                //TODO Mostrar las devoluciones totales
+                if (venta.getRepartidores().size() > 0 && !(venta.getRepartidores().get("repartidor0").equals("null"))) {
+                    masaDevolucion = 0.0;
+                    tortillaDevolucion = 0.0;
+                    totoposDevolucion = 0.0;
+                    for (int x = 0; x < venta.getRepartidores().size(); x++) {
+                        FirebaseDatabase.getInstance().getReference("AuxVentaRepartidor")
+                                .child(venta.getRepartidores().get("repartidor"+x))
+                                .child(idVenta)
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.exists()) {
+                                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                VentaCliente cliente = snapshot.getValue(VentaCliente.class);
+                                                if (cliente.getDevolucion() != null) {
+                                                    if (cliente.getDevolucion().getMasa() >= 0.0) {
+                                                        masaDevolucion += cliente.getDevolucion().getMasa();
+                                                    }
+                                                    if (cliente.getDevolucion().getTotopos() >= 0.0) {
+                                                        totoposDevolucion += cliente.getDevolucion().getTotopos();
+                                                    }
+                                                    if (cliente.getDevolucion().getTortillas() >= 0.0) {
+                                                        tortillaDevolucion += cliente.getDevolucion().getTortillas();
+                                                    }
+                                                }
+                                            }
+                                            if (tortillaDevolucion == 0.0 && masaDevolucion == 0.0 && totoposDevolucion == 0.0) {
+                                                txtDevoluciones.setText("Ninguna devolución");
+                                            } else {
+                                                txtDevoluciones.setOnClickListener(view1 -> {
+                                                    DevolucionBottomSheet devolucionBottomSheet = new DevolucionBottomSheet(
+                                                            tortillaDevolucion,
+                                                            masaDevolucion,
+                                                            totoposDevolucion
+                                                    );
+                                                    devolucionBottomSheet.show(
+                                                            getChildFragmentManager(),
+                                                            devolucionBottomSheet.getTag()
+                                                    );
+                                                });
+                                                String text = "";
+                                                if (tortillaDevolucion > 0) {
+                                                    text += ", " + tortillaDevolucion;
+                                                }
+                                                if (masaDevolucion > 0) {
+                                                    text += ", " + masaDevolucion;
+                                                }
+                                                if (totoposDevolucion > 0) {
+                                                    text += ", " + totoposDevolucion;
+                                                }
+                                                text = text.replaceFirst(",","");
+                                                text = text.replaceFirst(" ","");
+                                                txtDevoluciones.setText(text);
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                    }
+                }
             }
 
             @Override
@@ -367,6 +454,12 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                     }
                     if (!txtMermaMaquina.getText().toString().isEmpty()) {
                         hashMap.put("maquinaMasa",Double.parseDouble(txtMermaMaquina.getText().toString()));
+                    }
+                    if (!txtMasaVendia.getText().toString().isEmpty()) {
+                        hashMap.put("masaVendida",Double.parseDouble(txtMasaVendia.getText().toString()));
+                    }
+                    if (!txtTortillaSobra.getText().toString().isEmpty()) {
+                        hashMap.put("tortillaSobra",Double.parseDouble(txtTortillaSobra.getText().toString()));
                     }
                     if (hashMap.size() > 0) {
                         FirebaseDatabase.getInstance().getReference("VentasMostrador")

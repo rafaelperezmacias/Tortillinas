@@ -201,6 +201,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtMasaVendida"
+                    android:inputType="numberDecimal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -212,12 +213,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="Tortilla de sobra"
+                android:hint="Tortilla de sobra (kgs)"
                 android:paddingStart="56dp"
                 android:paddingEnd="16dp"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtTortillaSobra"
+                    android:inputType="numberDecimal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -235,6 +238,11 @@
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtDevoluciones"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:longClickable="false"
+                    android:clickable="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 

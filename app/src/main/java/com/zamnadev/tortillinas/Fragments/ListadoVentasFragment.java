@@ -171,6 +171,8 @@ public class ListadoVentasFragment extends Fragment {
         hashMap.put("maquinaMasa",-1);
         hashMap.put("molino",-1);
         hashMap.put("mermaTortilla",-1);
+        hashMap.put("masaVendida",-1);
+        hashMap.put("tortillaSobra",-1);
         HashMap<String, String> repartidores = new HashMap<>();
         repartidores.put("repartidor0","null");
         hashMap.put("repartidores",repartidores);

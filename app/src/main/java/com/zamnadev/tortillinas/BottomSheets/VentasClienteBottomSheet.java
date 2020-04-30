@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -112,6 +113,10 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
         ImageView icon2 = view.findViewById(R.id.icon2);
         ImageView icon3 = view.findViewById(R.id.icon3);
 
+        RelativeLayout layout1 = view.findViewById(R.id.layout1);
+        RelativeLayout layout2 = view.findViewById(R.id.layout2);
+        RelativeLayout layout3 = view.findViewById(R.id.layout3);
+
         if (ventaCliente != null) {
             if (devolucion) {
                 if (ventaCliente.getDevolucion() != null) {
@@ -162,66 +167,97 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
             ((TextView) view.findViewById(R.id.txtTitulo))
                     .setText("Devolución");
             if (ventaRepartidor.getVuelta2() != null && ventaRepartidor.getVuelta1() != null) {
-                if (ventaRepartidor.getVuelta1().getMasa() < 0 && ventaRepartidor.getVuelta2().getMasa() < 0) {
-                    txtMasa.setVisibility(View.GONE);
-                }
                 if (ventaRepartidor.getVuelta1().getTortillas() < 0 && ventaRepartidor.getVuelta2().getTortillas() < 0) {
-                    txtTortilla.setVisibility(View.GONE);
+                    layout1.setVisibility(View.GONE);
+                }
+                if (ventaRepartidor.getVuelta1().getMasa() < 0 && ventaRepartidor.getVuelta2().getMasa() < 0) {
+                    layout2.setVisibility(View.GONE);
+                } else {
+                    if (layout1.getVisibility() == View.GONE) {
+                        icon2.setVisibility(View.VISIBLE);
+                    }
                 }
                 if (ventaRepartidor.getVuelta1().getTotopos() < 0 && ventaRepartidor.getVuelta2().getTotopos() < 0) {
                     txtTotopos.setVisibility(View.GONE);
+                } else {
+                    if (layout2.getVisibility() == View.GONE) {
+                        icon3.setVisibility(View.VISIBLE);
+                    }
                 }
             } else if (ventaRepartidor.getVuelta1() != null) {
-                if (ventaRepartidor.getVuelta1().getMasa() < 0) {
-                    txtMasa.setVisibility(View.GONE);
-                }
                 if (ventaRepartidor.getVuelta1().getTortillas() < 0) {
-                    txtTortilla.setVisibility(View.GONE);
+                    layout1.setVisibility(View.GONE);
+                }
+                if (ventaRepartidor.getVuelta1().getMasa() < 0) {
+                    layout2.setVisibility(View.GONE);
+                } else {
+                    if (layout1.getVisibility() == View.GONE) {
+                        icon2.setVisibility(View.VISIBLE);
+                    }
                 }
                 if (ventaRepartidor.getVuelta1().getTotopos() < 0) {
                     txtTotopos.setVisibility(View.GONE);
+                } else {
+                    if (layout2.getVisibility() == View.GONE) {
+                        icon3.setVisibility(View.VISIBLE);
+                    }
                 }
             } else if (ventaRepartidor.getVuelta2() != null) {
-                if (ventaRepartidor.getVuelta2().getMasa() < 0) {
-                    txtMasa.setVisibility(View.GONE);
-                }
                 if (ventaRepartidor.getVuelta2().getTortillas() < 0) {
-                    txtTortilla.setVisibility(View.GONE);
+                    layout1.setVisibility(View.GONE);
+                }
+                if (ventaRepartidor.getVuelta2().getMasa() < 0) {
+                    layout2.setVisibility(View.GONE);
+                } else {
+                    if (layout1.getVisibility() == View.GONE) {
+                        icon2.setVisibility(View.VISIBLE);
+                    }
                 }
                 if (ventaRepartidor.getVuelta2().getTotopos() < 0) {
                     txtTotopos.setVisibility(View.GONE);
+                } else {
+                    if (layout2.getVisibility() == View.GONE) {
+                        icon3.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         } else if (primero) {
             ((TextView) view.findViewById(R.id.txtTitulo))
                     .setText("Primer vuelta");
-            if (ventaRepartidor.getVuelta1().getMasa() <= 0) {
-                txtMasa.setVisibility(View.GONE);
-            }
             if (ventaRepartidor.getVuelta1().getTortillas() <= 0) {
-                txtTortilla.setVisibility(View.GONE);
+                layout1.setVisibility(View.GONE);
+            }
+            if (ventaRepartidor.getVuelta1().getMasa() <= 0) {
+                layout2.setVisibility(View.GONE);
+            } else {
+                if (layout1.getVisibility() == View.GONE) {
+                    icon2.setVisibility(View.VISIBLE);
+                }
             }
             if (ventaRepartidor.getVuelta1().getTotopos() <= 0) {
-                txtTotopos.setVisibility(View.GONE);
+                layout3.setVisibility(View.GONE);
+            } else {
+                if (layout2.getVisibility() == View.GONE) {
+                    icon3.setVisibility(View.VISIBLE);
+                }
             }
         } else {
             ((TextView) view.findViewById(R.id.txtTitulo))
                     .setText("Segunda vuelta");
-            if (ventaRepartidor.getVuelta2().getMasa() <= 0) {
-                txtMasa.setVisibility(View.GONE);
-                icon2.setVisibility(View.GONE);
-            } else {
-                icon2.setVisibility(View.VISIBLE);
-            }
             if (ventaRepartidor.getVuelta2().getTortillas() <= 0) {
-                txtTortilla.setVisibility(View.GONE);
-                icon1.setVisibility(View.GONE);
+                layout1.setVisibility(View.GONE);
+            }
+            if (ventaRepartidor.getVuelta2().getMasa() <= 0) {
+                layout2.setVisibility(View.GONE);
+            } else {
+                if (layout1.getVisibility() == View.GONE) {
+                    icon2.setVisibility(View.VISIBLE);
+                }
             }
             if (ventaRepartidor.getVuelta2().getTotopos() <= 0) {
-                txtTotopos.setVisibility(View.GONE);
-                icon3.setVisibility(View.GONE);
+                layout3.setVisibility(View.GONE);
             } else {
-                if (icon2.getVisibility() != View.VISIBLE) {
+                if (layout2.getVisibility() == View.GONE) {
                     icon3.setVisibility(View.VISIBLE);
                 }
             }
