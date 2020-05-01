@@ -47,10 +47,16 @@ import com.zamnadev.tortillinas.Notificaciones.Sender;
 import com.zamnadev.tortillinas.Notificaciones.Token;
 import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -175,6 +181,14 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu,menu);
         return true;
+    }
+
+    public static String getFecha() {
+        TimeZone tz = TimeZone.getTimeZone("GMT-05:00");
+        Calendar c = Calendar.getInstance(tz);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        String fecha = sdf.format(c.getTime());
+        return fecha;
     }
 
     @Override

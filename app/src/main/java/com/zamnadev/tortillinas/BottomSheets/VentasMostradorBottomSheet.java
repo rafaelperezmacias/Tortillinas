@@ -31,6 +31,7 @@ import com.zamnadev.tortillinas.Adaptadores.AdaptadorVentasExtras;
 import com.zamnadev.tortillinas.Dialogos.DialogoAddCampoVentas;
 import com.zamnadev.tortillinas.Dialogos.DialogoMaizCocido;
 import com.zamnadev.tortillinas.Dialogos.DialogoVentaRepartidor;
+import com.zamnadev.tortillinas.MainActivity;
 import com.zamnadev.tortillinas.Moldes.AuxVenta;
 import com.zamnadev.tortillinas.Moldes.Concepto;
 import com.zamnadev.tortillinas.Moldes.Empleado;
@@ -175,12 +176,7 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
         recyclerViewRepartidores.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewRepartidores.setHasFixedSize(true);
 
-        final Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, Calendar.YEAR);
-        calendar.set(Calendar.MONTH, Calendar.MONTH);
-        calendar.set(Calendar.DAY_OF_MONTH, Calendar.DAY_OF_MONTH);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        String fecha = sdf.format(calendar.getTime());
+        String fecha = MainActivity.getFecha();
 
         //TODO muestra los datos de la venta
         refVenta = FirebaseDatabase.getInstance().getReference("VentasMostrador")
