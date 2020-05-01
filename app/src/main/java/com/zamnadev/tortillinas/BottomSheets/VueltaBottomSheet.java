@@ -27,6 +27,7 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Dialogs.MessageDialog;
 import com.zamnadev.tortillinas.Dialogs.MessageDialogBuilder;
+import com.zamnadev.tortillinas.MainActivity;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Vuelta;
 import com.zamnadev.tortillinas.Notificaciones.Client;
@@ -224,14 +225,7 @@ public class VueltaBottomSheet extends BottomSheetDialogFragment {
 
     //TODO inicia el proceso de comunicacion con el repartidor
     private void enviarNotificacion(String idRepartidor, String masa, String tortilla, String totopos, String sucursal) {
-
-        String fecha;
-        final Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
-        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH));
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        fecha = sdf.format(calendar.getTime());
+        String fecha = MainActivity.getFecha();
 
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("fecha",fecha);

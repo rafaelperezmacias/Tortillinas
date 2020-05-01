@@ -6,14 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,22 +19,17 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorVenta;
-import com.zamnadev.tortillinas.Adaptadores.ViewPagerAdapter;
 import com.zamnadev.tortillinas.BottomSheets.VentasMostradorBottomSheet;
-import com.zamnadev.tortillinas.BottomSheets.VentasRepartidorBottomSheet;
 import com.zamnadev.tortillinas.Dialogos.DialogoVentaSucursal;
+import com.zamnadev.tortillinas.MainActivity;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.VentaMostrador;
 import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
-import com.zamnadev.tortillinas.Moldes.Vuelta;
 import com.zamnadev.tortillinas.R;
 import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Locale;
 
 public class ListadoVentasFragment extends Fragment {
 
@@ -50,12 +42,7 @@ public class ListadoVentasFragment extends Fragment {
     public ListadoVentasFragment(VentasFragment ventasFragment)
     {
         this.ventasFragment = ventasFragment;
-        final Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
-        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH));
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        fecha = sdf.format(calendar.getTime());
+        fecha = MainActivity.getFecha();
     }
 
     @Override

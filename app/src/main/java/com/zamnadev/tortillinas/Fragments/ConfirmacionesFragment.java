@@ -25,6 +25,7 @@ import com.zamnadev.tortillinas.Adaptadores.AdaptadorConfirmaciones;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorVenta;
 import com.zamnadev.tortillinas.BottomSheets.VentasRepartidorBottomSheet;
 import com.zamnadev.tortillinas.Firma.FirmaActivity;
+import com.zamnadev.tortillinas.MainActivity;
 import com.zamnadev.tortillinas.Moldes.Confirmacion;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
@@ -56,12 +57,7 @@ public class ConfirmacionesFragment extends Fragment {
     public ConfirmacionesFragment(VentasFragment ventasFragment)
     {
         this.ventasFragment = ventasFragment;
-        final Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
-        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH));
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        fecha = sdf.format(calendar.getTime());
+        fecha = MainActivity.getFecha();
     }
 
     @Nullable

@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorRepartidorClientes;
+import com.zamnadev.tortillinas.MainActivity;
 import com.zamnadev.tortillinas.Moldes.Cliente;
 import com.zamnadev.tortillinas.Moldes.Concepto;
 import com.zamnadev.tortillinas.Moldes.Empleado;
@@ -130,12 +131,7 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
 
-        final Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, Calendar.YEAR);
-        calendar.set(Calendar.MONTH, Calendar.MONTH);
-        calendar.set(Calendar.DAY_OF_MONTH, Calendar.DAY_OF_MONTH);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        String fecha = sdf.format(calendar.getTime());
+        String fecha = MainActivity.getFecha();
         ArrayList<VentaCliente> ventaClientes = new ArrayList<>();
 
         txtGasto.setOnClickListener(view12 -> {

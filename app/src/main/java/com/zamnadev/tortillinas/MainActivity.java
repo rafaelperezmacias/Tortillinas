@@ -1,9 +1,7 @@
 package com.zamnadev.tortillinas;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -23,9 +21,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.zamnadev.tortillinas.BottomSheets.VentasRepartidorBottomSheet;
-import com.zamnadev.tortillinas.Dialogos.DialogoAddCampoVentas;
-import com.zamnadev.tortillinas.Dialogos.DialogoVentaRepartidor;
 import com.zamnadev.tortillinas.Dialogs.MessageDialog;
 import com.zamnadev.tortillinas.Dialogs.MessageDialogBuilder;
 import com.zamnadev.tortillinas.Firma.FirmaActivity;
@@ -36,31 +31,16 @@ import com.zamnadev.tortillinas.Fragments.VentasFragment;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
 import com.zamnadev.tortillinas.Moldes.VentaMostrador;
-import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
 import com.zamnadev.tortillinas.Moldes.Vuelta;
-import com.zamnadev.tortillinas.Notificaciones.Client;
 import com.zamnadev.tortillinas.Notificaciones.Data;
 import com.zamnadev.tortillinas.Notificaciones.FCMService;
-import com.zamnadev.tortillinas.Notificaciones.FCMServiceAPI;
-import com.zamnadev.tortillinas.Notificaciones.MyResponse;
-import com.zamnadev.tortillinas.Notificaciones.Sender;
-import com.zamnadev.tortillinas.Notificaciones.Token;
 import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 
-import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements
         BottomNavigationView.OnNavigationItemSelectedListener, FCMService.onConfirmacion {
