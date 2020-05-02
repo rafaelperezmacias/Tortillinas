@@ -35,12 +35,14 @@ public class AdaptadorVentasExtras extends RecyclerView.Adapter<AdaptadorVentasE
     private boolean recuperaData;
     private String idVenta;
     private VentasMostradorBottomSheet bottomSheet;
+    private boolean isEditable;
 
-    public AdaptadorVentasExtras(Context context, ArrayList<Producto> productos, ArrayList<VentaDelDia> ventasMotrador, VentasMostradorBottomSheet bottomSheet) {
+    public AdaptadorVentasExtras(Context context, ArrayList<Producto> productos, ArrayList<VentaDelDia> ventasMotrador, VentasMostradorBottomSheet bottomSheet, boolean isEditable) {
         this.context = context;
         this.productos = productos;
         this.ventasMotrador = ventasMotrador;
         this.bottomSheet = bottomSheet;
+        this.isEditable = isEditable;
     }
 
     @NonNull
@@ -62,6 +64,10 @@ public class AdaptadorVentasExtras extends RecyclerView.Adapter<AdaptadorVentasE
                     holder.txtField.setText("");
                 }
             }
+        }
+
+        if (!isEditable) {
+            hideTxt(holder.txtField);
         }
 
         holder.txtField.addTextChangedListener(new TextWatcher() {
@@ -111,5 +117,12 @@ public class AdaptadorVentasExtras extends RecyclerView.Adapter<AdaptadorVentasE
     public void addVenta(ArrayList<VentaDelDia> ventasMotrador) {
         this.ventasMotrador = ventasMotrador;
         notifyDataSetChanged();
+    }
+
+    private void hideTxt(TextInputEditText txt) {
+        txt.setClickable(false);
+        txt.setLongClickable(false);
+        txt.setFocusable(false);
+        txt.setCursorVisible(false);
     }
 }

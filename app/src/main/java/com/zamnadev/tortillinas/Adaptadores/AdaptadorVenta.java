@@ -87,6 +87,16 @@ public class AdaptadorVenta extends RecyclerView.Adapter<AdaptadorVenta.ViewHold
                     bottomSheet.show(fragmentManager, bottomSheet.getTag());
                 }
             });
+        } else {
+            holder.itemView.setOnClickListener(view -> {
+                if (isMostrador) {
+                    VentasMostradorBottomSheet bottomSheet = new VentasMostradorBottomSheet(venta.getIdVenta(),empleado,venta.getIdSucursal(), false);
+                    bottomSheet.show(fragmentManager, bottomSheet.getTag());
+                } else {
+                    VentasRepartidorBottomSheet bottomSheet = new VentasRepartidorBottomSheet(venta.getIdVenta(),empleado,venta.getIdSucursal(), false);
+                    bottomSheet.show(fragmentManager, bottomSheet.getTag());
+                }
+            });
         }
     }
 

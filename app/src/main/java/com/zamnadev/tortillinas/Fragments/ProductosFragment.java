@@ -3,6 +3,7 @@ package com.zamnadev.tortillinas.Fragments;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,9 @@ public class ProductosFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 productos.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Log.e("Producto","" + snapshot.toString());
                     Producto producto = snapshot.getValue(Producto.class);
+                    Log.e("Producto","" + producto.toString());
                     if (!producto.isEliminado()) {
                         productos.add(producto);
                     }

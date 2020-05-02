@@ -96,17 +96,6 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
     private Double tortillaDevolucion;
     private Double totoposDevolucion;
 
-    public VentasMostradorBottomSheet(String idVenta, Empleado empleado, String idSucursal)
-    {
-        this.idVenta = idVenta;
-        this.empleado = empleado;
-        this.idSucursal = idSucursal;
-        isEditable = true;
-        masaDevolucion = 0.0;
-        tortillaDevolucion = 0.0;
-        totoposDevolucion = 0.0;
-    }
-
     public VentasMostradorBottomSheet(String  idVenta, Empleado empleado, String idSucursal, boolean isEditable)
     {
         this.idVenta = idVenta;
@@ -178,6 +167,19 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
 
         String fecha = MainActivity.getFecha();
 
+        if (!isEditable) {
+            hideTxt(txtNixtamalSobra);
+            hideTxt(txtMasaVendia);
+            hideTxt(txtTortillaSobra);
+            hideTxt(txtMermaMaquina);
+            hideTxt(txtMermaMolino);
+            hideTxt(txtMermaTortilla);
+            ((ImageButton) view.findViewById(R.id.btnAddRepartidor))
+                    .setVisibility(View.GONE);
+            ((MaterialButton) view.findViewById(R.id.btnGuardar))
+                    .setText("CERRAR");
+        }
+
         //TODO muestra los datos de la venta
         refVenta = FirebaseDatabase.getInstance().getReference("VentasMostrador")
                 .child(empleado.getIdEmpleado())
@@ -226,7 +228,7 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                 }
 
                 txtMaizCocido.setOnClickListener(view1 -> {
-                    DialogoMaizCocido dialogoMaizCocido = new DialogoMaizCocido(getContext(),idVenta,venta.getCostales(),venta.getBotes());
+                    DialogoMaizCocido dialogoMaizCocido = new DialogoMaizCocido(getContext(),idVenta,venta.getCostales(),venta.getBotes(),isEditable);
                     dialogoMaizCocido.show(getChildFragmentManager(),dialogoMaizCocido.getTag());
                 });
 
@@ -285,6 +287,8 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                                                 text = text.replaceFirst(" ","");
                                                 txtDevoluciones.setText(text);
                                             }
+                                        } else {
+                                            txtDevoluciones.setText("Ninguna devolución");
                                         }
                                     }
 
@@ -304,12 +308,12 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
         });
 
         txtGastos.setOnClickListener(view12 -> {
-            VentasAdicionalesBottomSheet ventas = new VentasAdicionalesBottomSheet(VentasAdicionalesBottomSheet.TIPO_GASTOS,idVenta);
+            VentasAdicionalesBottomSheet ventas = new VentasAdicionalesBottomSheet(VentasAdicionalesBottomSheet.TIPO_GASTOS,idVenta,isEditable);
             ventas.show(getChildFragmentManager(),ventas.getTag());
         });
 
         txtVentasMostrador.setOnClickListener(view12 -> {
-            VentasAdicionalesBottomSheet ventas = new VentasAdicionalesBottomSheet(VentasAdicionalesBottomSheet.TIPO_VENTAS_MOSTRADOR,idVenta);
+            VentasAdicionalesBottomSheet ventas = new VentasAdicionalesBottomSheet(VentasAdicionalesBottomSheet.TIPO_VENTAS_MOSTRADOR,idVenta,isEditable);
             ventas.show(getChildFragmentManager(),ventas.getTag());
         });
 
@@ -364,33 +368,35 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
         });
 
         //TODO muestra los productos de la seccion de ventas extra
-        refProductos = FirebaseDatabase.getInstance().getReference("Productos");
-        listenerProductos = refProductos.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    recyclerView.setVisibility(View.GONE);
-                } else {
-                    recyclerView.setVisibility(View.VISIBLE);
-                    ArrayList<Producto> productos = new ArrayList<>();
-                    ArrayList<VentaDelDia> ventaDelDia = new ArrayList<>();
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Producto producto = snapshot.getValue(Producto.class);
-                        if (!producto.isEliminado() && producto.isFormulario()) {
-                            ventaDelDia.add(new VentaDelDia(producto.getIdProducto(),0));
-                            productos.add(producto);
+        if (isEditable) {
+            refProductos = FirebaseDatabase.getInstance().getReference("Productos");
+            listenerProductos = refProductos.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (!dataSnapshot.exists()) {
+                        recyclerView.setVisibility(View.GONE);
+                    } else {
+                        recyclerView.setVisibility(View.VISIBLE);
+                        ArrayList<Producto> productos = new ArrayList<>();
+                        ArrayList<VentaDelDia> ventaDelDia = new ArrayList<>();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            Producto producto = snapshot.getValue(Producto.class);
+                            if (!producto.isEliminado() && producto.isFormulario()) {
+                                ventaDelDia.add(new VentaDelDia(producto.getIdProducto(),0));
+                                productos.add(producto);
+                            }
                         }
+                        adaptadorVentasExtra = new AdaptadorVentasExtras(getContext(),productos,ventaDelDia,getMe(),isEditable);
+                        recyclerView.setAdapter(adaptadorVentasExtra);
                     }
-                    adaptadorVentasExtra = new AdaptadorVentasExtras(getContext(),productos,ventaDelDia,getMe());
-                    recyclerView.setAdapter(adaptadorVentasExtra);
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
 
         //TODO muestra por primera vez los datos de la sucursal
         DatabaseReference refSucursal = FirebaseDatabase.getInstance().getReference("Sucursales")
@@ -410,6 +416,7 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
             }
         });
 
+
         //TODO muestra la cantidad de conceptos alamcenados en las cventas de mostrador
         refVentasDia = FirebaseDatabase.getInstance().getReference("VentasDelDia")
                 .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
@@ -419,13 +426,37 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     ArrayList<VentaDelDia> productosMostrador = new ArrayList<>();
+                    ArrayList<Producto> productos = new ArrayList<>();
+                    ArrayList<VentaDelDia> ventaDelDia = new ArrayList<>();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         VentaDelDia venta = snapshot.getValue(VentaDelDia.class);
                         productosMostrador.add(venta);
-                    }
-                    if (adaptadorVentasExtra != null) {
-                        adaptadorVentasExtra.addVenta(productosMostrador);
-                    }
+                        if (!isEditable) {
+                            FirebaseDatabase.getInstance().getReference("Productos")
+                                    .child(venta.getIdProducto())
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snp) {
+                                            Producto producto = snp.getValue(Producto.class);
+                                            ventaDelDia.add(new VentaDelDia(producto.getIdProducto(),0));
+                                            productos.add(producto);
+                                            if (!isEditable) {
+                                                recyclerView.setVisibility(View.VISIBLE);
+                                                adaptadorVentasExtra = new AdaptadorVentasExtras(getContext(),productos,ventaDelDia,getMe(),isEditable);
+                                                recyclerView.setAdapter(adaptadorVentasExtra);
+                                            }
+                                            if (adaptadorVentasExtra != null) {
+                                                adaptadorVentasExtra.addVenta(productosMostrador);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+                            }
+                        }
                 }
             }
 
@@ -438,6 +469,10 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
         //TODO Guarda la informacion de la venta
         ((MaterialButton) view.findViewById(R.id.btnGuardar))
                 .setOnClickListener(view1 -> {
+                    if (!isEditable) {
+                        dismiss();
+                        return;
+                    }
                     HashMap<String,Object> hashMap = new HashMap<>();
                     if (!txtNixtamalSobra.getText().toString().isEmpty()) {
                         hashMap.put("maizNixtamalizado",Integer.parseInt(txtNixtamalSobra.getText().toString()));
@@ -528,7 +563,7 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
             for (int x = 0; x < venta.getRepartidores().size(); x++) {
                 arrayList.add(venta.getRepartidores().get("repartidor"+x));
             }
-            AdaptadorRepartidoresVenta adaptador = new AdaptadorRepartidoresVenta(getContext(),arrayList,getChildFragmentManager(),idVenta,sucursal.getNombre());
+            AdaptadorRepartidoresVenta adaptador = new AdaptadorRepartidoresVenta(getContext(),arrayList,getChildFragmentManager(),idVenta,sucursal.getNombre(),isEditable);
             recyclerViewRepartidores.setAdapter(adaptador);
         }
     }
@@ -618,13 +653,22 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
         }
     }
 
+    private void hideTxt(TextInputEditText txt) {
+       txt.setClickable(false);
+       txt.setLongClickable(false);
+       txt.setFocusable(false);
+       txt.setCursorVisible(false);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         refVenta.removeEventListener(listenerVenta);
         refGastos.removeEventListener(listenerGastos);
         refVentaMostrador.removeEventListener(listenerVentaMostrador);
-        refProductos.removeEventListener(listenerProductos);
+        if (isEditable) {
+            refProductos.removeEventListener(listenerProductos);
+        }
         refVentasDia.removeEventListener(listenerVentasDia);
     }
 

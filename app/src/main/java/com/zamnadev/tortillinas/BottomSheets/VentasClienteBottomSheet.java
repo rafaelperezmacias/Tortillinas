@@ -166,57 +166,57 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
         if (devolucion) {
             ((TextView) view.findViewById(R.id.txtTitulo))
                     .setText("Devolución");
-            if (ventaRepartidor.getVuelta2() != null && ventaRepartidor.getVuelta1() != null) {
-                if (ventaRepartidor.getVuelta1().getTortillas() < 0 && ventaRepartidor.getVuelta2().getTortillas() < 0) {
+            if (ventaCliente.getVuelta2() != null && ventaCliente.getVuelta1() != null) {
+                if (ventaCliente.getVuelta1().getTortillas() < 0 && ventaCliente.getVuelta2().getTortillas() < 0) {
                     layout1.setVisibility(View.GONE);
                 }
-                if (ventaRepartidor.getVuelta1().getMasa() < 0 && ventaRepartidor.getVuelta2().getMasa() < 0) {
+                if (ventaCliente.getVuelta1().getMasa() < 0 && ventaCliente.getVuelta2().getMasa() < 0) {
                     layout2.setVisibility(View.GONE);
                 } else {
                     if (layout1.getVisibility() == View.GONE) {
                         icon2.setVisibility(View.VISIBLE);
                     }
                 }
-                if (ventaRepartidor.getVuelta1().getTotopos() < 0 && ventaRepartidor.getVuelta2().getTotopos() < 0) {
-                    txtTotopos.setVisibility(View.GONE);
+                if (ventaCliente.getVuelta1().getTotopos() < 0 && ventaCliente.getVuelta2().getTotopos() < 0) {
+                    layout3.setVisibility(View.GONE);
                 } else {
-                    if (layout2.getVisibility() == View.GONE) {
+                    if (layout2.getVisibility() == View.GONE && layout1.getVisibility() == View.GONE) {
                         icon3.setVisibility(View.VISIBLE);
                     }
                 }
-            } else if (ventaRepartidor.getVuelta1() != null) {
-                if (ventaRepartidor.getVuelta1().getTortillas() < 0) {
+            } else if (ventaCliente.getVuelta1() != null) {
+                if (ventaCliente.getVuelta1().getTortillas() < 0) {
                     layout1.setVisibility(View.GONE);
                 }
-                if (ventaRepartidor.getVuelta1().getMasa() < 0) {
+                if (ventaCliente.getVuelta1().getMasa() < 0) {
                     layout2.setVisibility(View.GONE);
                 } else {
                     if (layout1.getVisibility() == View.GONE) {
                         icon2.setVisibility(View.VISIBLE);
                     }
                 }
-                if (ventaRepartidor.getVuelta1().getTotopos() < 0) {
-                    txtTotopos.setVisibility(View.GONE);
+                if (ventaCliente.getVuelta1().getTotopos() < 0) {
+                    layout3.setVisibility(View.GONE);
                 } else {
-                    if (layout2.getVisibility() == View.GONE) {
+                    if (layout2.getVisibility() == View.GONE && layout1.getVisibility() == View.GONE) {
                         icon3.setVisibility(View.VISIBLE);
                     }
                 }
-            } else if (ventaRepartidor.getVuelta2() != null) {
-                if (ventaRepartidor.getVuelta2().getTortillas() < 0) {
+            } else if (ventaCliente.getVuelta2() != null) {
+                if (ventaCliente.getVuelta2().getTortillas() < 0) {
                     layout1.setVisibility(View.GONE);
                 }
-                if (ventaRepartidor.getVuelta2().getMasa() < 0) {
+                if (ventaCliente.getVuelta2().getMasa() < 0) {
                     layout2.setVisibility(View.GONE);
                 } else {
                     if (layout1.getVisibility() == View.GONE) {
                         icon2.setVisibility(View.VISIBLE);
                     }
                 }
-                if (ventaRepartidor.getVuelta2().getTotopos() < 0) {
-                    txtTotopos.setVisibility(View.GONE);
+                if (ventaCliente.getVuelta2().getTotopos() < 0) {
+                    layout3.setVisibility(View.GONE);
                 } else {
-                    if (layout2.getVisibility() == View.GONE) {
+                    if (layout2.getVisibility() == View.GONE && layout1.getVisibility() == View.GONE) {
                         icon3.setVisibility(View.VISIBLE);
                     }
                 }
@@ -237,7 +237,7 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
             if (ventaRepartidor.getVuelta1().getTotopos() <= 0) {
                 layout3.setVisibility(View.GONE);
             } else {
-                if (layout2.getVisibility() == View.GONE) {
+                if (layout2.getVisibility() == View.GONE && layout1.getVisibility() == View.GONE) {
                     icon3.setVisibility(View.VISIBLE);
                 }
             }
@@ -250,22 +250,21 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
             if (ventaRepartidor.getVuelta2().getMasa() <= 0) {
                 layout2.setVisibility(View.GONE);
             } else {
-                if (layout1.getVisibility() == View.GONE) {
+                if (layout1.getVisibility() == View.GONE && layout1.getVisibility() == View.GONE) {
                     icon2.setVisibility(View.VISIBLE);
                 }
             }
             if (ventaRepartidor.getVuelta2().getTotopos() <= 0) {
                 layout3.setVisibility(View.GONE);
             } else {
-                if (layout2.getVisibility() == View.GONE) {
+                if (layout2.getVisibility() == View.GONE && layout1.getVisibility() == View.GONE) {
                     icon3.setVisibility(View.VISIBLE);
                 }
             }
         }
 
-
         ((TextView) view.findViewById(R.id.txtSubTitulo))
-                .setText(cliente.getNombre().getNombres() + cliente.getNombre().getApellidos());
+                .setText(cliente.getNombre().getNombres() + " " + cliente.getNombre().getApellidos());
 
         ((MaterialButton) view.findViewById(R.id.btnGuardar))
                 .setOnClickListener(view1 -> {

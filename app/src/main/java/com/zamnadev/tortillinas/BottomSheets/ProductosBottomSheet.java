@@ -84,6 +84,12 @@ public class ProductosBottomSheet extends BottomSheetDialogFragment {
         if (isEditable) {
             txtNombre.setText(producto.getNombre());
             txtNombre.setSelection(txtNombre.getText().length());
+            if (!producto.isNombreN()) {
+                txtNombre.setCursorVisible(false);
+                txtNombre.setClickable(false);
+                txtNombre.setFocusable(false);
+                txtNombre.setLongClickable(false);
+            }
             txtPrecio.setText(""+producto.getPrecio());
         }
 
@@ -107,6 +113,7 @@ public class ProductosBottomSheet extends BottomSheetDialogFragment {
                         productoMap.put("modificado",false);
                         productoMap.put("alta",ServerValue.TIMESTAMP);
                         productoMap.put("formulario",false);
+                        productoMap.put("nombreN",true);
                     }
 
                     productoMap.put("nombre",txtNombre.getText().toString().trim());

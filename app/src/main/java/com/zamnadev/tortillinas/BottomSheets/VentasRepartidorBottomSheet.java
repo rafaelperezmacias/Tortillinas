@@ -135,7 +135,7 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
         ArrayList<VentaCliente> ventaClientes = new ArrayList<>();
 
         txtGasto.setOnClickListener(view12 -> {
-            VentasAdicionalesBottomSheet ventas = new VentasAdicionalesBottomSheet(VentasAdicionalesBottomSheet.TIPO_GASTOS_REPARTIDOR,idVenta);
+            VentasAdicionalesBottomSheet ventas = new VentasAdicionalesBottomSheet(VentasAdicionalesBottomSheet.TIPO_GASTOS_REPARTIDOR,idVenta,isEditable);
             ventas.show(getChildFragmentManager(),ventas.getTag());
         });
 

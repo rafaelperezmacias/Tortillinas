@@ -31,13 +31,15 @@ public class AdaptadorConceptos extends RecyclerView.Adapter<AdaptadorConceptos.
     private FragmentManager fragmentManager;
     private int tipo;
     private String idVenta;
+    private boolean isEditable;
 
-    public AdaptadorConceptos(Context context, ArrayList<Concepto> conceptos, FragmentManager fragmentManager, int tipo, String idVenta) {
+    public AdaptadorConceptos(Context context, ArrayList<Concepto> conceptos, FragmentManager fragmentManager, int tipo, String idVenta, boolean isEditable) {
         this.context = context;
         this.conceptos = conceptos;
         this.fragmentManager = fragmentManager;
         this.tipo = tipo;
         this.idVenta = idVenta;
+        this.isEditable = isEditable;
     }
 
     @NonNull
@@ -52,6 +54,9 @@ public class AdaptadorConceptos extends RecyclerView.Adapter<AdaptadorConceptos.
         Concepto concepto = conceptos.get(position);
         holder.txtPrecio.setText("" + concepto.getPrecio());
         holder.txtNombre.setText("" + concepto.getNombre());
+        if (!isEditable) {
+            holder.btnRemove.setVisibility(View.GONE);
+        }
         holder.btnRemove.setOnClickListener(view -> {
             MessageDialog dialog = new MessageDialog(context, new MessageDialogBuilder()
                     .setTitle("Alerta")

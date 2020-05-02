@@ -34,13 +34,15 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
     private FragmentManager fragmentManager;
     private String idVenta;
     private String nombreSucursal;
+    private boolean isEditable;
 
-    public AdaptadorRepartidoresVenta(Context context, ArrayList<String> ids, FragmentManager fragmentManager, String idVenta, String nombreSucursal) {
+    public AdaptadorRepartidoresVenta(Context context, ArrayList<String> ids, FragmentManager fragmentManager, String idVenta, String nombreSucursal, boolean isEditable) {
         this.context = context;
         this.ids = ids;
         this.fragmentManager = fragmentManager;
         this.idVenta = idVenta;
         this.nombreSucursal = nombreSucursal;
+        this.isEditable = isEditable;
     }
 
     @NonNull
@@ -60,6 +62,11 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 holder.empleado = dataSnapshot.getValue(Empleado.class);
                 holder.txtNombre.setText(holder.empleado.getNombre().getNombres() + " " + holder.empleado.getNombre().getApellidos());
+
+                if (!isEditable) {
+                    holder.btnPrimero.setVisibility(View.GONE);
+                    holder.btnSegundo.setVisibility(View.GONE);
+                }
 
                 holder.btnPrimero.setOnClickListener(view -> {
                     VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(true, holder.empleado,idVenta, context, nombreSucursal);
@@ -110,8 +117,14 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
                         holder.txtEstadoUno.setText("Confirmado");
                         holder.btnEditarPrimer.setVisibility(View.GONE);
                     } else {
-                        holder.txtEstadoUno.setText("Esperando confirmación");
-                        holder.btnEditarPrimer.setVisibility(View.VISIBLE);
+                        if (isEditable) {
+                            holder.txtEstadoUno.setText("Esperando confirmación");
+                        } else {
+                            holder.txtEstadoUno.setText("Vuelta no confirmada");
+                        }
+                        if (isEditable) {
+                            holder.btnEditarPrimer.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
                 if (!auxVenta.getVuelta2().isRegistrada()) {
@@ -137,8 +150,14 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
                         holder.txtEstadoDos.setText("Confirmado");
                         holder.btnEditarSegunda.setVisibility(View.GONE);
                     } else {
-                        holder.txtEstadoDos.setText("Esperando confirmación");
-                        holder.btnEditarSegunda.setVisibility(View.VISIBLE);
+                        if (isEditable) {
+                            holder.txtEstadoDos.setText("Esperando confirmación");
+                        } else {
+                            holder.txtEstadoDos.setText("Vuelta no confirmada");
+                        }
+                        if (isEditable) {
+                            holder.btnEditarSegunda.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
 
@@ -151,7 +170,7 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
 
                 holder.btnEditarSegunda.setOnClickListener(view -> {
                     if (holder.empleado != null) {
-                        VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(true, holder.empleado,idVenta, context, nombreSucursal, true, auxVenta.getVuelta2());
+                        VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(false, holder.empleado,idVenta, context, nombreSucursal, true, auxVenta.getVuelta2());
                         vueltaBottomSheet.show(fragmentManager,vueltaBottomSheet.getTag());
                     }
                 });

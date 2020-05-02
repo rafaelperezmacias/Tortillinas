@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -31,8 +32,9 @@ public class DialogoMaizCocido extends DialogFragment {
     private int costalesAnteriores;
     private Context context;
     private String idVenta;
+    private boolean isEditable;
 
-    public DialogoMaizCocido(Context context, String idVenta,int costalesAnteriores, int botesAnteriores)
+    public DialogoMaizCocido(Context context, String idVenta,int costalesAnteriores, int botesAnteriores, boolean isEditable)
     {
         this.costalesAnteriores = costalesAnteriores;
         this.botesAnteriores = botesAnteriores;
@@ -65,8 +67,23 @@ public class DialogoMaizCocido extends DialogFragment {
         ((MaterialButton) view.findViewById(R.id.btn_dialog_secondary))
                 .setOnClickListener(view1 -> dismiss());
 
+        if (!isEditable) {
+            ((MaterialButton) view.findViewById(R.id.btn_dialog_secondary))
+                    .setVisibility(View.GONE);
+            ((MaterialButton) view.findViewById(R.id.btn_dialog_primary))
+                    .setText("CERRAR");
+            ((TextView) view.findViewById(R.id.tv_dialog_title))
+                    .setText("Maíz agregado");
+            hideTxt(txtBotes);
+            hideTxt(txtCostales);
+        }
+
         ((MaterialButton) view.findViewById(R.id.btn_dialog_primary))
                 .setOnClickListener(view1 -> {
+                    if (!isEditable) {
+                        dismiss();
+                        return;
+                    }
                     HashMap<String, Object> hashMap = new HashMap<>();
                     hashMap.put("costales",-1);
                     hashMap.put("botes",-1);
@@ -88,5 +105,12 @@ public class DialogoMaizCocido extends DialogFragment {
                 });
 
         return view;
+    }
+
+    private void hideTxt(TextInputEditText txt) {
+        txt.setClickable(false);
+        txt.setLongClickable(false);
+        txt.setFocusable(false);
+        txt.setCursorVisible(false);
     }
 }

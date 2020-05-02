@@ -43,11 +43,13 @@ public class VentasAdicionalesBottomSheet extends BottomSheetDialogFragment {
 
     private int tipo;
     private String idVenta;
+    private boolean isEditable;
 
-    public VentasAdicionalesBottomSheet(int tipo, String idVenta)
+    public VentasAdicionalesBottomSheet(int tipo, String idVenta, boolean isEditable)
     {
         this.tipo = tipo;
         this.idVenta = idVenta;
+        this.isEditable = isEditable;
     }
 
     @Override
@@ -96,7 +98,7 @@ public class VentasAdicionalesBottomSheet extends BottomSheetDialogFragment {
                                     total += concepto.getPrecio();
                                 }
                                 txtTotal.setText("Total: $" + total);
-                                AdaptadorConceptos adaptador = new AdaptadorConceptos(getContext(),conceptos,getFragmentManager(),tipo,idVenta);
+                                AdaptadorConceptos adaptador = new AdaptadorConceptos(getContext(),conceptos,getFragmentManager(),tipo,idVenta,isEditable);
                                 recyclerView.setAdapter(adaptador);
                             }
                         }
@@ -126,7 +128,7 @@ public class VentasAdicionalesBottomSheet extends BottomSheetDialogFragment {
                                     total += concepto.getPrecio();
                                 }
                                 txtTotal.setText("Total: $" + total);
-                                AdaptadorConceptos adaptador = new AdaptadorConceptos(getContext(),conceptos,getFragmentManager(),tipo,idVenta);
+                                AdaptadorConceptos adaptador = new AdaptadorConceptos(getContext(),conceptos,getFragmentManager(),tipo,idVenta,isEditable);
                                 recyclerView.setAdapter(adaptador);
                             }
                         }
@@ -156,7 +158,7 @@ public class VentasAdicionalesBottomSheet extends BottomSheetDialogFragment {
                                     total += concepto.getPrecio();
                                 }
                                 txtTotal.setText("Total: $" + total);
-                                AdaptadorConceptos adaptador = new AdaptadorConceptos(getContext(),conceptos,getFragmentManager(),tipo,idVenta);
+                                AdaptadorConceptos adaptador = new AdaptadorConceptos(getContext(),conceptos,getFragmentManager(),tipo,idVenta,isEditable);
                                 recyclerView.setAdapter(adaptador);
                             }
                         }
@@ -166,6 +168,11 @@ public class VentasAdicionalesBottomSheet extends BottomSheetDialogFragment {
 
                         }
                     });
+        }
+
+        if (!isEditable) {
+            ((ImageButton) view.findViewById(R.id.btnAddConcepto))
+                    .setVisibility(View.GONE);
         }
 
         ((ImageButton) view.findViewById(R.id.btnAddConcepto))

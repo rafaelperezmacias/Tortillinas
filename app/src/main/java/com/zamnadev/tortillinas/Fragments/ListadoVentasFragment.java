@@ -39,6 +39,9 @@ public class ListadoVentasFragment extends Fragment {
     private String fecha;
     private VentasFragment ventasFragment;
 
+    private DatabaseReference refEmpleados;
+    private ValueEventListener listenerEmpleados;
+
     public ListadoVentasFragment(VentasFragment ventasFragment)
     {
         this.ventasFragment = ventasFragment;
@@ -62,9 +65,9 @@ public class ListadoVentasFragment extends Fragment {
 
         //Se agrega el evento por la demaro del puto firebase, esta mierda no jala chido con mi internet de mierda
         //Luego validamos la puta espera de respuesta del servidor
-        DatabaseReference refEmpleado = FirebaseDatabase.getInstance().getReference("Empleados")
+        refEmpleados = FirebaseDatabase.getInstance().getReference("Empleados")
                 .child(ControlSesiones.ObtenerUsuarioActivo(getContext()));
-        refEmpleado.addValueEventListener(new ValueEventListener() {
+        listenerEmpleados =  refEmpleados.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 empleado = dataSnapshot.getValue(Empleado.class);
@@ -138,6 +141,11 @@ public class ListadoVentasFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        refEmpleados.removeEventListener(listenerEmpleados);
+    }
 
     //TODO Continuacion de alta venta
     public void altaVentaMostrador(String idSucursal, String id) {
@@ -170,7 +178,7 @@ public class ListadoVentasFragment extends Fragment {
                     {
                         VentaMostrador venta = new VentaMostrador();
                         venta.setIdVenta(finalId);
-                        VentasMostradorBottomSheet bottomSheet = new VentasMostradorBottomSheet(finalId,empleado,idSucursal);
+                        VentasMostradorBottomSheet bottomSheet = new VentasMostradorBottomSheet(finalId,empleado,idSucursal,true);
                         bottomSheet.show(getFragmentManager(), bottomSheet.getTag());
                     }
                 });

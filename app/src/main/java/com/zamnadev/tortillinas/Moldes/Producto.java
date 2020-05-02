@@ -9,6 +9,7 @@ public class Producto {
     private boolean eliminado;
     private boolean formulario;
     private Long alta;
+    private boolean nombreN;
 
     public Producto() {
 
@@ -22,16 +23,19 @@ public class Producto {
         modificado = p.modificado;
         eliminado = p.eliminado;
         formulario = p.formulario;
+        alta = p.alta;
+        nombreN = p.nombreN;
     }
 
-    public Producto(String idProducto, String nombre, double precio, boolean modificado, boolean eliminado, Long alta, boolean formulario) {
+    public Producto(String idProducto, String nombre, double precio, boolean modificado, boolean eliminado, boolean formulario, Long alta, boolean nombreN) {
         this.idProducto = idProducto;
         this.nombre = nombre;
         this.precio = precio;
         this.modificado = modificado;
         this.eliminado = eliminado;
-        this.alta = alta;
         this.formulario = formulario;
+        this.alta = alta;
+        this.nombreN = nombreN;
     }
 
     public String getIdProducto() {
@@ -74,6 +78,14 @@ public class Producto {
         this.eliminado = eliminado;
     }
 
+    public boolean isFormulario() {
+        return formulario;
+    }
+
+    public void setFormulario(boolean formulario) {
+        this.formulario = formulario;
+    }
+
     public Long getAlta() {
         return alta;
     }
@@ -82,12 +94,12 @@ public class Producto {
         this.alta = alta;
     }
 
-    public boolean isFormulario() {
-        return formulario;
+    public boolean isNombreN() {
+        return nombreN;
     }
 
-    public void setFormulario(boolean formulario) {
-        this.formulario = formulario;
+    public void setNombreN(boolean nombreN) {
+        this.nombreN = nombreN;
     }
 
     @Override
@@ -100,6 +112,7 @@ public class Producto {
                 ", eliminado=" + eliminado +
                 ", formulario=" + formulario +
                 ", alta=" + alta +
+                ", nombreN=" + nombreN +
                 '}';
     }
 }
