@@ -33,23 +33,15 @@ public class AdaptadorVenta extends RecyclerView.Adapter<AdaptadorVenta.ViewHold
     private Context context;
     private ArrayList<Venta> ventas;
     private String fecha;
-    private Empleado empleado;
     private FragmentManager fragmentManager;
-    private boolean isMostrador;
     private boolean isAdmin;
 
-    public AdaptadorVenta(Context context, ArrayList<Venta> ventas, String fecha, Empleado empleado, FragmentManager fragmentManager, int tipo, boolean isAdmin)
+    public AdaptadorVenta(Context context, ArrayList<Venta> ventas, String fecha, FragmentManager fragmentManager, boolean isAdmin)
     {
         this.context = context;
         this.ventas = ventas;
         this.fecha = fecha;
-        this.empleado = empleado;
         this.fragmentManager = fragmentManager;
-        if (tipo == Empleado.TIPO_MOSTRADOR) {
-            isMostrador = true;
-        } else if (tipo == Empleado.TIPO_REPARTIDOR){
-            isMostrador = false;
-        }
         this.isAdmin = isAdmin;
     }
 
@@ -63,6 +55,25 @@ public class AdaptadorVenta extends RecyclerView.Adapter<AdaptadorVenta.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Venta venta = ventas.get(position);
+
+        if (isAdmin) {
+            FirebaseDatabase.getInstance().getReference("Empleados")
+                    .child(venta.getIdEmpleado())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            Empleado empleado = dataSnapshot.getValue(Empleado.class);
+                            holder.txtEmpleado.setText(empleado.getNombre().getNombres() + " " + empleado.getNombre().getApellidos());
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+        } else {
+            holder.txtEmpleado.setVisibility(View.GONE);
+        }
 
         holder.txtFecha.setText(venta.getFecha());
         DatabaseReference refSucursal = FirebaseDatabase.getInstance().getReference("Sucursales")
@@ -132,6 +143,7 @@ public class AdaptadorVenta extends RecyclerView.Adapter<AdaptadorVenta.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView txtFecha;
+        private TextView txtEmpleado;
         private TextView txtSucursal;
         private LinearLayout lytMain;
 
@@ -140,6 +152,7 @@ public class AdaptadorVenta extends RecyclerView.Adapter<AdaptadorVenta.ViewHold
             txtFecha = (TextView) itemView.findViewById(R.id.txtFecha);
             txtSucursal = (TextView) itemView.findViewById(R.id.txtSucursal);
             lytMain = (LinearLayout) itemView.findViewById(R.id.lytMain);
+            txtEmpleado = (TextView) itemView.findViewById(R.id.txtEmpleado);
         }
     }
 }

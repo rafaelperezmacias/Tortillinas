@@ -46,10 +46,13 @@ public class ListadoVentasFragment extends Fragment {
     private ValueEventListener listenerVentasRepartidor;
     private ValueEventListener listenerEmpleados;
 
-    public ListadoVentasFragment(VentasFragment ventasFragment)
+    private boolean isMostrador;
+
+    public ListadoVentasFragment(VentasFragment ventasFragment, boolean isMostrador)
     {
         this.ventasFragment = ventasFragment;
         fecha = MainActivity.getFecha();
+        this.isMostrador = isMostrador;
     }
 
     @Override
@@ -118,7 +121,7 @@ public class ListadoVentasFragment extends Fragment {
                                     fabAgregarVenta.show();
                                 }
                             }
-                            AdaptadorVenta adaptador = new AdaptadorVenta(getContext(),ventas,fecha,empleado,getFragmentManager(),empleado.getTipo(),false);
+                            AdaptadorVenta adaptador = new AdaptadorVenta(getContext(),ventas,fecha,getFragmentManager(),false);
                             recyclerView.setAdapter(adaptador);
                         }
 
@@ -129,60 +132,69 @@ public class ListadoVentasFragment extends Fragment {
                     });
                 } else {
                     fabAgregarVenta.hide();
-                    ventasDelDia.clear();
-                    ventas.clear();
-                    Query refVentasMostrador = FirebaseDatabase.getInstance().getReference("VentasMostrador")
-                            .orderByChild("fecha");
-                    listenerVentasMostrador = refVentasMostrador.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren())
-                            {
-                                for (DataSnapshot snp : snapshot.getChildren())
+                    if (ventasFragment.getAdapter().getCount() != 2) {
+                        ventasFragment.getAdapter().addFragment(new ListadoVentasFragment(ventasFragment,false), "Ventas repartidor");
+                    }
+                    if (isMostrador) {
+                        ventasFragment.getTabLayout().getTabAt(0).setText("Ventas mostrador");
+                        Query refVentasMostrador = FirebaseDatabase.getInstance().getReference("VentasMostrador")
+                                .orderByChild("fecha");
+                        listenerVentasMostrador = refVentasMostrador.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                ventasDelDia.clear();
+                                ventas.clear();
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren())
                                 {
-                                    Venta ventaMostrador = snp.getValue(Venta.class);
-                                    ventaMostrador.setMostrador(true);
-                                    ventas.add(ventaMostrador);
-                                    if (ventaMostrador.getFecha().equals(fecha)) {
-                                        ventasDelDia.add(ventaMostrador);
+                                    for (DataSnapshot snp : snapshot.getChildren())
+                                    {
+                                        Venta ventaMostrador = snp.getValue(Venta.class);
+                                        ventaMostrador.setMostrador(true);
+                                        ventas.add(ventaMostrador);
+                                        if (ventaMostrador.getFecha().equals(fecha)) {
+                                            ventasDelDia.add(ventaMostrador);
+                                        }
                                     }
                                 }
+                                AdaptadorVenta adaptador = new AdaptadorVenta(getContext(),ventas,fecha,getFragmentManager(),true);
+                                recyclerView.setAdapter(adaptador);
                             }
-                            AdaptadorVenta adaptador = new AdaptadorVenta(getContext(),ventas,fecha,empleado,getFragmentManager(),Empleado.TIPO_MOSTRADOR,true);
-                            recyclerView.setAdapter(adaptador);
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        }
-                    });
-                    Query refVentaRepartidor = FirebaseDatabase.getInstance().getReference("VentasRepartidor")
-                            .orderByChild("fecha");
-                    listenerVentasRepartidor = refVentaRepartidor.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren())
-                            {
-                                for (DataSnapshot snp : snapshot.getChildren())
+                            }
+                        });
+                    } else {
+                        Query refVentaRepartidor = FirebaseDatabase.getInstance().getReference("VentasRepartidor")
+                                .orderByChild("fecha");
+                        listenerVentasRepartidor = refVentaRepartidor.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                ventasDelDia.clear();
+                                ventas.clear();
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren())
                                 {
-                                    Venta ventaRepartidor = snp.getValue(Venta.class);
-                                    ventaRepartidor.setMostrador(false);
-                                    ventas.add(ventaRepartidor);
-                                    if (ventaRepartidor.getFecha().equals(fecha)) {
-                                        ventasDelDia.add(ventaRepartidor);
+                                    for (DataSnapshot snp : snapshot.getChildren())
+                                    {
+                                        Venta ventaRepartidor = snp.getValue(Venta.class);
+                                        ventaRepartidor.setMostrador(false);
+                                        ventas.add(ventaRepartidor);
+                                        if (ventaRepartidor.getFecha().equals(fecha)) {
+                                            ventasDelDia.add(ventaRepartidor);
+                                        }
                                     }
                                 }
+                                AdaptadorVenta adaptador = new AdaptadorVenta(getContext(),ventas,fecha,getFragmentManager(),true);
+                                recyclerView.setAdapter(adaptador);
                             }
-                            AdaptadorVenta adaptador = new AdaptadorVenta(getContext(),ventas,fecha,empleado,getFragmentManager(),Empleado.TIPO_REPARTIDOR,true);
-                            recyclerView.setAdapter(adaptador);
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
             }
 

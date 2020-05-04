@@ -57,7 +57,7 @@ public class VentasFragment extends Fragment {
 
         tabLayout = view.findViewById(R.id.tab_layout);
         viewPager = view.findViewById(R.id.viewpager);
-        adapter.addFragment(new ListadoVentasFragment(getMe()), "Ventas realizadas");
+        adapter.addFragment(new ListadoVentasFragment(getMe(),true), "Ventas realizadas");
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -70,6 +70,10 @@ public class VentasFragment extends Fragment {
 
     private VentasFragment getMe() {
         return this;
+    }
+
+    public TabLayout getTabLayout() {
+        return tabLayout;
     }
 
     public void setTextToTab(String text) {
