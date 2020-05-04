@@ -60,8 +60,9 @@ public class VueltaBottomSheet extends BottomSheetDialogFragment {
     private String nombreSucursal;
     private boolean isEdit;
     private Vuelta vuelta;
+    private String idEmpleado;
 
-    public VueltaBottomSheet(boolean primero, Empleado empleado, String idVenta, Context context, String nombreSucursal)
+    public VueltaBottomSheet(boolean primero, Empleado empleado, String idVenta, Context context, String nombreSucursal, String idEmpleado)
     {
         this.primero = primero;
         this.empleado = empleado;
@@ -70,9 +71,10 @@ public class VueltaBottomSheet extends BottomSheetDialogFragment {
         this.context = context;
         this.nombreSucursal = nombreSucursal;
         isEdit = false;
+        this.idEmpleado = idEmpleado;
     }
 
-    public VueltaBottomSheet(boolean primero, Empleado empleado, String idVenta, Context context, String nombreSucursal, boolean isEdit, Vuelta vuelta)
+    public VueltaBottomSheet(boolean primero, Empleado empleado, String idVenta, Context context, String nombreSucursal, boolean isEdit, Vuelta vuelta, String idEmpleado)
     {
         this.primero = primero;
         this.empleado = empleado;
@@ -82,6 +84,7 @@ public class VueltaBottomSheet extends BottomSheetDialogFragment {
         this.nombreSucursal = nombreSucursal;
         this.isEdit = isEdit;
         this.vuelta = vuelta;
+        this.idEmpleado = idEmpleado;
     }
 
     @Override
@@ -230,7 +233,7 @@ public class VueltaBottomSheet extends BottomSheetDialogFragment {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("fecha",fecha);
         hashMap.put("idVenta", idVenta);
-        hashMap.put("idEmpleado",ControlSesiones.ObtenerUsuarioActivo(getContext()));
+        hashMap.put("idEmpleado",idEmpleado);
 
         HashMap<String, Object> vueltaMap = new HashMap<>();
         vueltaMap.put("confirmado",false);

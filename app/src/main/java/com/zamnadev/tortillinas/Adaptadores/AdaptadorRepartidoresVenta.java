@@ -35,14 +35,16 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
     private String idVenta;
     private String nombreSucursal;
     private boolean isEditable;
+    private String idEmpleado;
 
-    public AdaptadorRepartidoresVenta(Context context, ArrayList<String> ids, FragmentManager fragmentManager, String idVenta, String nombreSucursal, boolean isEditable) {
+    public AdaptadorRepartidoresVenta(Context context, ArrayList<String> ids, FragmentManager fragmentManager, String idVenta, String nombreSucursal, boolean isEditable, String idEmpleado) {
         this.context = context;
         this.ids = ids;
         this.fragmentManager = fragmentManager;
         this.idVenta = idVenta;
         this.nombreSucursal = nombreSucursal;
         this.isEditable = isEditable;
+        this.idEmpleado = idEmpleado;
     }
 
     @NonNull
@@ -69,12 +71,12 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
                 }
 
                 holder.btnPrimero.setOnClickListener(view -> {
-                    VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(true, holder.empleado,idVenta, context, nombreSucursal);
+                    VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(true, holder.empleado,idVenta, context, nombreSucursal,idEmpleado);
                     vueltaBottomSheet.show(fragmentManager,vueltaBottomSheet.getTag());
                 });
 
                 holder.btnSegundo.setOnClickListener(view -> {
-                    VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(false, holder.empleado,idVenta, context, nombreSucursal);
+                    VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(false, holder.empleado,idVenta, context, nombreSucursal,idEmpleado);
                     vueltaBottomSheet.show(fragmentManager,vueltaBottomSheet.getTag());
                 });
             }
@@ -163,14 +165,14 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
 
                 holder.btnEditarPrimer.setOnClickListener(view -> {
                     if (holder.empleado != null) {
-                        VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(true, holder.empleado,idVenta, context, nombreSucursal, true, auxVenta.getVuelta1());
+                        VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(true, holder.empleado,idVenta, context, nombreSucursal, true, auxVenta.getVuelta1(),idEmpleado);
                         vueltaBottomSheet.show(fragmentManager,vueltaBottomSheet.getTag());
                     }
                 });
 
                 holder.btnEditarSegunda.setOnClickListener(view -> {
                     if (holder.empleado != null) {
-                        VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(false, holder.empleado,idVenta, context, nombreSucursal, true, auxVenta.getVuelta2());
+                        VueltaBottomSheet vueltaBottomSheet = new VueltaBottomSheet(false, holder.empleado,idVenta, context, nombreSucursal, true, auxVenta.getVuelta2(),idEmpleado);
                         vueltaBottomSheet.show(fragmentManager,vueltaBottomSheet.getTag());
                     }
                 });

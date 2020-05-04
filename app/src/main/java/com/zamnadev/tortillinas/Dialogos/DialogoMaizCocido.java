@@ -30,16 +30,17 @@ public class DialogoMaizCocido extends DialogFragment {
 
     private int botesAnteriores;
     private int costalesAnteriores;
-    private Context context;
     private String idVenta;
     private boolean isEditable;
+    private String idEmpleado;
 
-    public DialogoMaizCocido(Context context, String idVenta,int costalesAnteriores, int botesAnteriores, boolean isEditable)
+    public DialogoMaizCocido(String idVenta,int costalesAnteriores, int botesAnteriores, boolean isEditable, String idEmpleado)
     {
         this.costalesAnteriores = costalesAnteriores;
         this.botesAnteriores = botesAnteriores;
-        this.context = context;
         this.idVenta = idVenta;
+        this.isEditable = isEditable;
+        this.idEmpleado = idEmpleado;
     }
 
     @Override
@@ -94,7 +95,7 @@ public class DialogoMaizCocido extends DialogFragment {
                         hashMap.put("botes",Integer.parseInt(txtBotes.getText().toString()));
                     }
                     FirebaseDatabase.getInstance().getReference("VentasMostrador")
-                            .child(ControlSesiones.ObtenerUsuarioActivo(Objects.requireNonNull(getContext())))
+                            .child(idEmpleado)
                             .child(idVenta)
                             .updateChildren(hashMap)
                             .addOnCompleteListener(task -> {

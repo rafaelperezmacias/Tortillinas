@@ -106,7 +106,7 @@ public class AdaptadorVenta extends RecyclerView.Adapter<AdaptadorVenta.ViewHold
                 if (venta.isMostrador()) {
                     VentasMostradorBottomSheet bottomSheet;
                     if (isAdmin) {
-                        bottomSheet = new VentasMostradorBottomSheet(venta.getIdVenta(),venta.getIdSucursal(), false,venta.getIdEmpleado());
+                        bottomSheet = new VentasMostradorBottomSheet(venta.getIdVenta(),venta.getIdSucursal(), true,venta.getIdEmpleado());
                     } else {
                         bottomSheet = new VentasMostradorBottomSheet(venta.getIdVenta(),venta.getIdSucursal(), false,venta.getIdEmpleado());
                     }

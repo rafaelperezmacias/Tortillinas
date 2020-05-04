@@ -228,7 +228,7 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                 }
 
                 txtMaizCocido.setOnClickListener(view1 -> {
-                    DialogoMaizCocido dialogoMaizCocido = new DialogoMaizCocido(getContext(),idVenta,venta.getCostales(),venta.getBotes(),isEditable);
+                    DialogoMaizCocido dialogoMaizCocido = new DialogoMaizCocido(idVenta,venta.getCostales(),venta.getBotes(),isEditable,idEmpleado);
                     dialogoMaizCocido.show(getChildFragmentManager(),dialogoMaizCocido.getTag());
                 });
 
@@ -298,6 +298,8 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                                     }
                                 });
                     }
+                } else {
+                    txtDevoluciones.setText("Ninguna devolución");
                 }
             }
 
@@ -455,6 +457,10 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
 
                                         }
                                     });
+                            } else {
+                                if (adaptadorVentasExtra != null) {
+                                    adaptadorVentasExtra.addVenta(productosMostrador);
+                                }
                             }
                         }
                 }
@@ -494,7 +500,7 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                     }
                     if (hashMap.size() > 0) {
                         FirebaseDatabase.getInstance().getReference("VentasMostrador")
-                                .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
+                                .child(idEmpleado)
                                 .child(idVenta)
                                 .updateChildren(hashMap);
                     }
@@ -504,7 +510,7 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                             productoMap.put("idProducto",ventaDelDia.getIdProducto());
                             productoMap.put("cantidad",ventaDelDia.getCantidad());
                             FirebaseDatabase.getInstance().getReference("VentasDelDia")
-                                    .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
+                                    .child(idEmpleado)
                                     .child(idVenta)
                                     .child(ventaDelDia.getIdProducto())
                                     .updateChildren(productoMap);
@@ -563,7 +569,7 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
             for (int x = 0; x < venta.getRepartidores().size(); x++) {
                 arrayList.add(venta.getRepartidores().get("repartidor"+x));
             }
-            AdaptadorRepartidoresVenta adaptador = new AdaptadorRepartidoresVenta(getContext(),arrayList,getChildFragmentManager(),idVenta,sucursal.getNombre(),isEditable);
+            AdaptadorRepartidoresVenta adaptador = new AdaptadorRepartidoresVenta(getContext(),arrayList,getChildFragmentManager(),idVenta,sucursal.getNombre(),isEditable,idEmpleado);
             recyclerViewRepartidores.setAdapter(adaptador);
         }
     }
