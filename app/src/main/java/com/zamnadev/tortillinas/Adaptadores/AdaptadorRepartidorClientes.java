@@ -48,13 +48,16 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
     private double masaVentaSegundaVuelta;
     private double totoposVentaSegundaVuelta;
 
-    public AdaptadorRepartidorClientes(Context context, ArrayList<Cliente> clientes, String idVenta, FragmentManager fragmentManager) {
+    private boolean isEditable;
+
+    public AdaptadorRepartidorClientes(Context context, ArrayList<Cliente> clientes, String idVenta, FragmentManager fragmentManager, boolean isEditable, String idEmpleado) {
         this.context = context;
         this.clientes = clientes;
         this.fragmentManager = fragmentManager;
+        this.isEditable = isEditable;
         pagos = new ArrayList<>();
         FirebaseDatabase.getInstance().getReference("VentasRepartidor")
-                .child(ControlSesiones.ObtenerUsuarioActivo(context))
+                .child(idEmpleado)
                 .child(idVenta)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -90,6 +93,10 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
         holder.txtPseudonimo.setText(cliente.getPseudonimo());
         VentaCliente ventaCliente = null;
         holder.total = 0.0;
+
+        if (!isEditable) {
+            hideTxt(holder.txtPago);
+        }
 
         if (ventaClientes != null && ventaClientes.size() > 0) {
             for (VentaCliente v : ventaClientes) {
@@ -175,13 +182,13 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
                         holder.txtDevolucion.setEnabled(true);
                         holder.txtPago.setEnabled(true);
                         holder.txtDevolucion.setOnClickListener(view -> {
-                            VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(getMe(),true,cliente,venta, finalVentaCliente,true);
+                            VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(getMe(),true,cliente,venta, finalVentaCliente,true, isEditable);
                             ventas.show(fragmentManager,ventas.getTag());
                         });
                     }
                 }
                 holder.txtPrimer.setOnClickListener(view -> {
-                    VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(getMe(), true,cliente,venta, finalVentaCliente);
+                    VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(getMe(), true,cliente,venta, finalVentaCliente,false,isEditable);
                     ventas.show(fragmentManager,ventas.getTag());
                 });
                 holder.txtPrimer.setEnabled(true);
@@ -210,7 +217,7 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
                             holder.txtDevolucion.setEnabled(true);
                             holder.txtPago.setEnabled(true);
                             holder.txtDevolucion.setOnClickListener(view -> {
-                                VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(getMe(), true,cliente,venta, finalVentaCliente,true);
+                                VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(getMe(), true,cliente,venta, finalVentaCliente,true, isEditable);
                                 ventas.show(fragmentManager,ventas.getTag());
                             });
                         }
@@ -218,7 +225,7 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
                     }
                 }
                 holder.txtSegunda.setOnClickListener(view -> {
-                    VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(getMe(), false,cliente,venta, finalVentaCliente);
+                    VentasClienteBottomSheet ventas = new VentasClienteBottomSheet(getMe(), false,cliente,venta, finalVentaCliente,false,isEditable);
                     ventas.show(fragmentManager,ventas.getTag());
                 });
                 holder.txtSegunda.setEnabled(true);
@@ -298,6 +305,13 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
                 holder.lytBody.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void hideTxt(TextInputEditText txt) {
+        txt.setClickable(false);
+        txt.setLongClickable(false);
+        txt.setFocusable(false);
+        txt.setCursorVisible(false);
     }
 
     private AdaptadorRepartidorClientes getMe() {

@@ -32,11 +32,13 @@ public class DialogoAddCampoVentas extends DialogFragment {
 
     private String idVenta;
     private int tipo;
+    private String idEmpleado;
 
-    public DialogoAddCampoVentas(int tipo, String idVenta)
+    public DialogoAddCampoVentas(int tipo, String idVenta, String idEmpleado)
     {
         this.tipo = tipo;
         this.idVenta = idVenta;
+        this.idEmpleado = idEmpleado;
     }
 
     @Override
@@ -65,7 +67,7 @@ public class DialogoAddCampoVentas extends DialogFragment {
                     hashMap.put("precio",Double.parseDouble(txtPrecio.getText().toString()));
                     if (tipo == TIPO_GASTOS) {
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Gastos")
-                                .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
+                                .child(idEmpleado)
                                 .child(idVenta);
                         String id = reference.push().getKey();
                         hashMap.put("id",id);
@@ -78,7 +80,7 @@ public class DialogoAddCampoVentas extends DialogFragment {
                                 });
                     } else if (tipo == TIPO_VENTAS_MOSTRADOR) {
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Mostrador")
-                                .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
+                                .child(idEmpleado)
                                 .child(idVenta);
                         String id = reference.push().getKey();
                         hashMap.put("id",id);
@@ -91,7 +93,7 @@ public class DialogoAddCampoVentas extends DialogFragment {
                                 });
                     } else if (tipo == TIPO_GASTOS_REPARTIDOR) {
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Gastos")
-                                .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
+                                .child(idEmpleado)
                                 .child(idVenta);
                         String id = reference.push().getKey();
                         hashMap.put("id",id);

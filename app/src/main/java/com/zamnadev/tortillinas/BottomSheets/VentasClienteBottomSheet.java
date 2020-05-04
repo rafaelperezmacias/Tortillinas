@@ -52,29 +52,20 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
     private boolean devolucion;
     private AdaptadorRepartidorClientes adaptador;
 
+    private boolean isEditable;
+
     private double masaAnterior;
     private double tortillaAnterior;
     private double totopoAnterior;
 
-    public VentasClienteBottomSheet(AdaptadorRepartidorClientes adaptador, boolean primero, Cliente cliente, VentaRepartidor ventaRepartidor, VentaCliente ventaCliente) {
-        this.primero = primero;
-        this.cliente = cliente;
-        this.ventaRepartidor = ventaRepartidor;
-        this.ventaCliente = ventaCliente;
-        devolucion = false;
-        this.adaptador = adaptador;
-        masaAnterior = -1;
-        tortillaAnterior = -1;
-        totopoAnterior = -1;
-    }
-
-    public VentasClienteBottomSheet(AdaptadorRepartidorClientes adaptador, boolean primero, Cliente cliente, VentaRepartidor ventaRepartidor, VentaCliente ventaCliente, boolean devolucion) {
+    public VentasClienteBottomSheet(AdaptadorRepartidorClientes adaptador, boolean primero, Cliente cliente, VentaRepartidor ventaRepartidor, VentaCliente ventaCliente, boolean devolucion, boolean isEditable) {
         this.primero = primero;
         this.cliente = cliente;
         this.ventaRepartidor = ventaRepartidor;
         this.ventaCliente = ventaCliente;
         this.devolucion = devolucion;
         this.adaptador = adaptador;
+        this.isEditable = isEditable;
         masaAnterior = -1;
         tortillaAnterior = -1;
         totopoAnterior = -1;
@@ -116,6 +107,14 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
         RelativeLayout layout1 = view.findViewById(R.id.layout1);
         RelativeLayout layout2 = view.findViewById(R.id.layout2);
         RelativeLayout layout3 = view.findViewById(R.id.layout3);
+
+        if (!isEditable) {
+            hideTxt(txtMasa);
+            hideTxt(txtTortilla);
+            hideTxt(txtTotopos);
+            ((MaterialButton) view.findViewById(R.id.btnGuardar))
+                    .setText("CERRAR");
+        }
 
         if (ventaCliente != null) {
             if (devolucion) {
@@ -268,6 +267,10 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
 
         ((MaterialButton) view.findViewById(R.id.btnGuardar))
                 .setOnClickListener(view1 -> {
+                    if (!isEditable) {
+                        dismiss();
+                        return;
+                    }
                     double masa = -1, tortilla = -1, totopos = -1;
                     if (!txtMasa.getText().toString().isEmpty()) {
                         masa = Double.parseDouble(txtMasa.getText().toString());
@@ -499,5 +502,12 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
     public void onStart() {
         super.onStart();
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+
+    private void hideTxt(TextInputEditText txt) {
+        txt.setClickable(false);
+        txt.setLongClickable(false);
+        txt.setFocusable(false);
+        txt.setCursorVisible(false);
     }
 }

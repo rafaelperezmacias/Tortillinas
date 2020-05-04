@@ -50,7 +50,6 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
 
     private BottomSheetBehavior bottomSheetBehavior;
 
-    private Empleado empleado;
     private String idSucursal;
     private boolean isEditable;
     private String idVenta;
@@ -67,21 +66,14 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
 
     private VentaRepartidor ventaRepartidor;
     private AdaptadorRepartidorClientes adaptador;
+    private String idEmpleado;
 
-    public VentasRepartidorBottomSheet(String idVenta, Empleado empleado, String idSucursal)
+    public VentasRepartidorBottomSheet(String  idVenta, String idSucursal, boolean isEditable, String idEmpleado)
     {
         this.idVenta = idVenta;
-        this.empleado = empleado;
-        this.idSucursal = idSucursal;
-        isEditable = true;
-    }
-
-    public VentasRepartidorBottomSheet(String  idVenta, Empleado empleado, String idSucursal, boolean isEditable)
-    {
-        this.idVenta = idVenta;
-        this.empleado = empleado;
         this.idSucursal = idSucursal;
         this.isEditable = isEditable;
+        this.idEmpleado = idEmpleado;
     }
 
     @Override
@@ -102,6 +94,9 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
 
             @Override public void onSlide(@NonNull View view, float v) { }
         });
+
+        Log.e("S", "" + idEmpleado);
+        Log.e("sd","" + ControlSesiones.ObtenerUsuarioActivo(getContext()));
 
         ImageButton btnCerrar = view.findViewById(R.id.btn_cerrar);
         btnCerrar.setOnClickListener((v -> dismiss()));
@@ -135,13 +130,18 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
         ArrayList<VentaCliente> ventaClientes = new ArrayList<>();
 
         txtGasto.setOnClickListener(view12 -> {
-            VentasAdicionalesBottomSheet ventas = new VentasAdicionalesBottomSheet(VentasAdicionalesBottomSheet.TIPO_GASTOS_REPARTIDOR,idVenta,isEditable);
+            VentasAdicionalesBottomSheet ventas = new VentasAdicionalesBottomSheet(VentasAdicionalesBottomSheet.TIPO_GASTOS_REPARTIDOR,idVenta,isEditable,idEmpleado);
             ventas.show(getChildFragmentManager(),ventas.getTag());
         });
 
+        if (!isEditable) {
+            ((MaterialButton) view.findViewById(R.id.btnGuardar))
+                    .setText("CERRAR");
+        }
+
         //TODO muestra la informacion de la venta de tipo repartidor
         refVenta = FirebaseDatabase.getInstance().getReference("VentasRepartidor")
-                .child(empleado.getIdEmpleado())
+                .child(idEmpleado)
                 .child(idVenta);
         listenerVenta = refVenta.addValueEventListener(new ValueEventListener() {
             @Override
@@ -228,7 +228,7 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
 
         //TODO muestra la cantidad de conceptos que se muestra en la seccion de ventas extra (gastos, especificar en qué)
         refGastos = FirebaseDatabase.getInstance().getReference("Gastos")
-                .child(empleado.getIdEmpleado())
+                .child(idEmpleado)
                 .child(idVenta);
         listenerGastos = refGastos.addValueEventListener(new ValueEventListener() {
             @Override
@@ -265,7 +265,7 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
                         clientes.add(cliente);
                     }
                 }
-                adaptador = new AdaptadorRepartidorClientes(getContext(),clientes, idVenta, getChildFragmentManager());
+                adaptador = new AdaptadorRepartidorClientes(getContext(),clientes, idVenta, getChildFragmentManager(),isEditable,idEmpleado);
                 recyclerView.setAdapter(adaptador);
                 if (adaptador.getVentaClientes() == null && ventaClientes.size() > 0) {
                     adaptador.addVentas(ventaClientes);
@@ -280,7 +280,7 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
 
         //TODO obtiene las ventas de cada cliente
         refAuxVenta = FirebaseDatabase.getInstance().getReference("AuxVentaRepartidor")
-                .child(ControlSesiones.ObtenerUsuarioActivo(Objects.requireNonNull(getContext())))
+                .child(idEmpleado)
                 .child(idVenta);
 
         listenerAuxVenta = refAuxVenta.addValueEventListener(new ValueEventListener() {
@@ -425,10 +425,14 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
 
         ((MaterialButton) view.findViewById(R.id.btnGuardar))
                 .setOnClickListener(view1 -> {
+                    if (!isEditable) {
+                        dismiss();
+                        return;
+                    }
                     if (adaptador != null) {
                         for (VentaCliente ventaCliente : adaptador.getPagos()) {
                             FirebaseDatabase.getInstance().getReference("AuxVentaRepartidor")
-                                    .child(empleado.getIdEmpleado())
+                                    .child(idEmpleado)
                                     .child(idVenta)
                                     .child(ventaCliente.getIdCliente())
                                     .child("pago")

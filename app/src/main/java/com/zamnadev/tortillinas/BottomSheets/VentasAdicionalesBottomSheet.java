@@ -44,12 +44,14 @@ public class VentasAdicionalesBottomSheet extends BottomSheetDialogFragment {
     private int tipo;
     private String idVenta;
     private boolean isEditable;
+    private String idEmpleado;
 
-    public VentasAdicionalesBottomSheet(int tipo, String idVenta, boolean isEditable)
+    public VentasAdicionalesBottomSheet(int tipo, String idVenta, boolean isEditable, String idEmpleado)
     {
         this.tipo = tipo;
         this.idVenta = idVenta;
         this.isEditable = isEditable;
+        this.idEmpleado = idEmpleado;
     }
 
     @Override
@@ -80,7 +82,7 @@ public class VentasAdicionalesBottomSheet extends BottomSheetDialogFragment {
 
         if (tipo == TIPO_VENTAS_MOSTRADOR) {
             FirebaseDatabase.getInstance().getReference("Mostrador")
-                    .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
+                    .child(idEmpleado)
                     .child(idVenta)
                     .addValueEventListener(new ValueEventListener() {
                         @Override
@@ -110,7 +112,7 @@ public class VentasAdicionalesBottomSheet extends BottomSheetDialogFragment {
                     });
         } else if (tipo == TIPO_GASTOS) {
             FirebaseDatabase.getInstance().getReference("Gastos")
-                    .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
+                    .child(idEmpleado)
                     .child(idVenta)
                     .addValueEventListener(new ValueEventListener() {
                         @Override
@@ -140,7 +142,7 @@ public class VentasAdicionalesBottomSheet extends BottomSheetDialogFragment {
                     });
         } else if (tipo == TIPO_GASTOS_REPARTIDOR) {
             FirebaseDatabase.getInstance().getReference("Gastos")
-                    .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
+                    .child(idEmpleado)
                     .child(idVenta)
                     .addValueEventListener(new ValueEventListener() {
                         @Override
@@ -177,7 +179,7 @@ public class VentasAdicionalesBottomSheet extends BottomSheetDialogFragment {
 
         ((ImageButton) view.findViewById(R.id.btnAddConcepto))
                 .setOnClickListener(view12 -> {
-                    DialogoAddCampoVentas dialogo = new DialogoAddCampoVentas(tipo,idVenta);
+                    DialogoAddCampoVentas dialogo = new DialogoAddCampoVentas(tipo,idVenta,idEmpleado);
                     dialogo.show(getChildFragmentManager(),dialogo.getTag());
                 });
 

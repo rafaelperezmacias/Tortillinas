@@ -20,6 +20,7 @@ import com.zamnadev.tortillinas.Fragments.ListadoVentasFragment;
 import com.zamnadev.tortillinas.Fragments.VentasFragment;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
+import com.zamnadev.tortillinas.Moldes.Venta;
 import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
 import com.zamnadev.tortillinas.R;
 
@@ -31,10 +32,10 @@ public class DialogoVentaSucursal extends DialogFragment {
 
     private ListadoVentasFragment ventasFragment;
     private Empleado empleado;
-    private ArrayList<VentaRepartidor> ventas;
+    private ArrayList<Venta> ventas;
     private boolean isMostrador;
 
-    public DialogoVentaSucursal(ListadoVentasFragment ventasFragment, Empleado empleado, ArrayList<VentaRepartidor> ventas, boolean isMostrador) {
+    public DialogoVentaSucursal(ListadoVentasFragment ventasFragment, Empleado empleado, ArrayList<Venta> ventas, boolean isMostrador) {
         this.ventasFragment = ventasFragment;
         this.empleado = empleado;
         this.ventas = ventas;

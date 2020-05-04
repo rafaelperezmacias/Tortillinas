@@ -57,10 +57,10 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
 
     private BottomSheetBehavior bottomSheetBehavior;
 
-    private Empleado empleado;
     private String idSucursal;
     private boolean isEditable;
     private String idVenta;
+    private String idEmpleado;
 
     private DatabaseReference refVenta;
     private DatabaseReference refGastos;
@@ -96,12 +96,12 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
     private Double tortillaDevolucion;
     private Double totoposDevolucion;
 
-    public VentasMostradorBottomSheet(String  idVenta, Empleado empleado, String idSucursal, boolean isEditable)
+    public VentasMostradorBottomSheet(String  idVenta, String idSucursal, boolean isEditable, String idEmpleado)
     {
         this.idVenta = idVenta;
-        this.empleado = empleado;
         this.idSucursal = idSucursal;
         this.isEditable = isEditable;
+        this.idEmpleado = idEmpleado;
         masaDevolucion = 0.0;
         tortillaDevolucion = 0.0;
         totoposDevolucion = 0.0;
@@ -182,7 +182,7 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
 
         //TODO muestra los datos de la venta
         refVenta = FirebaseDatabase.getInstance().getReference("VentasMostrador")
-                .child(empleado.getIdEmpleado())
+                .child(idEmpleado)
                 .child(idVenta);
         listenerVenta = refVenta.addValueEventListener(new ValueEventListener() {
             @Override
@@ -308,18 +308,18 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
         });
 
         txtGastos.setOnClickListener(view12 -> {
-            VentasAdicionalesBottomSheet ventas = new VentasAdicionalesBottomSheet(VentasAdicionalesBottomSheet.TIPO_GASTOS,idVenta,isEditable);
+            VentasAdicionalesBottomSheet ventas = new VentasAdicionalesBottomSheet(VentasAdicionalesBottomSheet.TIPO_GASTOS,idVenta,isEditable,idEmpleado);
             ventas.show(getChildFragmentManager(),ventas.getTag());
         });
 
         txtVentasMostrador.setOnClickListener(view12 -> {
-            VentasAdicionalesBottomSheet ventas = new VentasAdicionalesBottomSheet(VentasAdicionalesBottomSheet.TIPO_VENTAS_MOSTRADOR,idVenta,isEditable);
+            VentasAdicionalesBottomSheet ventas = new VentasAdicionalesBottomSheet(VentasAdicionalesBottomSheet.TIPO_VENTAS_MOSTRADOR,idVenta,isEditable,idEmpleado);
             ventas.show(getChildFragmentManager(),ventas.getTag());
         });
 
         //TODO muestra la cantidad de conceptos que se muestra en la seccion de ventas extra (gastos, especificar en qué)
         refGastos = FirebaseDatabase.getInstance().getReference("Gastos")
-                .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
+                .child(idEmpleado)
                 .child(idVenta);
         listenerGastos = refGastos.addValueEventListener(new ValueEventListener() {
             @Override
@@ -344,7 +344,7 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
 
         //TODO muestra la cantidad de conceptos alamcenados en las cventas de mostrador
         refVentaMostrador = FirebaseDatabase.getInstance().getReference("Mostrador")
-                .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
+                .child(idEmpleado)
                 .child(idVenta);
         listenerVentaMostrador = refVentaMostrador.addValueEventListener(new ValueEventListener() {
             @Override
@@ -419,7 +419,7 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
 
         //TODO muestra la cantidad de conceptos alamcenados en las cventas de mostrador
         refVentasDia = FirebaseDatabase.getInstance().getReference("VentasDelDia")
-                .child(ControlSesiones.ObtenerUsuarioActivo(getContext()))
+                .child(idEmpleado)
                 .child(idVenta);
         listenerVentasDia = refVentasDia.addValueEventListener(new ValueEventListener() {
             @Override
@@ -645,7 +645,7 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
             hashMap.clear();
             hashMap.put("repartidores",repartidores);
             FirebaseDatabase.getInstance().getReference("VentasMostrador")
-                    .child(empleado.getIdEmpleado())
+                    .child(idEmpleado)
                     .child(idVenta)
                     .updateChildren(hashMap);
         } else {

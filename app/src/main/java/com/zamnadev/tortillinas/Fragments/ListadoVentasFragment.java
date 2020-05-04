@@ -1,6 +1,7 @@
 package com.zamnadev.tortillinas.Fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.zamnadev.tortillinas.BottomSheets.VentasMostradorBottomSheet;
 import com.zamnadev.tortillinas.Dialogos.DialogoVentaSucursal;
 import com.zamnadev.tortillinas.MainActivity;
 import com.zamnadev.tortillinas.Moldes.Empleado;
+import com.zamnadev.tortillinas.Moldes.Venta;
 import com.zamnadev.tortillinas.Moldes.VentaMostrador;
 import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
 import com.zamnadev.tortillinas.R;
@@ -34,12 +36,14 @@ import java.util.HashMap;
 public class ListadoVentasFragment extends Fragment {
 
     private Empleado empleado;
-    private ArrayList<VentaRepartidor> ventas;
-    private ArrayList<VentaRepartidor> ventasDelDia;
+    private ArrayList<Venta> ventas;
+    private ArrayList<Venta> ventasDelDia;
     private String fecha;
     private VentasFragment ventasFragment;
 
     private DatabaseReference refEmpleados;
+    private ValueEventListener listenerVentasMostrador;
+    private ValueEventListener listenerVentasRepartidor;
     private ValueEventListener listenerEmpleados;
 
     public ListadoVentasFragment(VentasFragment ventasFragment)
@@ -95,8 +99,13 @@ public class ListadoVentasFragment extends Fragment {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren())
                             {
                                 //Vamos a mostrar todas las ventas, solo podremos verlas
-                                VentaRepartidor venta = snapshot.getValue(VentaRepartidor.class);
+                                Venta venta = snapshot.getValue(Venta.class);
                                 ventas.add(venta);
+                                if (empleado.getTipo() == Empleado.TIPO_REPARTIDOR) {
+                                    venta.setMostrador(false);
+                                } else {
+                                    venta.setMostrador(true);
+                                }
                                 //Pero solo las del dia son las que podremos editar y/o agregar
                                 if (venta.getFecha().equals(fecha)) {
                                     ventasDelDia.add(venta);
@@ -109,7 +118,7 @@ public class ListadoVentasFragment extends Fragment {
                                     fabAgregarVenta.show();
                                 }
                             }
-                            AdaptadorVenta adaptador = new AdaptadorVenta(getContext(),ventas,fecha,empleado,getFragmentManager(),empleado.getTipo());
+                            AdaptadorVenta adaptador = new AdaptadorVenta(getContext(),ventas,fecha,empleado,getFragmentManager(),empleado.getTipo(),false);
                             recyclerView.setAdapter(adaptador);
                         }
 
@@ -120,6 +129,60 @@ public class ListadoVentasFragment extends Fragment {
                     });
                 } else {
                     fabAgregarVenta.hide();
+                    ventasDelDia.clear();
+                    ventas.clear();
+                    Query refVentasMostrador = FirebaseDatabase.getInstance().getReference("VentasMostrador")
+                            .orderByChild("fecha");
+                    listenerVentasMostrador = refVentasMostrador.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                            {
+                                for (DataSnapshot snp : snapshot.getChildren())
+                                {
+                                    Venta ventaMostrador = snp.getValue(Venta.class);
+                                    ventaMostrador.setMostrador(true);
+                                    ventas.add(ventaMostrador);
+                                    if (ventaMostrador.getFecha().equals(fecha)) {
+                                        ventasDelDia.add(ventaMostrador);
+                                    }
+                                }
+                            }
+                            AdaptadorVenta adaptador = new AdaptadorVenta(getContext(),ventas,fecha,empleado,getFragmentManager(),Empleado.TIPO_MOSTRADOR,true);
+                            recyclerView.setAdapter(adaptador);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                    Query refVentaRepartidor = FirebaseDatabase.getInstance().getReference("VentasRepartidor")
+                            .orderByChild("fecha");
+                    listenerVentasRepartidor = refVentaRepartidor.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                            {
+                                for (DataSnapshot snp : snapshot.getChildren())
+                                {
+                                    Venta ventaRepartidor = snp.getValue(Venta.class);
+                                    ventaRepartidor.setMostrador(false);
+                                    ventas.add(ventaRepartidor);
+                                    if (ventaRepartidor.getFecha().equals(fecha)) {
+                                        ventasDelDia.add(ventaRepartidor);
+                                    }
+                                }
+                            }
+                            AdaptadorVenta adaptador = new AdaptadorVenta(getContext(),ventas,fecha,empleado,getFragmentManager(),Empleado.TIPO_REPARTIDOR,true);
+                            recyclerView.setAdapter(adaptador);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 }
             }
 
@@ -145,6 +208,12 @@ public class ListadoVentasFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         refEmpleados.removeEventListener(listenerEmpleados);
+        if (listenerVentasMostrador != null) {
+            refEmpleados.removeEventListener(listenerVentasMostrador);
+        }
+        if (listenerVentasRepartidor != null) {
+            refEmpleados.removeEventListener(listenerVentasRepartidor);
+        }
     }
 
     //TODO Continuacion de alta venta
@@ -178,7 +247,7 @@ public class ListadoVentasFragment extends Fragment {
                     {
                         VentaMostrador venta = new VentaMostrador();
                         venta.setIdVenta(finalId);
-                        VentasMostradorBottomSheet bottomSheet = new VentasMostradorBottomSheet(finalId,empleado,idSucursal,true);
+                        VentasMostradorBottomSheet bottomSheet = new VentasMostradorBottomSheet(finalId,idSucursal,true,empleado.getIdEmpleado());
                         bottomSheet.show(getFragmentManager(), bottomSheet.getTag());
                     }
                 });

@@ -21,21 +21,24 @@ import com.zamnadev.tortillinas.BottomSheets.VentasMostradorBottomSheet;
 import com.zamnadev.tortillinas.BottomSheets.VentasRepartidorBottomSheet;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
+import com.zamnadev.tortillinas.Moldes.Venta;
 import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
 import com.zamnadev.tortillinas.R;
+import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 
 import java.util.ArrayList;
 
 public class AdaptadorVenta extends RecyclerView.Adapter<AdaptadorVenta.ViewHolder> {
 
     private Context context;
-    private ArrayList<VentaRepartidor> ventas;
+    private ArrayList<Venta> ventas;
     private String fecha;
     private Empleado empleado;
     private FragmentManager fragmentManager;
     private boolean isMostrador;
+    private boolean isAdmin;
 
-    public AdaptadorVenta(Context context, ArrayList<VentaRepartidor> ventas, String fecha, Empleado empleado, FragmentManager fragmentManager, int tipo)
+    public AdaptadorVenta(Context context, ArrayList<Venta> ventas, String fecha, Empleado empleado, FragmentManager fragmentManager, int tipo, boolean isAdmin)
     {
         this.context = context;
         this.ventas = ventas;
@@ -47,6 +50,7 @@ public class AdaptadorVenta extends RecyclerView.Adapter<AdaptadorVenta.ViewHold
         } else if (tipo == Empleado.TIPO_REPARTIDOR){
             isMostrador = false;
         }
+        this.isAdmin = isAdmin;
     }
 
     @NonNull
@@ -58,7 +62,7 @@ public class AdaptadorVenta extends RecyclerView.Adapter<AdaptadorVenta.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        VentaRepartidor venta = ventas.get(position);
+        Venta venta = ventas.get(position);
 
         holder.txtFecha.setText(venta.getFecha());
         DatabaseReference refSucursal = FirebaseDatabase.getInstance().getReference("Sucursales")
@@ -79,21 +83,41 @@ public class AdaptadorVenta extends RecyclerView.Adapter<AdaptadorVenta.ViewHold
         if (fecha.equals(venta.getFecha())) {
             holder.lytMain.setBackgroundColor(Color.GREEN);
             holder.itemView.setOnClickListener(view -> {
-                if (isMostrador) {
-                    VentasMostradorBottomSheet bottomSheet = new VentasMostradorBottomSheet(venta.getIdVenta(),empleado,venta.getIdSucursal(), true);
+                if (venta.isMostrador()) {
+                    VentasMostradorBottomSheet bottomSheet;
+                    if (isAdmin) {
+                        bottomSheet = new VentasMostradorBottomSheet(venta.getIdVenta(),venta.getIdSucursal(), true, venta.getIdEmpleado());
+                    } else {
+                        bottomSheet = new VentasMostradorBottomSheet(venta.getIdVenta(), venta.getIdSucursal(), true, venta.getIdEmpleado());
+                    }
                     bottomSheet.show(fragmentManager, bottomSheet.getTag());
                 } else {
-                    VentasRepartidorBottomSheet bottomSheet = new VentasRepartidorBottomSheet(venta.getIdVenta(),empleado,venta.getIdSucursal(), true);
+                    VentasRepartidorBottomSheet bottomSheet;
+                    if (isAdmin) {
+                        bottomSheet = new VentasRepartidorBottomSheet(venta.getIdVenta(),venta.getIdSucursal(), true, venta.getIdEmpleado());
+                    } else {
+                        bottomSheet = new VentasRepartidorBottomSheet(venta.getIdVenta(),venta.getIdSucursal(), true, venta.getIdEmpleado());
+                    }
                     bottomSheet.show(fragmentManager, bottomSheet.getTag());
                 }
             });
         } else {
             holder.itemView.setOnClickListener(view -> {
-                if (isMostrador) {
-                    VentasMostradorBottomSheet bottomSheet = new VentasMostradorBottomSheet(venta.getIdVenta(),empleado,venta.getIdSucursal(), false);
+                if (venta.isMostrador()) {
+                    VentasMostradorBottomSheet bottomSheet;
+                    if (isAdmin) {
+                        bottomSheet = new VentasMostradorBottomSheet(venta.getIdVenta(),venta.getIdSucursal(), false,venta.getIdEmpleado());
+                    } else {
+                        bottomSheet = new VentasMostradorBottomSheet(venta.getIdVenta(),venta.getIdSucursal(), false,venta.getIdEmpleado());
+                    }
                     bottomSheet.show(fragmentManager, bottomSheet.getTag());
                 } else {
-                    VentasRepartidorBottomSheet bottomSheet = new VentasRepartidorBottomSheet(venta.getIdVenta(),empleado,venta.getIdSucursal(), false);
+                    VentasRepartidorBottomSheet bottomSheet;
+                    if (isAdmin) {
+                        bottomSheet = new VentasRepartidorBottomSheet(venta.getIdVenta(),venta.getIdSucursal(), true, venta.getIdEmpleado());
+                    } else {
+                        bottomSheet = new VentasRepartidorBottomSheet(venta.getIdVenta(),venta.getIdSucursal(), false, venta.getIdEmpleado());
+                    }
                     bottomSheet.show(fragmentManager, bottomSheet.getTag());
                 }
             });
