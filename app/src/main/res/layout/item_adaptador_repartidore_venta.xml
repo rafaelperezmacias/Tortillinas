@@ -24,7 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:layout_marginBottom="6dp"/>
+            android:layout_marginBottom="6dp"
+            tools:text="Nombre"/>
 
         <LinearLayout
             android:id="@+id/lytPrimero"
@@ -41,43 +42,59 @@
 
                 <TextView
                     android:id="@+id/txtDireccion"
-                    android:text="Primer vuelta"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txtNombre" />
+                    android:layout_below="@+id/txtNombre"
+                    android:text="Primer vuelta"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+                    android:textColor="@android:color/black"/>
 
                 <TextView
                     android:id="@+id/txtPrimerVuelta"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    tools:text="Tortillas y esa madre"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:id="@+id/img_status_icon_1"
+                        android:visibility="gone"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:tint="@android:color/darker_gray"
+                        android:src="@drawable/ic_time_24dp"/>
+
+                    <TextView
+                        android:id="@+id/txtEstadoUno"
+                        android:visibility="gone"
+                        android:layout_toEndOf="@+id/img_status_icon_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_centerVertical="true"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="16sp"
+                        tools:text="Esperando confirmación"/>
+
+                </RelativeLayout>
 
             </LinearLayout>
 
-            <LinearLayout
+            <ImageButton
+                android:id="@+id/btnEditarPrimero"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/txtEstadoUno"
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <ImageButton
-                    android:layout_marginTop="5dp"
-                    android:id="@+id/btnEditarPrimero"
-                    android:visibility="gone"
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/icon"
-                    android:src="@drawable/ic_edit_black_24dp" />
-
-            </LinearLayout>
+                android:padding="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/icon"
+                android:src="@drawable/ic_edit_black_24dp" />
 
             <ImageButton
                 android:id="@+id/btnPrimero"
@@ -105,43 +122,59 @@
 
                 <TextView
                     android:id="@+id/txtDireccion"
-                    android:text="Segunda vuelta"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txtNombre" />
+                    android:layout_below="@+id/txtNombre"
+                    android:text="Segunda vuelta"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+                    android:textColor="@android:color/black"/>
 
                 <TextView
                     android:id="@+id/txtSegundaVuelta"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    tools:text="Tortillas y esa madre x2"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:id="@+id/img_status_icon_2"
+                        android:visibility="gone"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:tint="@android:color/darker_gray"
+                        android:src="@drawable/ic_time_24dp"/>
+
+                    <TextView
+                        android:id="@+id/txtEstadoDos"
+                        android:visibility="gone"
+                        android:layout_toEndOf="@+id/img_status_icon_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_centerVertical="true"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="16sp"
+                        tools:text="Esperando confirmación"/>
+
+                </RelativeLayout>
 
             </LinearLayout>
 
-            <LinearLayout
+            <ImageButton
+                android:id="@+id/btnEditarSegundo"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/txtEstadoDos"
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <ImageButton
-                    android:layout_marginTop="5dp"
-                    android:id="@+id/btnEditarSegundo"
-                    android:visibility="gone"
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/icon"
-                    android:src="@drawable/ic_edit_black_24dp" />
-
-            </LinearLayout>
+                android:padding="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/icon"
+                android:src="@drawable/ic_edit_black_24dp" />
 
             <ImageButton
                 android:id="@+id/btnSegundo"

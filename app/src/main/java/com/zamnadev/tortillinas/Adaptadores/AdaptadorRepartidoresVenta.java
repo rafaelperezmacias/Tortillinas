@@ -1,15 +1,15 @@
 package com.zamnadev.tortillinas.Adaptadores;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,8 +22,6 @@ import com.zamnadev.tortillinas.BottomSheets.VueltaBottomSheet;
 import com.zamnadev.tortillinas.Moldes.AuxVenta;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.R;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -99,30 +97,41 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
                 if (!auxVenta.getVuelta1().isRegistrada()) {
                     holder.txtPrimeraVuelta.setText("Sin registrar");
                     holder.txtEstadoUno.setVisibility(View.GONE);
+                    holder.imgStatusIcon1.setVisibility(View.GONE);
                     holder.btnEditarPrimer.setVisibility(View.GONE);
                     holder.btnPrimero.setVisibility(View.VISIBLE);
                 } else {
                     holder.btnPrimero.setVisibility(View.GONE);
+                    holder.imgStatusIcon1.setVisibility(View.VISIBLE);
                     holder.txtEstadoUno.setVisibility(View.VISIBLE);
                     String text = "";
                     if (auxVenta.getVuelta1().getTortillas() > 0) {
-                        text += "\t\tTortillas: " +  auxVenta.getVuelta1().getTortillas() + " kgs.\n";
+                        text += "Tortillas: " +  auxVenta.getVuelta1().getTortillas() + " kgs.\n";
                     }
                     if (auxVenta.getVuelta1().getMasa() > 0) {
-                        text += "\t\tMasa: " +  auxVenta.getVuelta1().getMasa() + " kgs.\n";
+                        text += "Masa: " +  auxVenta.getVuelta1().getMasa() + " kgs.\n";
                     }
                     if (auxVenta.getVuelta1().getTotopos() > 0) {
-                        text += "\t\tTotopos: " +  auxVenta.getVuelta1().getTotopos() + " kgs.\n";
+                        text += "Totopos: " +  auxVenta.getVuelta1().getTotopos() + " kgs.";
                     }
                     holder.txtPrimeraVuelta.setText(text);
                     if (auxVenta.getVuelta1().isConfirmado()) {
+                        holder.imgStatusIcon1.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_check_circle_24dp));
+                        holder.imgStatusIcon1.setColorFilter(context.getResources().getColor(R.color.success));
                         holder.txtEstadoUno.setText("Confirmado");
+                        holder.txtEstadoUno.setTextColor(ContextCompat.getColor(context, R.color.success));
                         holder.btnEditarPrimer.setVisibility(View.GONE);
                     } else {
                         if (isEditable) {
+                            holder.imgStatusIcon1.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_time_24dp));
+                            holder.imgStatusIcon1.setColorFilter(context.getResources().getColor(R.color.darker_gray));
                             holder.txtEstadoUno.setText("Esperando confirmación");
+                            holder.txtEstadoUno.setTextColor(ContextCompat.getColor(context, R.color.darker_gray));
                         } else {
+                            holder.imgStatusIcon1.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_cancel_24dp));
+                            holder.imgStatusIcon1.setColorFilter(context.getResources().getColor(R.color.error));
                             holder.txtEstadoUno.setText("Vuelta no confirmada");
+                            holder.txtEstadoUno.setTextColor(ContextCompat.getColor(context, R.color.error));
                         }
                         if (isEditable) {
                             holder.btnEditarPrimer.setVisibility(View.VISIBLE);
@@ -134,28 +143,39 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
                     holder.btnSegundo.setVisibility(View.VISIBLE);
                     holder.btnEditarSegunda.setVisibility(View.GONE);
                     holder.txtEstadoDos.setVisibility(View.GONE);
+                    holder.imgStatusIcon2.setVisibility(View.GONE);
                 } else {
                     holder.btnSegundo.setVisibility(View.GONE);
+                    holder.imgStatusIcon2.setVisibility(View.VISIBLE);
                     holder.txtEstadoDos.setVisibility(View.VISIBLE);
                     String text = "";
                     if (auxVenta.getVuelta2().getTortillas() > 0) {
-                        text += "\t\tTortillas: " +  auxVenta.getVuelta2().getTortillas() + " kgs.\n";
+                        text += "Tortillas: " +  auxVenta.getVuelta2().getTortillas() + " kgs.\n";
                     }
                     if (auxVenta.getVuelta2().getMasa() > 0) {
-                        text += "\t\tMasa: " +  auxVenta.getVuelta2().getMasa() + " kgs.\n";
+                        text += "Masa: " +  auxVenta.getVuelta2().getMasa() + " kgs.\n";
                     }
                     if (auxVenta.getVuelta2().getTotopos() > 0) {
-                        text += "\t\tTotopos: " +  auxVenta.getVuelta2().getTotopos() + " kgs.\n";
+                        text += "Totopos: " +  auxVenta.getVuelta2().getTotopos() + " kgs.";
                     }
                     holder.txtSegundaVuelta.setText(text);
                     if (auxVenta.getVuelta2().isConfirmado()) {
+                        holder.imgStatusIcon2.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_check_circle_24dp));
+                        holder.imgStatusIcon2.setColorFilter(context.getResources().getColor(R.color.success));
                         holder.txtEstadoDos.setText("Confirmado");
+                        holder.txtEstadoDos.setTextColor(ContextCompat.getColor(context, R.color.success));
                         holder.btnEditarSegunda.setVisibility(View.GONE);
                     } else {
                         if (isEditable) {
+                            holder.imgStatusIcon2.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_time_24dp));
+                            holder.imgStatusIcon2.setColorFilter(context.getResources().getColor(R.color.darker_gray));
                             holder.txtEstadoDos.setText("Esperando confirmación");
+                            holder.txtEstadoDos.setTextColor(ContextCompat.getColor(context, R.color.darker_gray));
                         } else {
+                            holder.imgStatusIcon2.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_cancel_24dp));
+                            holder.imgStatusIcon2.setColorFilter(context.getResources().getColor(R.color.error));
                             holder.txtEstadoDos.setText("Vuelta no confirmada");
+                            holder.txtEstadoDos.setTextColor(ContextCompat.getColor(context, R.color.error));
                         }
                         if (isEditable) {
                             holder.btnEditarSegunda.setVisibility(View.VISIBLE);
@@ -192,16 +212,19 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
         private TextView txtNombre;
-        private ImageButton btnPrimero;
-        private ImageButton btnSegundo;
         private TextView txtPrimeraVuelta;
         private TextView txtSegundaVuelta;
         private TextView txtEstadoUno;
+        private ImageView imgStatusIcon1;
         private TextView txtEstadoDos;
+        private ImageView imgStatusIcon2;
+
+        private ImageButton btnPrimero;
+        private ImageButton btnSegundo;
         private ImageButton btnEditarPrimer;
         private ImageButton btnEditarSegunda;
+
         private Empleado empleado;
 
         public ViewHolder(@NonNull View itemView) {
@@ -211,7 +234,9 @@ public class AdaptadorRepartidoresVenta extends RecyclerView.Adapter<AdaptadorRe
             btnSegundo = itemView.findViewById(R.id.btnSegundo);
             txtPrimeraVuelta = itemView.findViewById(R.id.txtPrimerVuelta);
             txtSegundaVuelta = itemView.findViewById(R.id.txtSegundaVuelta);
+            imgStatusIcon1 = itemView.findViewById(R.id.img_status_icon_1);
             txtEstadoUno = itemView.findViewById(R.id.txtEstadoUno);
+            imgStatusIcon2 = itemView.findViewById(R.id.img_status_icon_2);
             txtEstadoDos = itemView.findViewById(R.id.txtEstadoDos);
             btnEditarPrimer = itemView.findViewById(R.id.btnEditarPrimero);
             btnEditarSegunda = itemView.findViewById(R.id.btnEditarSegundo);
