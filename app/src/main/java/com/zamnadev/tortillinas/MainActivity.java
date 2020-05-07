@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.zamnadev.tortillinas.BottomSheets.PasswordBottomSheet;
 import com.zamnadev.tortillinas.Dialogs.MessageDialog;
 import com.zamnadev.tortillinas.Dialogs.MessageDialogBuilder;
 import com.zamnadev.tortillinas.Firma.FirmaActivity;
@@ -184,6 +185,9 @@ public class MainActivity extends AppCompatActivity implements
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
             return true;
+        } else if (item.getItemId() == R.id.menuCambiarContrasena) {
+            PasswordBottomSheet bottomSheet = new PasswordBottomSheet();
+            bottomSheet.show(getSupportFragmentManager(),bottomSheet.getTag());
         }
         return false;
     }
