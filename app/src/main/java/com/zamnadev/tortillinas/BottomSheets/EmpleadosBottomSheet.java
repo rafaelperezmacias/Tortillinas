@@ -64,6 +64,9 @@ public class EmpleadosBottomSheet extends BottomSheetDialogFragment {
     private Empleado empleado;
     private boolean isEditMode;
 
+    private TextInputLayout lytPassword;
+    private TextInputEditText txtPassword;
+
     private String msg = "";
     private Cuenta cuenta;
 
@@ -111,14 +114,14 @@ public class EmpleadosBottomSheet extends BottomSheetDialogFragment {
         TextInputLayout lytTelefono = view.findViewById(R.id.lytTelefono);
         TextInputLayout lytSucursal = view.findViewById(R.id.lytSucursal);
         TextInputLayout lytUsuario = view.findViewById(R.id.lytUsuario);
-        TextInputLayout lytPassword = view.findViewById(R.id.lytPassword);
+        lytPassword = view.findViewById(R.id.lytPassword);
 
         TextInputEditText txtNombre = view.findViewById(R.id.txtNombre);
         TextInputEditText txtApellidos = view.findViewById(R.id.txtApellidos);
         TextInputEditText txtTelefono = view.findViewById(R.id.txtTelefono);
         txtSucursal = view.findViewById(R.id.txtSucursal);
         TextInputEditText txtUsuario = view.findViewById(R.id.txtUsuario);
-        TextInputEditText txtPassword = view.findViewById(R.id.txtPassword);
+        txtPassword = view.findViewById(R.id.txtPassword);
 
         RadioButton rdbMostrador = view.findViewById(R.id.rdbMostrador);
         RadioButton rdbRepartidor = view.findViewById(R.id.rdbRepartidor);
@@ -275,7 +278,7 @@ public class EmpleadosBottomSheet extends BottomSheetDialogFragment {
                         | !validaCampo(lytTelefono,txtTelefono,"Ingrese el telefono")
                         | !validaCampo(lytSucursal, txtSucursal, "Ingrese la sucursal")
                         | !validaCampo(lytUsuario, txtUsuario,"Ingrese el usuario")
-                        | !validaCampo(lytPassword,txtPassword,"Ingrese la contraseña")) {
+                        | !isValidPassword()) {
                         return;
                     }
 
@@ -522,6 +525,24 @@ public class EmpleadosBottomSheet extends BottomSheetDialogFragment {
             msg += ", " + sucursals.get(x).getNombre();
         }
         txtSucursal.setText(msg);
+    }
+
+    private boolean isValidPassword() {
+        if (txtPassword.getText().toString().isEmpty()) {
+            lytPassword.setError("Ingrese la nueva contraseña");
+            isError = true;
+            return false;
+        }
+
+        if (txtPassword.getText().toString().length() <= 7 || txtSucursal.getText().toString().length() > 16) {
+            lytPassword.setError("La contraseña debe de medir de 8 a 16 carácteres");
+            isError = true;
+            return false;
+        }
+
+        isError = false;
+        lytPassword.setError(null);
+        return true;
     }
 
     private boolean validaCampo(TextInputLayout lyt,TextInputEditText txt, String error) {

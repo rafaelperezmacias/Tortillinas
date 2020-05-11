@@ -6,18 +6,29 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.zamnadev.tortillinas.Moldes.Cuenta;
 import com.zamnadev.tortillinas.R;
+import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 
 public class PasswordBottomSheet extends BottomSheetDialogFragment {
 
@@ -63,15 +74,50 @@ public class PasswordBottomSheet extends BottomSheetDialogFragment {
         txtPasswordNew = view.findViewById(R.id.txtPasswordNew);
         txtPasswordRepeat = view.findViewById(R.id.txtPasswordRepeat);
 
+        ((ImageButton) view.findViewById(R.id.btn_cerrar))
+                .setOnClickListener(view1 -> dismiss());
+
         ((Button) view.findViewById(R.id.btnGuardar))
                 .setOnClickListener(view1 -> {
                     if (!isValidPassword() | !isValidPasswordNew() | !isValidPasswordRepeat()) {
                         return;
                     }
 
-                    ProgressDialog dialog = new ProgressDialog(getContext());
-                    dialog.setMessage("Actualizando contraseña");
-                    dialog.show();
+                    if (!txtPasswordNew.getText().toString().equals(txtPasswordRepeat.getText().toString())) {
+                        lytPasswordRepeat.setError("Las contraseñas no coinciden");
+                        return;
+                    }
+
+                    lytPasswordRepeat.setError(null);
+
+                    DatabaseReference refUser = FirebaseDatabase.getInstance().getReference("Cuentas")
+                            .child(ControlSesiones.ObtenerUsuarioActivo(getContext()));
+                    refUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            Cuenta c = dataSnapshot.getValue(Cuenta.class);
+                            if (!c.getPassword().equals(txtPassword.getText().toString())) {
+                                lytPassword.setError("La contraseña anterior no coincide");
+                                return;
+                            }
+                            lytPassword.setError(null);
+                            refUser.child("password").setValue(txtPasswordNew.getText().toString())
+                                    .addOnCompleteListener(task -> {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(getContext(), "La contraseña se ha cambiado", Toast.LENGTH_SHORT).show();
+                                            dismiss();
+                                        } else {
+                                            Toast.makeText(getContext(), "Error, intentelo más tarde", Toast.LENGTH_SHORT).show();
+                                            dismiss();
+                                        }
+                                    });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 });
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
