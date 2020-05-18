@@ -48,6 +48,15 @@
 
             </LinearLayout>
 
+            <ImageButton
+                android:id="@+id/btnOpciones"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_more_vert_24dp"
+                android:contentDescription="@string/icon"/>
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnGuardar"
                 android:text="GUARDAR"

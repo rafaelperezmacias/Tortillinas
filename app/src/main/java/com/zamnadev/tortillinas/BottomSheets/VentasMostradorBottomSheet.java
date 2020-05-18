@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,8 @@ import com.zamnadev.tortillinas.Adaptadores.AdaptadorVentasExtras;
 import com.zamnadev.tortillinas.Dialogos.DialogoAddCampoVentas;
 import com.zamnadev.tortillinas.Dialogos.DialogoMaizCocido;
 import com.zamnadev.tortillinas.Dialogos.DialogoVentaRepartidor;
+import com.zamnadev.tortillinas.Dialogs.MessageDialog;
+import com.zamnadev.tortillinas.Dialogs.MessageDialogBuilder;
 import com.zamnadev.tortillinas.MainActivity;
 import com.zamnadev.tortillinas.Moldes.AuxVenta;
 import com.zamnadev.tortillinas.Moldes.Concepto;
@@ -103,12 +106,15 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
     private double tortillaT;
     private double totoposT;
 
-    public VentasMostradorBottomSheet(String  idVenta, String idSucursal, boolean isEditable, String idEmpleado)
+    private boolean isAdmin;
+
+    public VentasMostradorBottomSheet(String  idVenta, String idSucursal, boolean isEditable, String idEmpleado, boolean isAdmin)
     {
         this.idVenta = idVenta;
         this.idSucursal = idSucursal;
         this.isEditable = isEditable;
         this.idEmpleado = idEmpleado;
+        this.isAdmin = isAdmin;
         masaDevolucion = 0.0;
         tortillaDevolucion = 0.0;
         totoposDevolucion = 0.0;
@@ -169,11 +175,33 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
         TextInputEditText txtTortillaSobra = view.findViewById(R.id.txtTortillaSobra);
         TextInputEditText txtDevoluciones = view.findViewById(R.id.txtDevoluciones);
 
+        ImageButton btnOpciones = view.findViewById(R.id.btnOpciones);
+
         TextView txtSucursal = view.findViewById(R.id.txtSucursal);
 
         recyclerViewRepartidores = view.findViewById(R.id.recyclerviewRepartidores);
         recyclerViewRepartidores.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewRepartidores.setHasFixedSize(true);
+
+        if (isAdmin) {
+            btnOpciones.setOnClickListener(view13 -> {
+                PopupMenu popupMenu = new PopupMenu(getContext(), btnOpciones);
+                popupMenu.inflate(R.menu.venta_mostrador);
+                popupMenu.setOnMenuItemClickListener(menuItem -> {
+                    switch (menuItem.getItemId()) {
+                        case R.id.menuTotal: {
+                            TotalBottomSheet totalBottomSheet = new TotalBottomSheet(idVenta);
+                            totalBottomSheet.show(getChildFragmentManager(),totalBottomSheet.getTag());
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+                popupMenu.show();
+            });
+        } else {
+            btnOpciones.setVisibility(View.GONE);
+        }
 
         if (!isEditable) {
             hideTxt(txtNixtamalSobra);
