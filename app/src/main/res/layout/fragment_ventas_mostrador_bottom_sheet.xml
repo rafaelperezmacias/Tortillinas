@@ -222,7 +222,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="Tortilla de sobra (kgs)"
+                android:hint="Tortilla de sobra (kg)"
                 android:paddingStart="56dp"
                 android:paddingEnd="16dp"
                 app:errorEnabled="true">

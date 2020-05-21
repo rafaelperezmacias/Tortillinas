@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".BottomSheets.VentasMostradorBottomSheet">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_cerrar"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingEnd="16dp"
+                android:background="@color/blanco"
+                android:src="@drawable/ic_close_black_24dp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Venta total"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:id="@+id/btnGuardar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginEnd="16dp"
+                android:text="CERRAR"/>
+
+        </LinearLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nested_scroll_ventas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+
+            <LinearLayout
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/btnVentasExtra"
+                    android:tag="down"
+                    android:layout_marginStart="5dp"
+                    android:layout_width="32dp"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_arrow_down_24dp"
+                    android:contentDescription="@string/icon"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    android:text="Ventas extra"
+                    android:textColor="@android:color/black"
+                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+
+                <TextView
+                    android:layout_marginEnd="10dp"
+                    android:id="@+id/txtVentasExtra"
+                    android:textSize="18sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="23.78"/>
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerviewVentasExtra"
+                android:visibility="gone"
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+
+            <LinearLayout
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/btnVentaMostrador"
+                    android:tag="down"
+                    android:layout_marginStart="5dp"
+                    android:layout_width="32dp"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_arrow_down_24dp"
+                    android:contentDescription="@string/icon"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    android:text="Ventas de mostrador"
+                    android:textColor="@android:color/black"
+                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+
+                <TextView
+                    android:layout_marginEnd="10dp"
+                    android:id="@+id/txtTotalVentaMostrador"
+                    android:textSize="18sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="23.78"/>
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerviewVentaMostrador"
+                android:visibility="gone"
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+
+            <LinearLayout
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/btnGastosMostrador"
+                    android:tag="down"
+                    android:layout_marginStart="5dp"
+                    android:layout_width="32dp"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_arrow_down_24dp"
+                    android:contentDescription="@string/icon"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    android:text="Gastos mostrador"
+                    android:textColor="@android:color/black"
+                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+
+                <TextView
+                    android:layout_marginEnd="10dp"
+                    android:id="@+id/txtGastosMostrador"
+                    android:textSize="18sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="23.78"/>
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerviewGastosMostrador"
+                android:visibility="gone"
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</RelativeLayout>

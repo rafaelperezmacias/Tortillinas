@@ -190,7 +190,7 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                 popupMenu.setOnMenuItemClickListener(menuItem -> {
                     switch (menuItem.getItemId()) {
                         case R.id.menuTotal: {
-                            TotalBottomSheet totalBottomSheet = new TotalBottomSheet(idVenta);
+                            TotalBottomSheet totalBottomSheet = new TotalBottomSheet(idVenta,idEmpleado);
                             totalBottomSheet.show(getChildFragmentManager(),totalBottomSheet.getTag());
                             return false;
                         }
