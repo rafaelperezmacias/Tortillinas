@@ -1,7 +1,6 @@
 package com.zamnadev.tortillinas.Adaptadores;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,9 +22,7 @@ import com.zamnadev.tortillinas.BottomSheets.VentasRepartidorBottomSheet;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
 import com.zamnadev.tortillinas.Moldes.Venta;
-import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
 import com.zamnadev.tortillinas.R;
-import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 
 import java.util.ArrayList;
 
@@ -92,7 +90,7 @@ public class AdaptadorVenta extends RecyclerView.Adapter<AdaptadorVenta.ViewHold
         });
 
         if (fecha.equals(venta.getFecha())) {
-            holder.lytMain.setBackgroundColor(Color.GREEN);
+            holder.lytMain.setBackgroundColor(ContextCompat.getColor(context, R.color.venta));
             holder.itemView.setOnClickListener(view -> {
                 if (venta.isMostrador()) {
                     VentasMostradorBottomSheet bottomSheet;
