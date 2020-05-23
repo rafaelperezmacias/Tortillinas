@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,8 @@ import com.zamnadev.tortillinas.Adaptadores.AdaptadorVentasExtras;
 import com.zamnadev.tortillinas.Dialogos.DialogoAddCampoVentas;
 import com.zamnadev.tortillinas.Dialogos.DialogoMaizCocido;
 import com.zamnadev.tortillinas.Dialogos.DialogoVentaRepartidor;
+import com.zamnadev.tortillinas.Dialogs.MessageDialog;
+import com.zamnadev.tortillinas.Dialogs.MessageDialogBuilder;
 import com.zamnadev.tortillinas.MainActivity;
 import com.zamnadev.tortillinas.Moldes.AuxVenta;
 import com.zamnadev.tortillinas.Moldes.Concepto;
@@ -96,15 +99,28 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
     private Double tortillaDevolucion;
     private Double totoposDevolucion;
 
-    public VentasMostradorBottomSheet(String  idVenta, String idSucursal, boolean isEditable, String idEmpleado)
+    private Double masaTotal;
+    private Double tortillaTotal;
+
+    private double masaT;
+    private double tortillaT;
+    private double totoposT;
+
+    private boolean isAdmin;
+
+    public VentasMostradorBottomSheet(String  idVenta, String idSucursal, boolean isEditable, String idEmpleado, boolean isAdmin)
     {
         this.idVenta = idVenta;
         this.idSucursal = idSucursal;
         this.isEditable = isEditable;
         this.idEmpleado = idEmpleado;
+        this.isAdmin = isAdmin;
         masaDevolucion = 0.0;
         tortillaDevolucion = 0.0;
         totoposDevolucion = 0.0;
+        masaT = 0.0;
+        tortillaT = 0.0;
+        totoposT = 0.0;
     }
 
 
@@ -159,13 +175,33 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
         TextInputEditText txtTortillaSobra = view.findViewById(R.id.txtTortillaSobra);
         TextInputEditText txtDevoluciones = view.findViewById(R.id.txtDevoluciones);
 
+        ImageButton btnOpciones = view.findViewById(R.id.btnOpciones);
+
         TextView txtSucursal = view.findViewById(R.id.txtSucursal);
 
         recyclerViewRepartidores = view.findViewById(R.id.recyclerviewRepartidores);
         recyclerViewRepartidores.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewRepartidores.setHasFixedSize(true);
 
-        String fecha = MainActivity.getFecha();
+        if (isAdmin) {
+            btnOpciones.setOnClickListener(view13 -> {
+                PopupMenu popupMenu = new PopupMenu(getContext(), btnOpciones);
+                popupMenu.inflate(R.menu.venta_mostrador);
+                popupMenu.setOnMenuItemClickListener(menuItem -> {
+                    switch (menuItem.getItemId()) {
+                        case R.id.menuTotal: {
+                            TotalBottomSheet totalBottomSheet = new TotalBottomSheet(idVenta,idEmpleado);
+                            totalBottomSheet.show(getChildFragmentManager(),totalBottomSheet.getTag());
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+                popupMenu.show();
+            });
+        } else {
+            btnOpciones.setVisibility(View.GONE);
+        }
 
         if (!isEditable) {
             hideTxt(txtNixtamalSobra);
@@ -194,8 +230,12 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                 if (venta.getCostales() >= 0.0) {
                     text += venta.getCostales() + " costales ";
                 }
-                if (venta.getBotes() >= 0.0) {
+                if (venta.getBotes() >= 0.0 && venta.getCostales() >= 0.0) {
                     text += ", + " + venta.getBotes() +  " botes";
+                } else {
+                    if (venta.getBotes() >= 0.0) {
+                        text += venta.getBotes() +  " botes";
+                    }
                 }
                 txtMaizCocido.setText(text);
 
@@ -225,6 +265,31 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                     controladorRepartidores = -1;
                     mostrarVentasRepartidor();
                     mostrarRepartidores();
+                }
+
+                //TODO MANERJO DE RECURSOS POR PARTE DE LA VENTA
+                if (venta.getCostales() > 0 || venta.getBotes() > 0)
+                {
+                    int botes = 0;
+                    if (venta.getBotes() >= 0) {
+                        botes += venta.getBotes();
+                    }
+                    if (venta.getCostales() >= 0) {
+                        botes += venta.getCostales() * 5;
+                    }
+                    if (venta.getMaizNixtamalizado() >= 0.0) {
+                        botes -= venta.getMaizNixtamalizado();
+                    }
+                    Log.e("Botes","" + botes);
+                    masaTotal =   (((double) botes / 5) * 50) * 1.8;
+
+                    if (venta.getMasaVendida() >= 0) {
+                        masaTotal -= venta.getMasaVendida();
+                    }
+
+                    if (venta.getMaquinaMasa() >= 0) {
+                        masaTotal -= venta.getMaquinaMasa();
+                    }
                 }
 
                 txtMaizCocido.setOnClickListener(view1 -> {
@@ -258,6 +323,28 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                                                         tortillaDevolucion += cliente.getDevolucion().getTortillas();
                                                     }
                                                 }
+                                                if (cliente.getVuelta1() != null) {
+                                                    if (cliente.getVuelta1().getMasa() >= 0.0) {
+                                                        masaT += cliente.getVuelta1().getMasa();
+                                                    }
+                                                    if (cliente.getVuelta1().getTotopos() >= 0.0) {
+                                                        totoposT += cliente.getVuelta1().getTotopos();
+                                                    }
+                                                    if (cliente.getVuelta1().getTortillas() >= 0.0) {
+                                                        tortillaT += cliente.getVuelta1().getTortillas();
+                                                    }
+                                                }
+                                                if (cliente.getVuelta2() != null) {
+                                                    if (cliente.getVuelta2().getMasa() >= 0.0) {
+                                                        masaT += cliente.getVuelta2().getMasa();
+                                                    }
+                                                    if (cliente.getVuelta2().getTotopos() >= 0.0) {
+                                                        totoposT += cliente.getVuelta2().getTotopos();
+                                                    }
+                                                    if (cliente.getVuelta2().getTortillas() >= 0.0) {
+                                                        tortillaT += cliente.getVuelta2().getTortillas();
+                                                    }
+                                                }
                                             }
                                             if (tortillaDevolucion == 0.0 && masaDevolucion == 0.0 && totoposDevolucion == 0.0) {
                                                 txtDevoluciones.setText("Ninguna devolución");
@@ -286,8 +373,30 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                                                 text = text.replaceFirst(",","");
                                                 text = text.replaceFirst(" ","");
                                                 txtDevoluciones.setText(text);
+
+                                                //TODO continuacion de calculos
+                                                tortillaTotal = masaTotal * 0.8;
+                                                if (venta.getMermaTortilla() >= 0.0) {
+                                                    tortillaTotal -= venta.getMermaTortilla();
+                                                }
+
+                                                masaTotal -= masaT;
+
+                                                Log.e("Masa" , "" + masaTotal);
+                                                Log.e("Torilla" , "" + tortillaTotal);
+                                                Log.e("tortillat", "" + tortillaT);
                                             }
                                         } else {
+                                            tortillaTotal = masaTotal * .8;
+                                            Log.e("Torilla" , "" + tortillaTotal);
+                                            if (venta.getMermaTortilla() >= 0.0) {
+                                                tortillaTotal -= venta.getMermaTortilla();
+                                                Log.e("Torilla" , "" + tortillaTotal);
+                                            }
+
+                                            Log.e("Masa" , "" + masaTotal);
+                                            Log.e("Torilla" , "" + tortillaTotal);
+                                            Log.e("tortillat", "" + tortillaT);
                                             txtDevoluciones.setText("Ninguna devolución");
                                         }
                                     }

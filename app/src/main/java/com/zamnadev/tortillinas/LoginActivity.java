@@ -62,7 +62,6 @@ public class LoginActivity extends AppCompatActivity {
             reference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
-                    Log.e("data", dataSnapshot.toString());
                     if (dataSnapshot.exists()) {
                         Query reference = FirebaseDatabase.getInstance().getReference("Cuentas")
                                 .orderByChild("password")

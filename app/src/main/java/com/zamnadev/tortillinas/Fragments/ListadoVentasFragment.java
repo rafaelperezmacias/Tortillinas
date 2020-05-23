@@ -259,7 +259,7 @@ public class ListadoVentasFragment extends Fragment {
                     {
                         VentaMostrador venta = new VentaMostrador();
                         venta.setIdVenta(finalId);
-                        VentasMostradorBottomSheet bottomSheet = new VentasMostradorBottomSheet(finalId,idSucursal,true,empleado.getIdEmpleado());
+                        VentasMostradorBottomSheet bottomSheet = new VentasMostradorBottomSheet(finalId,idSucursal,true,empleado.getIdEmpleado(),false);
                         bottomSheet.show(getFragmentManager(), bottomSheet.getTag());
                     }
                 });

@@ -297,11 +297,11 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
         holder.btnFormulario.setOnClickListener(view -> {
             if (holder.btnFormulario.getTag().equals("down")) {
                 holder.btnFormulario.setTag("up");
-                holder.btnFormulario.setImageResource(R.drawable.ic_arrow_down_24dp);
+                holder.btnFormulario.setImageResource(R.drawable.ic_arrow_up_24dp);
                 holder.lytBody.setVisibility(View.VISIBLE);
             } else {
                 holder.btnFormulario.setTag("down");
-                holder.btnFormulario.setImageResource(R.drawable.ic_arrow_up_24dp);
+                holder.btnFormulario.setImageResource(R.drawable.ic_arrow_down_24dp);
                 holder.lytBody.setVisibility(View.GONE);
             }
         });
