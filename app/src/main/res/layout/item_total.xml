@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="8dp"
-    android:paddingStart="16dp"
     android:paddingEnd="8dp"
     android:paddingBottom="8dp"
     android:clickable="true"
@@ -20,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtNombre"
+            style="@style/TextAppearance.AppCompat.Body2"
             tools:text="+523327201710"/>
 
         <TextView
@@ -28,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtNombre"
+            style="@style/TextAppearance.AppCompat.Body1"
             tools:text="+523327201710"/>
 
 </LinearLayout>

@@ -34,15 +34,6 @@
                 android:text="Venta total"
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
 
-            <com.google.android.material.button.MaterialButton
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:id="@+id/btnGuardar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginEnd="16dp"
-                android:text="CERRAR"/>
-
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>
@@ -61,158 +52,209 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <View
-                android:layout_marginTop="8dp"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
-
-            <LinearLayout
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_ventas_extra"
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:orientation="horizontal">
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                app:cardUseCompatPadding="true"
+                app:strokeColor="@android:color/darker_gray"
+                app:strokeWidth="1dp">
 
-                <ImageButton
-                    android:id="@+id/btnVentasExtra"
-                    android:tag="down"
-                    android:layout_marginStart="5dp"
-                    android:layout_width="32dp"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_arrow_down_24dp"
-                    android:contentDescription="@string/icon"/>
-
-                <TextView
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:textSize="18sp"
-                    android:layout_weight="1"
-                    android:text="Ventas extra"
-                    android:textColor="@android:color/black"
-                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:layout_marginEnd="10dp"
-                    android:id="@+id/txtVentasExtra"
-                    android:textSize="18sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="23.78"/>
+                    <LinearLayout
+                        android:id="@+id/layVentasExtras"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp">
 
-            </LinearLayout>
+                        <ImageButton
+                            android:id="@+id/btnVentasExtra"
+                            android:tag="down"
+                            android:layout_marginStart="5dp"
+                            android:layout_width="32dp"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_arrow_down_24dp"
+                            android:contentDescription="@string/icon"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerviewVentasExtra"
-                android:visibility="gone"
-                android:layout_marginStart="45dp"
-                android:layout_marginEnd="15dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:textSize="18sp"
+                            android:layout_weight="1"
+                            android:text="Ventas extra"
+                            android:textColor="@android:color/black"
+                            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
 
-            <View
-                android:layout_marginTop="8dp"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
+                        <TextView
+                            android:layout_marginEnd="10dp"
+                            android:id="@+id/txtVentasExtra"
+                            android:textSize="18sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="23.78"/>
 
-            <LinearLayout
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerviewVentasExtra"
+                        android:layout_below="@+id/layVentasExtras"
+                        android:visibility="gone"
+                        android:layout_marginStart="45dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_ventas_mostrador"
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:orientation="horizontal">
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                app:cardUseCompatPadding="true"
+                app:strokeColor="@android:color/darker_gray"
+                app:strokeWidth="1dp">
 
-                <ImageButton
-                    android:id="@+id/btnVentaMostrador"
-                    android:tag="down"
-                    android:layout_marginStart="5dp"
-                    android:layout_width="32dp"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_arrow_down_24dp"
-                    android:contentDescription="@string/icon"/>
-
-                <TextView
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:textSize="18sp"
-                    android:layout_weight="1"
-                    android:text="Ventas de mostrador"
-                    android:textColor="@android:color/black"
-                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:layout_marginEnd="10dp"
-                    android:id="@+id/txtTotalVentaMostrador"
-                    android:textSize="18sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="23.78"/>
+                    <LinearLayout
+                        android:id="@+id/layVentasMostrador"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp">
 
-            </LinearLayout>
+                        <ImageButton
+                            android:id="@+id/btnVentaMostrador"
+                            android:tag="down"
+                            android:layout_marginStart="5dp"
+                            android:layout_width="32dp"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_arrow_down_24dp"
+                            android:contentDescription="@string/icon"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerviewVentaMostrador"
-                android:visibility="gone"
-                android:layout_marginStart="45dp"
-                android:layout_marginEnd="15dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:textSize="18sp"
+                            android:layout_weight="1"
+                            android:text="Ventas de mostrador"
+                            android:textColor="@android:color/black"
+                            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
 
-            <View
-                android:layout_marginTop="8dp"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
+                        <TextView
+                            android:layout_marginEnd="10dp"
+                            android:id="@+id/txtTotalVentaMostrador"
+                            android:textSize="18sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="23.78"/>
 
-            <LinearLayout
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_below="@+id/layVentasMostrador"
+                        android:id="@+id/recyclerviewVentaMostrador"
+                        android:visibility="gone"
+                        android:layout_marginStart="45dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_gastos_mostrador"
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:orientation="horizontal">
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                app:cardUseCompatPadding="true"
+                app:strokeColor="@android:color/darker_gray"
+                app:strokeWidth="1dp">
 
-                <ImageButton
-                    android:id="@+id/btnGastosMostrador"
-                    android:tag="down"
-                    android:layout_marginStart="5dp"
-                    android:layout_width="32dp"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_arrow_down_24dp"
-                    android:contentDescription="@string/icon"/>
-
-                <TextView
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:textSize="18sp"
-                    android:layout_weight="1"
-                    android:text="Gastos mostrador"
-                    android:textColor="@android:color/black"
-                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:layout_marginEnd="10dp"
-                    android:id="@+id/txtGastosMostrador"
-                    android:textSize="18sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="23.78"/>
+                    <LinearLayout
+                        android:id="@+id/layGastosMostrador"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp">
 
-            </LinearLayout>
+                        <ImageButton
+                            android:id="@+id/btnGastosMostrador"
+                            android:tag="down"
+                            android:layout_marginStart="5dp"
+                            android:layout_width="32dp"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_arrow_down_24dp"
+                            android:contentDescription="@string/icon"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerviewGastosMostrador"
-                android:visibility="gone"
-                android:layout_marginStart="45dp"
-                android:layout_marginEnd="15dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:textSize="18sp"
+                            android:layout_weight="1"
+                            android:text="Gastos mostrador"
+                            android:textColor="@android:color/black"
+                            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+
+                        <TextView
+                            android:layout_marginEnd="10dp"
+                            android:id="@+id/txtGastosMostrador"
+                            android:textSize="18sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="23.78"/>
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_below="@+id/layGastosMostrador"
+                        android:id="@+id/recyclerviewGastosMostrador"
+                        android:visibility="gone"
+                        android:layout_marginStart="45dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 

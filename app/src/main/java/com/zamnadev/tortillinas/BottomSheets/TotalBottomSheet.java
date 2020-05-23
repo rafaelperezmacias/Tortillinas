@@ -3,12 +3,9 @@ package com.zamnadev.tortillinas.BottomSheets;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -19,21 +16,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorTotal;
-import com.zamnadev.tortillinas.Adaptadores.AdaptadorVentasExtras;
 import com.zamnadev.tortillinas.Moldes.Concepto;
-import com.zamnadev.tortillinas.Moldes.Cuenta;
 import com.zamnadev.tortillinas.Moldes.Producto;
 import com.zamnadev.tortillinas.Moldes.VentaDelDia;
 import com.zamnadev.tortillinas.R;
-import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 
 import java.util.ArrayList;
 
@@ -69,6 +61,10 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
 
             @Override public void onSlide(@NonNull View view, float v) { }
         });
+
+        MaterialCardView cardVentasExtras = view.findViewById(R.id.card_ventas_extra);
+        MaterialCardView cardVentasMostrador = view.findViewById(R.id.card_ventas_mostrador);
+        MaterialCardView cardGastosMostrador = view.findViewById(R.id.card_gastos_mostrador);
 
         TextView txtTotalMostrador = view.findViewById(R.id.txtTotalVentaMostrador);
         RecyclerView rVentaMostrador = view.findViewById(R.id.recyclerviewVentaMostrador);
@@ -208,7 +204,31 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
             }
         });
 
+        cardVentasMostrador.setOnClickListener(view1 -> {
+            if (btnVentaMostrador.getTag().equals("down")) {
+                btnVentaMostrador.setTag("up");
+                btnVentaMostrador.setImageResource(R.drawable.ic_arrow_up_24dp);
+                rVentaMostrador.setVisibility(View.VISIBLE);
+            } else {
+                btnVentaMostrador.setTag("down");
+                btnVentaMostrador.setImageResource(R.drawable.ic_arrow_down_24dp);
+                rVentaMostrador.setVisibility(View.GONE);
+            }
+        });
+
         btnGastosMostrador.setOnClickListener(view1 -> {
+            if (btnGastosMostrador.getTag().equals("down")) {
+                btnGastosMostrador.setTag("up");
+                btnGastosMostrador.setImageResource(R.drawable.ic_arrow_up_24dp);
+                rGastosMostrador.setVisibility(View.VISIBLE);
+            } else {
+                btnGastosMostrador.setTag("down");
+                btnGastosMostrador.setImageResource(R.drawable.ic_arrow_down_24dp);
+                rGastosMostrador.setVisibility(View.GONE);
+            }
+        });
+
+        cardGastosMostrador.setOnClickListener(view1 -> {
             if (btnGastosMostrador.getTag().equals("down")) {
                 btnGastosMostrador.setTag("up");
                 btnGastosMostrador.setImageResource(R.drawable.ic_arrow_up_24dp);
@@ -232,10 +252,19 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
             }
         });
 
-        ((ImageButton) view.findViewById(R.id.btn_cerrar))
-                .setOnClickListener(view1 -> dismiss());
+        cardVentasExtras.setOnClickListener(view1 -> {
+            if (btnVentasExtra.getTag().equals("down")) {
+                btnVentasExtra.setTag("up");
+                btnVentasExtra.setImageResource(R.drawable.ic_arrow_up_24dp);
+                rVentasExtra.setVisibility(View.VISIBLE);
+            } else {
+                btnVentasExtra.setTag("down");
+                btnVentasExtra.setImageResource(R.drawable.ic_arrow_down_24dp);
+                rVentasExtra.setVisibility(View.GONE);
+            }
+        });
 
-        ((Button) view.findViewById(R.id.btnGuardar))
+        ((ImageButton) view.findViewById(R.id.btn_cerrar))
                 .setOnClickListener(view1 -> dismiss());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
