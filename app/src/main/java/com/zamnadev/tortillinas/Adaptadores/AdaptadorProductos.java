@@ -21,8 +21,6 @@ import com.zamnadev.tortillinas.Dialogs.MessageDialogBuilder;
 import com.zamnadev.tortillinas.Moldes.Producto;
 import com.zamnadev.tortillinas.R;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.ViewHolder> {
@@ -104,8 +102,8 @@ public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.
                         MessageDialog dialog = new MessageDialog(context, new MessageDialogBuilder()
                                 .setTitle("Alerta")
                                 .setMessage("¿Estás seguro de que quieres eliminar este producto?")
-                                .setPositiveButtonText("Sí, Eliminar")
-                                .setNegativeButtonText("No, cancelar")
+                                .setPositiveButtonText("Eliminar")
+                                .setNegativeButtonText("Cancelar")
                         );
                         dialog.show();
                         dialog.setPositiveButtonListener(v -> {

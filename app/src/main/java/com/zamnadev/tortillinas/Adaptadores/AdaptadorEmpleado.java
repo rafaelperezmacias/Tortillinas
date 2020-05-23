@@ -13,8 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,7 +28,6 @@ import com.zamnadev.tortillinas.Moldes.Sucursal;
 import com.zamnadev.tortillinas.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class AdaptadorEmpleado extends RecyclerView.Adapter<AdaptadorEmpleado.ViewHolder> {
     private Context context;
@@ -130,8 +127,8 @@ public class AdaptadorEmpleado extends RecyclerView.Adapter<AdaptadorEmpleado.Vi
                         MessageDialog dialog = new MessageDialog(context, new MessageDialogBuilder()
                                 .setTitle("Alerta")
                                 .setMessage("¿Estás seguro de que quieres eliminar a este empleado?")
-                                .setPositiveButtonText("Sí, Eliminar")
-                                .setNegativeButtonText("No, cancelar")
+                                .setPositiveButtonText("Eliminar")
+                                .setNegativeButtonText("Cancelar")
                         );
                         dialog.show();
                         dialog.setPositiveButtonListener(v -> {

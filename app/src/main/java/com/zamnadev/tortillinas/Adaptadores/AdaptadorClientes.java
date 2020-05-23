@@ -97,8 +97,8 @@ public class AdaptadorClientes extends RecyclerView.Adapter<AdaptadorClientes.Vi
                         MessageDialog dialog = new MessageDialog(context, new MessageDialogBuilder()
                                 .setTitle("Alerta")
                                 .setMessage("¿Estás seguro de que quieres eliminar a este cliente?")
-                                .setPositiveButtonText("Sí, Eliminar")
-                                .setNegativeButtonText("No, cancelar")
+                                .setPositiveButtonText("Eliminar")
+                                .setNegativeButtonText("Cancelar")
                         );
                         dialog.show();
                         dialog.setPositiveButtonListener(v -> {

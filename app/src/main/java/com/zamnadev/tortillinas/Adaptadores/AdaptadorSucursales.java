@@ -129,8 +129,8 @@ public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursale
         MessageDialog dialog = new MessageDialog(context, new MessageDialogBuilder()
                 .setTitle("Alerta")
                 .setMessage("¿Estás seguro de que quieres eliminar esta sucursal?")
-                .setPositiveButtonText("Sí, eliminar")
-                .setNegativeButtonText("No, cancelar")
+                .setPositiveButtonText("Eliminar")
+                .setNegativeButtonText("Cancelar")
         );
         dialog.show();
         dialog.setPositiveButtonListener(v -> {
