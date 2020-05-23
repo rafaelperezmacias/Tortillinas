@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="8dp"
-    android:paddingStart="16dp"
+    android:paddingStart="56dp"
     android:paddingEnd="8dp"
     android:paddingBottom="8dp"
     android:clickable="true"
@@ -47,6 +47,7 @@
                     android:layout_below="@+id/txtNombre"
                     android:text="Primer vuelta"
                     android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+                    android:textStyle="bold"
                     android:textColor="@android:color/black"/>
 
                 <TextView
@@ -54,7 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     tools:text="Tortillas y esa madre"/>
 
                 <RelativeLayout
@@ -127,6 +128,7 @@
                     android:layout_below="@+id/txtNombre"
                     android:text="Segunda vuelta"
                     android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+                    android:textStyle="bold"
                     android:textColor="@android:color/black"/>
 
                 <TextView
@@ -134,7 +136,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     tools:text="Tortillas y esa madre x2"/>
 
                 <RelativeLayout

@@ -132,8 +132,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:padding="10dp">
+                android:paddingStart="56dp">
 
                 <RelativeLayout
                     android:layout_width="0dp"
@@ -156,32 +155,65 @@
                             <TextView
                                 android:text="Primer vuelta"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/black"/>
 
                             <TextView
                                 android:id="@+id/txtPrimerVuelta"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
+                                android:layout_height="wrap_content"
+                                android:textSize="20sp"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                                tools:text="Primer vuelta (contenido)"/>
 
                             <TextView
                                 android:id="@+id/txtTituloVendidoPrimero"
                                 android:text="Vendido"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/txtPrimerVuelta" />
+                                android:layout_below="@+id/txtPrimerVuelta"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/black"/>
 
                             <TextView
                                 android:id="@+id/txtVendidosUno"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:textSize="20sp"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                                tools:text="Vendido uno"/>
+
+                            <RelativeLayout
+                                android:id="@+id/layout_estado_1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp">
+
+                                <ImageView
+                                    android:id="@+id/img_status_icon_1"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:tint="@android:color/darker_gray"
+                                    android:src="@drawable/ic_time_24dp"/>
+
+                                <TextView
+                                    android:id="@+id/txtEstadoUno"
+                                    android:layout_toEndOf="@+id/img_status_icon_1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:layout_centerVertical="true"
+                                    android:textColor="@android:color/darker_gray"
+                                    android:textSize="16sp"
+                                    tools:text="Esperando confirmación"/>
+
+                            </RelativeLayout>
 
                         </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/txtEstadoUno"
-                            android:layout_gravity="center"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
 
                         <ImageButton
                             android:id="@+id/btnPrimero"
@@ -194,9 +226,18 @@
 
                     </LinearLayout>
 
+                    <View
+                        android:id="@+id/div"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@+id/lytPrimero"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@android:color/darker_gray"/>
+
                     <LinearLayout
                         android:id="@+id/lytSecond"
-                        android:layout_below="@id/lytPrimero"
+                        android:layout_below="@id/div"
                         android:layout_width="match_parent"
                         android:orientation="horizontal"
                         android:layout_height="wrap_content">
@@ -211,31 +252,64 @@
                                 android:id="@+id/txtTitulo"
                                 android:text="Segunda vuelta"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/black"/>
 
                             <TextView
                                 android:id="@+id/txtSegundaVuelta"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
+                                android:layout_height="wrap_content"
+                                android:textSize="20sp"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                                tools:text="Rafa es gay"/>
 
                             <TextView
                                 android:id="@+id/txtTituloVendidoSegunda"
                                 android:text="Vendido"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/black"/>
 
                             <TextView
                                 android:id="@+id/txtVendidosSegunda"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:textSize="20sp"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                                tools:text="Vendido dos"/>
+
+                            <RelativeLayout
+                                android:id="@+id/layout_estado_2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp">
+
+                                <ImageView
+                                    android:id="@+id/img_status_icon_2"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:tint="@android:color/darker_gray"
+                                    android:src="@drawable/ic_time_24dp"/>
+
+                                <TextView
+                                    android:id="@+id/txtEstadoDos"
+                                    android:layout_toEndOf="@+id/img_status_icon_2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:layout_centerVertical="true"
+                                    android:textColor="@android:color/darker_gray"
+                                    android:textSize="16sp"
+                                    tools:text="Esperando confirmación"/>
+
+                            </RelativeLayout>
 
                         </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/txtEstadoDos"
-                            android:layout_gravity="center"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
 
                         <ImageButton
                             android:id="@+id/btnSegundo"
