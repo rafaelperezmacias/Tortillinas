@@ -25,36 +25,23 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorRepartidoresVenta;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorVentasExtras;
-import com.zamnadev.tortillinas.Dialogos.DialogoAddCampoVentas;
 import com.zamnadev.tortillinas.Dialogos.DialogoMaizCocido;
 import com.zamnadev.tortillinas.Dialogos.DialogoVentaRepartidor;
-import com.zamnadev.tortillinas.Dialogs.MessageDialog;
-import com.zamnadev.tortillinas.Dialogs.MessageDialogBuilder;
-import com.zamnadev.tortillinas.MainActivity;
 import com.zamnadev.tortillinas.Moldes.AuxVenta;
 import com.zamnadev.tortillinas.Moldes.Concepto;
-import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Producto;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
 import com.zamnadev.tortillinas.Moldes.VentaCliente;
 import com.zamnadev.tortillinas.Moldes.VentaDelDia;
 import com.zamnadev.tortillinas.Moldes.VentaMostrador;
-import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
 import com.zamnadev.tortillinas.Moldes.Vuelta;
 import com.zamnadev.tortillinas.R;
-import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 
-import org.w3c.dom.Text;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Locale;
 
 public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
 
@@ -212,8 +199,7 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
             hideTxt(txtMermaTortilla);
             ((ImageButton) view.findViewById(R.id.btnAddRepartidor))
                     .setVisibility(View.GONE);
-            ((MaterialButton) view.findViewById(R.id.btnGuardar))
-                    .setText("CERRAR");
+            ((MaterialButton) view.findViewById(R.id.btnGuardar)).setVisibility(View.GONE);
         }
 
         //TODO muestra los datos de la venta

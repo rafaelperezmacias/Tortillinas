@@ -1,23 +1,18 @@
 package com.zamnadev.tortillinas.BottomSheets;
 
 import android.app.Dialog;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -35,10 +30,8 @@ import com.zamnadev.tortillinas.Moldes.Producto;
 import com.zamnadev.tortillinas.Moldes.VentaCliente;
 import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
 import com.zamnadev.tortillinas.R;
-import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.StringTokenizer;
 
 public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
@@ -112,8 +105,7 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
             hideTxt(txtMasa);
             hideTxt(txtTortilla);
             hideTxt(txtTotopos);
-            ((MaterialButton) view.findViewById(R.id.btnGuardar))
-                    .setText("CERRAR");
+            ((MaterialButton) view.findViewById(R.id.btnGuardar)).setVisibility(View.GONE);
         }
 
         if (ventaCliente != null) {

@@ -151,8 +151,7 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
         });
 
         if (!isEditable) {
-            ((MaterialButton) view.findViewById(R.id.btnGuardar))
-                    .setText("ACEPTAR");
+            ((MaterialButton) view.findViewById(R.id.btnGuardar)).setVisibility(View.GONE);
         }
 
         //TODO muestra la informacion de la venta de tipo repartidor

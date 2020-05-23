@@ -177,7 +177,7 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
             }
             if (isOnlyShow) {
                 txtTitulo.setText("Datos del cliente");
-                ((Button) view.findViewById(R.id.btnGuardar)).setText("CERRAR");
+                ((Button) view.findViewById(R.id.btnGuardar)).setVisibility(View.GONE);
                 ocultaCampo(txtNombre);
                 ocultaCampo(txtApellidos);
                 ocultaCampo(txtTelefono);
