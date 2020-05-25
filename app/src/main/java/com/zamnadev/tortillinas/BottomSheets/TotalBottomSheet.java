@@ -164,7 +164,7 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
                                                 Producto producto = snp.getValue(Producto.class);
                                                 Concepto concepto = new Concepto();
                                                 concepto.setNombre(producto.getNombre() + "\nCantidad: " + venta.getCantidad());
-                                                concepto.setPrecio(producto.getPrecio() * venta.getCantidad());
+                                                concepto.setPrecio(venta.getTotal());
                                                 ventasDelDia += concepto.getPrecio();
                                                 conceptos.add(concepto);
                                                 txtVentasExtra.setText("$" + ventasDelDia);

@@ -93,6 +93,7 @@ public class SucursalesBottomSheet extends BottomSheetDialogFragment {
             }
             txtZona.setText(direccion.getZona());
             txtCubetas.setText(String.valueOf(sucursal.getBotes()));
+            txtCubetas.setVisibility(View.GONE);
         }
 
         (view.findViewById(R.id.btnGuardar)).setOnClickListener(view1 -> {

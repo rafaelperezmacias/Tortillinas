@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
         android:paddingTop="16dp"
-        android:paddingBottom="16dp"
+        android:paddingBottom="8dp"
         android:clipToPadding="false">
 
         <LinearLayout

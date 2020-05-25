@@ -57,6 +57,7 @@ public class AdaptadorSucursales extends RecyclerView.Adapter<AdaptadorSucursale
         holder.txtDireccion.setText(sucursal.getDireccion().toRecyclerView());
         holder.txtZona.setText(sucursal.getDireccion().getZona());
         holder.txtCubetas.setText("Cubetas: " + sucursal.getBotes());
+        holder.txtCubetas.setVisibility(View.GONE);
         holder.btnOpciones.setOnClickListener(view -> {
             PopupMenu popupMenu = new PopupMenu(context,holder.btnOpciones);
             popupMenu.inflate(R.menu.menu_sucursales_recyclerview);

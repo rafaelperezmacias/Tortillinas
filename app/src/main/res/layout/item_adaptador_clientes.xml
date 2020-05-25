@@ -29,10 +29,20 @@
             tools:text="Pablo Alexis Padilla Maldonado"/>
 
         <TextView
+            android:id="@+id/txtPseudonimo"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/negro"
+            android:layout_below="@+id/txtNombre"
+            android:layout_marginBottom="6dp"
+            tools:text="Chorizo veloz"/>
+
+        <TextView
             android:id="@+id/txtTelefono"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txtNombre"
+            android:layout_below="@+id/txtPseudonimo"
             android:layout_marginBottom="6dp"
             tools:text="+523327201710" />
 

@@ -4,14 +4,24 @@ public class VentaDelDia {
 
     private String idProducto;
     private int cantidad;
+    private double precio;
+    private double total;
 
     public VentaDelDia() {
 
     }
 
-    public VentaDelDia(String idProducto, int cantidad) {
+    public VentaDelDia(String idProducto, int cantidad, double precio) {
         this.idProducto = idProducto;
         this.cantidad = cantidad;
+        this.precio = precio;
+    }
+
+    public VentaDelDia(String idProducto, int cantidad, double precio, double total) {
+        this.idProducto = idProducto;
+        this.cantidad = cantidad;
+        this.precio = precio;
+        this.total = total;
     }
 
     public String getIdProducto() {
@@ -30,11 +40,29 @@ public class VentaDelDia {
         this.cantidad = cantidad;
     }
 
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
     @Override
     public String toString() {
         return "VentaDelDia{" +
                 "idProducto='" + idProducto + '\'' +
                 ", cantidad=" + cantidad +
+                ", precio=" + precio +
+                ", total=" + total +
                 '}';
     }
 }
