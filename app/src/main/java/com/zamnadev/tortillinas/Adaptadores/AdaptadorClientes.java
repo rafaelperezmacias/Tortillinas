@@ -64,6 +64,7 @@ public class AdaptadorClientes extends RecyclerView.Adapter<AdaptadorClientes.Vi
         holder.txtNombre.setText(cliente.getNombre().getNombres() + " " +
                 cliente.getNombre().getApellidos());
         holder.txtTelefono.setText(cliente.getTelefono());
+        holder.txtPseudonimo.setText("\""+cliente.getPseudonimo()+"\"");
         holder.txtDireccion.setText(cliente.getDireccion().toRecyclerView());
         PopupMenu popupMenu = new PopupMenu(context, holder.btnOpciones);
         popupMenu.inflate(R.menu.menu_clientes_recyclerview);
@@ -182,6 +183,8 @@ public class AdaptadorClientes extends RecyclerView.Adapter<AdaptadorClientes.Vi
         private ImageButton btnOpciones;
         private ImageButton btnMostrarPrecios;
 
+        private TextView txtPseudonimo;
+
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             txtNombre = itemView.findViewById(R.id.txtNombre);
@@ -191,6 +194,7 @@ public class AdaptadorClientes extends RecyclerView.Adapter<AdaptadorClientes.Vi
             recyclerView = itemView.findViewById(R.id.recyclerview);
             btnOpciones = itemView.findViewById(R.id.btnOpciones);
             btnMostrarPrecios = itemView.findViewById(R.id.btn_mostrar_precios);
+            txtPseudonimo = itemView.findViewById(R.id.txtPseudonimo);
         }
     }
 }
