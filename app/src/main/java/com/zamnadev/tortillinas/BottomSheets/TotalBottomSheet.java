@@ -3,7 +3,6 @@ package com.zamnadev.tortillinas.BottomSheets;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -36,10 +35,7 @@ import com.zamnadev.tortillinas.Moldes.VentaDelDia;
 import com.zamnadev.tortillinas.Moldes.VentaMostrador;
 import com.zamnadev.tortillinas.R;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 public class TotalBottomSheet extends BottomSheetDialogFragment {
 
@@ -82,6 +78,8 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
 
             @Override public void onSlide(@NonNull View view, float v) { }
         });
+
+        view.findViewById(R.id.btnGuardar).setVisibility(View.GONE);
 
         TextInputEditText txtTortillas = view.findViewById(R.id.txtTortillas);
         TextInputEditText txtMasa = view.findViewById(R.id.txtMasa);
