@@ -2,6 +2,7 @@ package com.zamnadev.tortillinas;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

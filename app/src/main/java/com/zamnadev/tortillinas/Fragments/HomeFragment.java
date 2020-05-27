@@ -2,6 +2,7 @@ package com.zamnadev.tortillinas.Fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,36 +42,36 @@ public class HomeFragment extends Fragment {
             while(true) {
                 try {
                     Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    networkDisposable = ReactiveNetwork.observeNetworkConnectivity(mActivity)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(connectivity -> {
+                                networkType = connectivity.typeName();
+                                if(networkType.equalsIgnoreCase("WIFI")) {
+                                    imgConexion.setImageResource(R.drawable.ic_wifi_24dp);
+                                } else if(networkType.equalsIgnoreCase("MOBILE")) {
+                                    imgConexion.setImageResource(R.drawable.signal);
+                                }
+                            });
+                    internetDisposable = ReactiveNetwork.observeInternetConnectivity()
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(isConnected -> {
+                                if(isConnected) {
+                                    tvEstadoConexion.setText("Estás conectado");
+                                    tvEstadoConexion.setTextColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
+                                    imgConexion.setColorFilter(ContextCompat.getColor(mActivity, R.color.colorPrimary));
+                                } else {
+                                    imgConexion.setImageResource(R.drawable.wifi_off);
+                                    imgConexion.setColorFilter(ContextCompat.getColor(mActivity, R.color.error));
+                                    tvEstadoConexion.setText("Sin conexión a internet");
+                                    tvEstadoConexion.setTextColor(ContextCompat.getColor(mActivity, R.color.error));
+                                }
+                            });
+                } catch (Exception e) {
+                    Log.e("Error",e.toString());
                     return;
                 }
-                networkDisposable = ReactiveNetwork.observeNetworkConnectivity(mActivity)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(connectivity -> {
-                            networkType = connectivity.typeName();
-                            if(networkType.equalsIgnoreCase("WIFI")) {
-                                imgConexion.setImageResource(R.drawable.ic_wifi_24dp);
-                            } else if(networkType.equalsIgnoreCase("MOBILE")) {
-                                imgConexion.setImageResource(R.drawable.signal);
-                            }
-                        });
-                internetDisposable = ReactiveNetwork.observeInternetConnectivity()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(isConnected -> {
-                            if(isConnected) {
-                                tvEstadoConexion.setText("Estás conectado");
-                                tvEstadoConexion.setTextColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
-                                imgConexion.setColorFilter(ContextCompat.getColor(mActivity, R.color.colorPrimary));
-                            } else {
-                                imgConexion.setImageResource(R.drawable.wifi_off);
-                                imgConexion.setColorFilter(ContextCompat.getColor(mActivity, R.color.error));
-                                tvEstadoConexion.setText("Sin conexión a internet");
-                                tvEstadoConexion.setTextColor(ContextCompat.getColor(mActivity, R.color.error));
-                            }
-                        });
             }
         });
         t.start();

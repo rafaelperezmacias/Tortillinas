@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    android:id="@+id/card_ventas_extra"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="0dp"
+    app:cardUseCompatPadding="true"
+    app:strokeColor="@android:color/darker_gray"
+    app:strokeWidth="1dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/layVentasExtras"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <ImageButton
+                android:id="@+id/btnAccion"
+                android:tag="down"
+                android:layout_marginStart="5dp"
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_arrow_down_24dp"
+                android:contentDescription="@string/icon"/>
+
+            <TextView
+                android:id="@+id/txtNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textSize="18sp"
+                android:layout_weight="1"
+                android:textColor="@android:color/black"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+
+            <TextView
+                android:id="@+id/txtTotal"
+                android:text="23.23"
+                android:layout_marginEnd="10dp"
+                android:textSize="18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lytVenta"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layVentasExtras"
+            android:layout_marginStart="45dp"
+            android:layout_marginEnd="15dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/lytPrimerVuelta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Primer vuelta"/>
+
+                <LinearLayout
+                    android:id="@+id/lytPMasa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtPMasa"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Masa" />
+
+                    <TextView
+                        android:id="@+id/txtPMasaP"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="23.20"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lytPTortilla"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtPTortilla"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tortilla" />
+
+                    <TextView
+                        android:id="@+id/txtPTortillaP"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="23.20"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lytPTotopos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtPTotopos"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Totopos" />
+
+                    <TextView
+                        android:id="@+id/txtPTotopoP"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="23.20"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtPSubtotal"
+                    android:gravity="end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lytSegundaVuelta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Segunda vuelta"/>
+
+                <LinearLayout
+                    android:id="@+id/lytSMasa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtSMasa"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Masa" />
+
+                    <TextView
+                        android:id="@+id/txtSMasaS"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="23.20"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lytSTortilla"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtSTortilla"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tortilla" />
+
+                    <TextView
+                        android:id="@+id/txtSTortillaS"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="23.20"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lytSTotopos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtSTotopos"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Totopos" />
+
+                    <TextView
+                        android:id="@+id/txtSTotopoS"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="23.20"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtSSubtotal"
+                    android:gravity="end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lytDevoluciones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Devoluciones"/>
+
+                <LinearLayout
+                    android:id="@+id/lytDMasa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtDMasa"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Masa" />
+
+                    <TextView
+                        android:id="@+id/txtDMasaD"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="23.20"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lytDTortilla"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtDTortilla"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tortilla" />
+
+                    <TextView
+                        android:id="@+id/txtDTortillaD"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="23.20"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lytDTotopos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtDTotopos"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Totopos" />
+
+                    <TextView
+                        android:id="@+id/txtDTotopoD"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="23.20"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtDSubtotal"
+                    android:gravity="end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lytGastos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Gastos: " />
+
+                <TextView
+                    android:id="@+id/txtGastos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="23.20"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>

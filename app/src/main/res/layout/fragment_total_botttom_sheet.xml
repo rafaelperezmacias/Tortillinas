@@ -24,15 +24,37 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:paddingEnd="16dp"
-                android:background="@color/blanco"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_close_black_24dp"/>
 
-            <TextView
+            <LinearLayout
+                android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Venta total"
-                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Venta total"
+                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+
+                <TextView
+                    android:id="@+id/txtSucursal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="+523327201710"/>
+
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGuardar"
+                android:text="CERRAR"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:gravity="center"
+                style="@style/Widget.AppCompat.Button.Borderless"/>
 
         </LinearLayout>
 
@@ -51,6 +73,266 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp"
+                android:text="PRODUCTO"
+                android:textColor="@android:color/black"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/icon8"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_kg_24dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/icon8"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:hint="Masa (kgs)"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    app:errorEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtMasa"
+                        android:inputType="numberDecimal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/icon8"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_kg_24dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/icon8"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:hint="Tortilla (kgs)"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    app:errorEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtTortillas"
+                        android:inputType="numberDecimal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </RelativeLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_mermas"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                android:layout_marginBottom="10dp"
+                app:cardUseCompatPadding="true"
+                app:strokeColor="@android:color/darker_gray"
+                app:strokeWidth="1dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/lytMermas"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp">
+
+                        <ImageButton
+                            android:id="@+id/btnMermas"
+                            android:tag="down"
+                            android:layout_marginStart="5dp"
+                            android:layout_width="32dp"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_arrow_down_24dp"
+                            android:contentDescription="@string/icon"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:textSize="18sp"
+                            android:layout_weight="1"
+                            android:text="Mermas"
+                            android:textColor="@android:color/black"
+                            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+
+                        <TextView
+                            android:id="@+id/txtMermaTotal"
+                            android:layout_marginEnd="10dp"
+                            android:textSize="18sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="23.78"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/lytContenidoMermas"
+                        android:layout_below="@+id/lytMermas"
+                        android:layout_marginStart="45dp"
+                        android:layout_marginEnd="15dp"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/txtMolino"
+                                android:layout_weight="1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Molino" />
+
+                            <TextView
+                                android:id="@+id/txtMolinoP"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="23.20"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/txtMaquinaMasa"
+                                android:layout_weight="1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Tortilla" />
+
+                            <TextView
+                                android:id="@+id/txtMaquinaMasaP"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="23.20"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/txtTortilla"
+                                android:layout_weight="1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Totopos" />
+
+                            <TextView
+                                android:id="@+id/txtTortillaP"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="23.20"/>
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/txtPSubtotal"
+                            android:gravity="end"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp"
+                android:text="REPARTIDORES"
+                android:textColor="@android:color/black"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview_repartidores"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp"
+                android:text="OTRO"
+                android:textColor="@android:color/black"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_ventas_extra"
@@ -184,6 +466,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
+
                 </RelativeLayout>
 
             </com.google.android.material.card.MaterialCardView>
@@ -197,6 +480,7 @@
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="0dp"
+                android:layout_marginBottom="10dp"
                 app:cardUseCompatPadding="true"
                 app:strokeColor="@android:color/darker_gray"
                 app:strokeWidth="1dp">
@@ -255,6 +539,24 @@
                 </RelativeLayout>
 
             </com.google.android.material.card.MaterialCardView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:id="@+id/txtTotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:paddingTop="8dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp"
+                android:text="TOTAL: $0.0"
+                android:textColor="@android:color/black"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
 
         </LinearLayout>
 
