@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
@@ -160,34 +159,34 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
                                             Producto p = snapshot.getValue(Producto.class);
                                             if (p.getNombre().toUpperCase().contains("TORTILLA")) {
                                                 if (ventaMostrador.getMermaTortilla() >= 0.0) {
-                                                    txtTortilla.setText("Tortillas: " + ventaMostrador.getMermaTortilla() + " kgs");
-                                                    txtTortillaP.setText("$ " + p.getPrecio() * ventaMostrador.getMermaTortilla());
+                                                    txtTortilla.setText("Tortillas: " + ventaMostrador.getMermaTortilla() + "kgs");
+                                                    txtTortillaP.setText("$" + p.getPrecio() * ventaMostrador.getMermaTortilla());
                                                     mermasTotal += p.getPrecio() * ventaMostrador.getMermaTortilla();
                                                 } else {
-                                                    txtTortilla.setText("Tortillas: 0 kgs");
-                                                    txtTortillaP.setText("$ 0");
+                                                    txtTortilla.setText("Tortillas: 0kgs");
+                                                    txtTortillaP.setText("$0");
                                                 }
                                             }
                                             if (p.getNombre().toUpperCase().contains("MASA")) {
                                                 if (ventaMostrador.getMaquinaMasa() >= 0.0) {
-                                                    txtMaquinaMasa.setText("Maquina masa: " + ventaMostrador.getMaquinaMasa() + " kgs");
-                                                    txtMaquinaMasaP.setText("$ " + p.getPrecio() * ventaMostrador.getMaquinaMasa());
+                                                    txtMaquinaMasa.setText("Maquina masa: " + ventaMostrador.getMaquinaMasa() + "kgs");
+                                                    txtMaquinaMasaP.setText("$" + p.getPrecio() * ventaMostrador.getMaquinaMasa());
                                                     mermasTotal += p.getPrecio() * ventaMostrador.getMaquinaMasa();
                                                 } else {
-                                                    txtMaquinaMasa.setText("Maquina masa: 0 kgs");
-                                                    txtMaquinaMasaP.setText("$ 0");
+                                                    txtMaquinaMasa.setText("Maquina masa: 0kgs");
+                                                    txtMaquinaMasaP.setText("$0");
                                                 }
                                                 if (ventaMostrador.getMolino() >= 0.0) {
-                                                    txtMolino.setText("Molino: " + ventaMostrador.getMolino() + " kgs");
-                                                    txtMolinoP.setText("$ " + p.getPrecio() * ventaMostrador.getMolino());
+                                                    txtMolino.setText("Molino: " + ventaMostrador.getMolino() + "kgs");
+                                                    txtMolinoP.setText("$" + p.getPrecio() * ventaMostrador.getMolino());
                                                     mermasTotal += p.getPrecio() * ventaMostrador.getMolino();
                                                 } else {
-                                                    txtMolino.setText("Molino: 0 kgs");
-                                                    txtMolinoP.setText("$ 0");
+                                                    txtMolino.setText("Molino: 0kgs");
+                                                    txtMolinoP.setText("$0");
                                                 }
                                             }
                                         }
-                                        txtMermaTotal.setText("- $ " + mermasTotal);
+                                        txtMermaTotal.setText("- $" + mermasTotal);
                                         total -= mermasTotal;
                                         txtTotal.setText("TOTAL: $" + total);
                                     }
@@ -493,9 +492,6 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
         });
 
         ((ImageButton) view.findViewById(R.id.btn_cerrar))
-                .setOnClickListener(view1 -> dismiss());
-
-        ((MaterialButton) view.findViewById(R.id.btnGuardar))
                 .setOnClickListener(view1 -> dismiss());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

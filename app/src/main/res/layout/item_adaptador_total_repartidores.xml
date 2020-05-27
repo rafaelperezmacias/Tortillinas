@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    android:id="@+id/card_ventas_extra"
+<com.google.android.material.card.MaterialCardView android:id="@+id/card_ventas_extra"
     android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,7 +11,8 @@
     app:cardUseCompatPadding="true"
     app:strokeColor="@android:color/darker_gray"
     app:strokeWidth="1dp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -75,7 +75,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Primer vuelta"/>
+                    android:text="Primer vuelta"
+                    android:textSize="14sp"
+                    style="@style/TextAppearance.AppCompat.Body2"/>
 
                 <LinearLayout
                     android:id="@+id/lytPMasa"
@@ -88,13 +90,17 @@
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Masa" />
+                        android:text="Masa"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body2"/>
 
                     <TextView
                         android:id="@+id/txtPMasaP"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="23.20"/>
+                        android:text="23.20"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body1"/>
 
                 </LinearLayout>
 
@@ -109,13 +115,17 @@
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Tortilla" />
+                        android:text="Tortilla"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body2"/>
 
                     <TextView
                         android:id="@+id/txtPTortillaP"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="23.20"/>
+                        android:text="23.20"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body1"/>
 
                 </LinearLayout>
 
@@ -130,21 +140,51 @@
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Totopos" />
+                        android:text="Totopos"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body2"/>
 
                     <TextView
                         android:id="@+id/txtPTotopoP"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="23.20"/>
+                        android:text="23.20"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body1"/>
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/txtPSubtotal"
-                    android:gravity="end"
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@android:color/darker_gray"/>
+
+                <LinearLayout
+                    android:id="@+id/lytSubtotal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="14sp"
+                        android:text="Subtotal"
+                        style="@style/TextAppearance.AppCompat.Body2"/>
+
+                    <TextView
+                        android:id="@+id/txtPSubtotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body1"
+                        tools:text="Hola"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -157,7 +197,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Segunda vuelta"/>
+                    android:text="Segunda vuelta"
+                    android:textSize="14sp"
+                    style="@style/TextAppearance.AppCompat.Body2"/>
 
                 <LinearLayout
                     android:id="@+id/lytSMasa"
@@ -170,13 +212,17 @@
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Masa" />
+                        android:text="Masa"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body2"/>
 
                     <TextView
                         android:id="@+id/txtSMasaS"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="23.20"/>
+                        android:text="23.20"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body1"/>
 
                 </LinearLayout>
 
@@ -191,13 +237,17 @@
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Tortilla" />
+                        android:text="Tortilla"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body2"/>
 
                     <TextView
                         android:id="@+id/txtSTortillaS"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="23.20"/>
+                        android:text="23.20"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body1"/>
 
                 </LinearLayout>
 
@@ -212,21 +262,49 @@
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Totopos" />
+                        android:text="Totopos"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body2"/>
 
                     <TextView
                         android:id="@+id/txtSTotopoS"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="23.20"/>
+                        android:text="23.20"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body1"/>
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/txtSSubtotal"
-                    android:gravity="end"
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@android:color/darker_gray"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="14sp"
+                        android:text="Subtotal"
+                        style="@style/TextAppearance.AppCompat.Body2"/>
+
+                    <TextView
+                        android:id="@+id/txtSSubtotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body1"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -239,7 +317,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Devoluciones"/>
+                    android:text="Devoluciones"
+                    android:textSize="14sp"
+                    style="@style/TextAppearance.AppCompat.Body2"/>
 
                 <LinearLayout
                     android:id="@+id/lytDMasa"
@@ -252,13 +332,17 @@
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Masa" />
+                        android:text="Masa"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body2"/>
 
                     <TextView
                         android:id="@+id/txtDMasaD"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="23.20"/>
+                        android:text="23.20"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body1"/>
 
                 </LinearLayout>
 
@@ -273,13 +357,17 @@
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Tortilla" />
+                        android:text="Tortilla"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body2"/>
 
                     <TextView
                         android:id="@+id/txtDTortillaD"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="23.20"/>
+                        android:text="23.20"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body1"/>
 
                 </LinearLayout>
 
@@ -294,21 +382,49 @@
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Totopos" />
+                        android:text="Totopos"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body2"/>
 
                     <TextView
                         android:id="@+id/txtDTotopoD"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="23.20"/>
+                        android:text="23.20"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body1"/>
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/txtDSubtotal"
-                    android:gravity="end"
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@android:color/darker_gray"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="14sp"
+                        android:text="Subtotal"
+                        style="@style/TextAppearance.AppCompat.Body2"/>
+
+                    <TextView
+                        android:id="@+id/txtDSubtotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body1"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -316,19 +432,24 @@
                 android:id="@+id/lytGastos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
 
                 <TextView
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Gastos: " />
+                    android:text="Gastos: "
+                    android:textSize="14sp"
+                    style="@style/TextAppearance.AppCompat.Body2"/>
 
                 <TextView
                     android:id="@+id/txtGastos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="23.20"/>
+                    android:text="23.20"
+                    android:textSize="14sp"
+                    style="@style/TextAppearance.AppCompat.Body1"/>
 
             </LinearLayout>
 

@@ -1,7 +1,6 @@
 package com.zamnadev.tortillinas.Adaptadores;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +20,7 @@ import com.zamnadev.tortillinas.Moldes.Concepto;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.VentaCliente;
 import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
-import com.zamnadev.tortillinas.Moldes.Vuelta;
 import com.zamnadev.tortillinas.R;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -142,7 +138,7 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
                                     holder.totoposS += ventaCliente.getVuelta2().getTotoposVenta();
                                 }
                                 holder.subTotalS += holder.totoposS + holder.toritillaS + holder.masaS;
-                                holder.txtSSubTotal.setText("+ $ " + holder.subTotalS);
+                                holder.txtSSubTotal.setText("+ $" + holder.subTotalS);
                             }
                             //TODO DEVOLUCION
                             if (ventaCliente.getDevolucion() != null) {
@@ -159,7 +155,7 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
                                     holder.totoposD += ventaCliente.getDevolucion().getTotoposVenta();
                                 }
                                 holder.subTotalD += holder.totoposD + holder.toritillaD + holder.masaD;
-                                holder.txtDSubtotal.setText("- $ " + holder.subTotalD);
+                                holder.txtDSubtotal.setText("- $" + holder.subTotalD);
                             }
                         }
 
@@ -179,7 +175,7 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
                                             holder.total += holder.subTotalS + holder.subTotalP;
                                             holder.total -= holder.subTotalD;
                                             holder.total -= holder.gastos;
-                                            holder.txtTotal.setText( "$ " + holder.total + " +");
+                                            holder.txtTotal.setText( "$" + holder.total + " +");
                                         } else {
                                             holder.lytGastos.setVisibility(View.GONE);
                                         }
@@ -204,20 +200,20 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
                                         } else {
                                             if (ventaRepartidor.getVuelta1().isConfirmado() && ventaRepartidor.getVuelta1().isRegistrada()) {
                                                 if (holder.masaVendidaP > 0.0 && holder.masaP > 0.0) {
-                                                    holder.txtPMasa.setText("Masa: " + holder.masaVendidaP + " kgs");
-                                                    holder.txtPMasaP.setText("$ " + holder.masaP);
+                                                    holder.txtPMasa.setText("Masa: " + holder.masaVendidaP + "kgs");
+                                                    holder.txtPMasaP.setText("$" + holder.masaP);
                                                 } else {
                                                     holder.lytPMasa.setVisibility(View.GONE);
                                                 }
                                                 if (holder.toritillaP > 0.0 && holder.tortillaVendidaP > 0.0) {
-                                                    holder.txtPTortilla.setText("Tortilla: " + holder.tortillaVendidaP + " kgs");
-                                                    holder.txtPTortillaP.setText("$ " + holder.toritillaP);
+                                                    holder.txtPTortilla.setText("Tortilla: " + holder.tortillaVendidaP + "kgs");
+                                                    holder.txtPTortillaP.setText("$" + holder.toritillaP);
                                                 } else {
                                                     holder.lytPTortilla.setVisibility(View.GONE);
                                                 }
                                                 if (holder.totoposP > 0.0 && holder.totoposVendidoP > 0.0) {
-                                                    holder.txtPTotopo.setText("Totopo: " + holder.totoposVendidoP + " kgs");
-                                                    holder.txtPTotopoP.setText("$ " + holder.totoposP);
+                                                    holder.txtPTotopo.setText("Totopo: " + holder.totoposVendidoP + "kgs");
+                                                    holder.txtPTotopoP.setText("$" + holder.totoposP);
                                                 } else {
                                                     holder.lytPTotopo.setVisibility(View.GONE);
                                                 }
@@ -232,20 +228,20 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
                                         } else {
                                             if (ventaRepartidor.getVuelta2().isConfirmado() && ventaRepartidor.getVuelta2().isRegistrada()) {
                                                 if (holder.masaVendidaS > 0.0 && holder.masaS > 0.0) {
-                                                    holder.txtSMasa.setText("Masa: " + holder.masaVendidaS + " kgs");
-                                                    holder.txtSMasaS.setText("$ " + holder.masaS);
+                                                    holder.txtSMasa.setText("Masa: " + holder.masaVendidaS + "kgs");
+                                                    holder.txtSMasaS.setText("$" + holder.masaS);
                                                 } else {
                                                     holder.lytSMasa.setVisibility(View.GONE);
                                                 }
                                                 if (holder.toritillaS > 0.0 && holder.tortillaVendidaS > 0.0) {
-                                                    holder.txtSTortilla.setText("Tortilla: " + holder.tortillaVendidaS + " kgs");
-                                                    holder.txtSTortillaS.setText("$ " + holder.toritillaS);
+                                                    holder.txtSTortilla.setText("Tortilla: " + holder.tortillaVendidaS + "kgs");
+                                                    holder.txtSTortillaS.setText("$" + holder.toritillaS);
                                                 } else {
                                                     holder.lytSTortilla.setVisibility(View.GONE);
                                                 }
                                                 if (holder.totoposS > 0.0 && holder.totoposVendidoS > 0.0) {
-                                                    holder.txtSTotopo.setText("Totopo: " + holder.totoposVendidoS + " kgs");
-                                                    holder.txtSTotopoS.setText("$ " + holder.totoposS);
+                                                    holder.txtSTotopo.setText("Totopo: " + holder.totoposVendidoS + "kgs");
+                                                    holder.txtSTotopoS.setText("$" + holder.totoposS);
                                                 } else {
                                                     holder.lytSTotopo.setVisibility(View.GONE);
                                                 }
@@ -257,20 +253,20 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
                                         //TODO DEVOLUCION
                                         if (holder.totoposD >= 0.0 || holder.toritillaD >= 0.0 || holder.masaD >= 0.0) {
                                             if (holder.masaVendidaD > 0.0 && holder.masaD > 0.0) {
-                                                holder.txtDMasa.setText("Masa: " + holder.masaVendidaD + " kgs");
-                                                holder.txtDMasaD.setText("$ " + holder.masaD);
+                                                holder.txtDMasa.setText("Masa: " + holder.masaVendidaD + "kgs");
+                                                holder.txtDMasaD.setText("$" + holder.masaD);
                                             } else {
                                                 holder.lytDMasa.setVisibility(View.GONE);
                                             }
                                             if (holder.toritillaD > 0.0 && holder.tortillaVendidaD > 0.0) {
-                                                holder.txtDTortilla.setText("Tortilla: " + holder.tortillaVendidaD + " kgs");
-                                                holder.txtDTortillaD.setText("$ " + holder.toritillaD);
+                                                holder.txtDTortilla.setText("Tortilla: " + holder.tortillaVendidaD + "kgs");
+                                                holder.txtDTortillaD.setText("$" + holder.toritillaD);
                                             } else {
                                                 holder.lytDTortilla.setVisibility(View.GONE);
                                             }
                                             if (holder.totoposD > 0.0 && holder.totoposVendidoD > 0.0) {
-                                                holder.txtDTotopo.setText("Totopo: " + holder.totoposVendidoD + " kgs");
-                                                holder.txtDTotopoD.setText("$ " + holder.totoposD);
+                                                holder.txtDTotopo.setText("Totopo: " + holder.totoposVendidoD + "kgs");
+                                                holder.txtDTotopoD.setText("$" + holder.totoposD);
                                             } else {
                                                 holder.lytDTotopo.setVisibility(View.GONE);
                                             }

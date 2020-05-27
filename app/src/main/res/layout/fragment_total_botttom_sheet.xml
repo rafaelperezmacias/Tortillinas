@@ -74,15 +74,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
@@ -128,21 +122,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/icon8"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginTop="22dp"
-                    android:layout_marginStart="16dp"
-                    android:src="@drawable/ic_kg_24dp"/>
-
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/icon8"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:hint="Tortilla (kgs)"
-                    android:paddingStart="16dp"
+                    android:paddingStart="56dp"
                     android:paddingEnd="16dp"
                     app:errorEnabled="true">
 
@@ -234,13 +219,17 @@
                                 android:layout_weight="1"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Molino" />
+                                android:text="Molino"
+                                android:textSize="14sp"
+                                style="@style/TextAppearance.AppCompat.Body2"/>
 
                             <TextView
                                 android:id="@+id/txtMolinoP"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="23.20"/>
+                                android:text="23.20"
+                                android:textSize="14sp"
+                                style="@style/TextAppearance.AppCompat.Body1"/>
 
                         </LinearLayout>
 
@@ -254,13 +243,17 @@
                                 android:layout_weight="1"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Tortilla" />
+                                android:text="Tortilla"
+                                android:textSize="14sp"
+                                style="@style/TextAppearance.AppCompat.Body2"/>
 
                             <TextView
                                 android:id="@+id/txtMaquinaMasaP"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="23.20"/>
+                                android:text="23.20"
+                                android:textSize="14sp"
+                                style="@style/TextAppearance.AppCompat.Body1"/>
 
                         </LinearLayout>
 
@@ -274,13 +267,17 @@
                                 android:layout_weight="1"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Totopos" />
+                                android:text="Totopos"
+                                android:textSize="14sp"
+                                style="@style/TextAppearance.AppCompat.Body2"/>
 
                             <TextView
                                 android:id="@+id/txtTortillaP"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="23.20"/>
+                                android:text="23.20"
+                                android:textSize="14sp"
+                                style="@style/TextAppearance.AppCompat.Body1"/>
 
                         </LinearLayout>
 
