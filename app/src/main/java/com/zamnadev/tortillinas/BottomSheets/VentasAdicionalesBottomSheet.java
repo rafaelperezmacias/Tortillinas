@@ -1,13 +1,11 @@
 package com.zamnadev.tortillinas.BottomSheets;
 
 import android.app.Dialog;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -18,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -27,9 +24,6 @@ import com.zamnadev.tortillinas.Adaptadores.AdaptadorConceptos;
 import com.zamnadev.tortillinas.Dialogos.DialogoAddCampoVentas;
 import com.zamnadev.tortillinas.Moldes.Concepto;
 import com.zamnadev.tortillinas.R;
-import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -197,8 +191,7 @@ public class VentasAdicionalesBottomSheet extends BottomSheetDialogFragment {
         ((ImageButton) view.findViewById(R.id.btn_cerrar))
                 .setOnClickListener(view1 -> dismiss());
 
-        ((MaterialButton) view.findViewById(R.id.btnGuardar))
-                .setOnClickListener(view1 -> dismiss());
+        view.findViewById(R.id.btnGuardar).setVisibility(View.GONE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Toolbar toolbar = view.findViewById(R.id.toolbar);
