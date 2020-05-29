@@ -103,9 +103,9 @@ public class AdaptadorVenta extends RecyclerView.Adapter<AdaptadorVenta.ViewHold
                 } else {
                     VentasRepartidorBottomSheet bottomSheet;
                     if (isAdmin) {
-                        bottomSheet = new VentasRepartidorBottomSheet(venta.getIdVenta(),venta.getIdSucursal(), true, venta.getIdEmpleado());
+                        bottomSheet = new VentasRepartidorBottomSheet(venta.getIdVenta(),venta.getIdSucursal(), true, venta.getIdEmpleado(),true);
                     } else {
-                        bottomSheet = new VentasRepartidorBottomSheet(venta.getIdVenta(),venta.getIdSucursal(), true, venta.getIdEmpleado());
+                        bottomSheet = new VentasRepartidorBottomSheet(venta.getIdVenta(),venta.getIdSucursal(), true, venta.getIdEmpleado(),false);
                     }
                     bottomSheet.show(fragmentManager, bottomSheet.getTag());
                 }
@@ -123,9 +123,9 @@ public class AdaptadorVenta extends RecyclerView.Adapter<AdaptadorVenta.ViewHold
                 } else {
                     VentasRepartidorBottomSheet bottomSheet;
                     if (isAdmin) {
-                        bottomSheet = new VentasRepartidorBottomSheet(venta.getIdVenta(),venta.getIdSucursal(), true, venta.getIdEmpleado());
+                        bottomSheet = new VentasRepartidorBottomSheet(venta.getIdVenta(),venta.getIdSucursal(), true, venta.getIdEmpleado(),true);
                     } else {
-                        bottomSheet = new VentasRepartidorBottomSheet(venta.getIdVenta(),venta.getIdSucursal(), false, venta.getIdEmpleado());
+                        bottomSheet = new VentasRepartidorBottomSheet(venta.getIdVenta(),venta.getIdSucursal(), false, venta.getIdEmpleado(), false);
                     }
                     bottomSheet.show(fragmentManager, bottomSheet.getTag());
                 }

@@ -3,6 +3,7 @@ package com.zamnadev.tortillinas.BottomSheets;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -51,6 +52,10 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
 
     private int x;
     private int cont;
+    private boolean precio;
+
+    private AdaptadorTotalRepartidores adaptador;
+    private TextView txtTotal;
 
     public TotalBottomSheet(String idVenta, String idEmpleado, String idSucursal)
     {
@@ -87,6 +92,7 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
         MaterialCardView cardVentasMostrador = view.findViewById(R.id.card_ventas_mostrador);
         MaterialCardView cardGastosMostrador = view.findViewById(R.id.card_gastos_mostrador);
         MaterialCardView cardMermas = view.findViewById(R.id.card_mermas);
+        MaterialCardView cardMasa = view.findViewById(R.id.card_masa_vendida);
 
         TextView txtSucursal = view.findViewById(R.id.txtSucursal);
 
@@ -103,7 +109,11 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
         ImageButton btnVentasExtra = view.findViewById(R.id.btnVentasExtra);
 
         ImageButton btnMermas = view.findViewById(R.id.btnMermas);
+        ImageButton btnMasa = view.findViewById(R.id.btnMasaVendida);
         LinearLayout lytContenidoMermas = view.findViewById(R.id.lytContenidoMermas);
+
+        TextView txtMasaVendida = view.findViewById(R.id.txtMasaVendida);
+        TextView txtKgsMasaVendia = view.findViewById(R.id.txtMasaKgVendida);
 
         RecyclerView rRepartidores = view.findViewById(R.id.recyclerview_repartidores);
 
@@ -114,7 +124,7 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
         TextView txtTortilla = view.findViewById(R.id.txtTortilla);
         TextView txtTortillaP = view.findViewById(R.id.txtTortillaP);
         TextView txtMermaTotal = view.findViewById(R.id.txtMermaTotal);
-        TextView txtTotal = view.findViewById(R.id.txtTotal);
+        txtTotal = view.findViewById(R.id.txtTotal);
 
         rVentaMostrador.setLayoutManager(new LinearLayoutManager(getContext()));
         rVentaMostrador.setHasFixedSize(true);
@@ -150,6 +160,15 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
                             materia =   (((double) botes / 5) * 50) * 1.8;
                         }
 
+                        precio = false;
+                        if (ventaMostrador.getMasaVendida() >= 0.0) {
+                            txtKgsMasaVendia.setText(ventaMostrador.getMasaVendida() + " kgs");
+                            precio = true;
+                        } else {
+                            txtKgsMasaVendia.setText("0 kgs");
+                            txtMasaVendida.setText("+ $0");
+                        }
+
                         FirebaseDatabase.getInstance().getReference("Productos")
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
@@ -168,6 +187,11 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
                                                 }
                                             }
                                             if (p.getNombre().toUpperCase().contains("MASA")) {
+                                                if (precio) {
+                                                    txtMasaVendida.setText("+ $" + ventaMostrador.getMasaVendida() * p.getPrecio());
+                                                    total += ventaMostrador.getMasaVendida() * p.getPrecio();
+                                                    txtTotal.setText("TOTAL: $" + total);
+                                                }
                                                 if (ventaMostrador.getMaquinaMasa() >= 0.0) {
                                                     txtMaquinaMasa.setText("Maquina masa: " + ventaMostrador.getMaquinaMasa() + "kgs");
                                                     txtMaquinaMasaP.setText("$" + p.getPrecio() * ventaMostrador.getMaquinaMasa());
@@ -203,7 +227,7 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
                             for (int x = 0; x < ventaMostrador.getRepartidores().size(); x++) {
                                 repartidores.add(ventaMostrador.getRepartidores().get("repartidor"+x));
                             }
-                            AdaptadorTotalRepartidores adaptador = new AdaptadorTotalRepartidores(getContext(),repartidores,idVenta);
+                            adaptador = new AdaptadorTotalRepartidores(getContext(),repartidores,idVenta, TotalBottomSheet.this);
                             rRepartidores.setAdapter(adaptador);
                             FirebaseDatabase.getInstance().getReference("AuxVentaMostrador")
                                     .child(idVenta)
@@ -281,7 +305,7 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
                             AdaptadorTotal adaptador = new AdaptadorTotal(getContext(),conceptos);
                             rVentaMostrador.setAdapter(adaptador);
                         } else {
-                            txtTotalMostrador.setText("$0");
+                            txtTotalMostrador.setText("+ $0.0");
                         }
                     }
 
@@ -312,7 +336,7 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
                             AdaptadorTotal adaptador = new AdaptadorTotal(getContext(),conceptos);
                             rGastosMostrador.setAdapter(adaptador);
                         } else {
-                            txtTotalGastosMostrador.setText("$0");
+                            txtTotalGastosMostrador.setText("+ $0.0");
                         }
                     }
 
@@ -392,6 +416,30 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+
+        btnMasa.setOnClickListener(view1 -> {
+            if (btnMasa.getTag().equals("down")) {
+                btnMasa.setTag("up");
+                btnMasa.setImageResource(R.drawable.ic_arrow_up_24dp);
+                txtKgsMasaVendia.setVisibility(View.VISIBLE);
+            } else {
+                btnMasa.setTag("down");
+                btnMasa.setImageResource(R.drawable.ic_arrow_down_24dp);
+                txtKgsMasaVendia.setVisibility(View.GONE);
+            }
+        });
+
+        cardMasa.setOnClickListener(view1 -> {
+            if (btnMasa.getTag().equals("down")) {
+                btnMasa.setTag("up");
+                btnMasa.setImageResource(R.drawable.ic_arrow_up_24dp);
+                txtKgsMasaVendia.setVisibility(View.VISIBLE);
+            } else {
+                btnMasa.setTag("down");
+                btnMasa.setImageResource(R.drawable.ic_arrow_down_24dp);
+                txtKgsMasaVendia.setVisibility(View.GONE);
             }
         });
 
@@ -514,6 +562,15 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
     public void onStart() {
         super.onStart();
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+
+    public void aumentarRepartidores() {
+        double tmpPrecio = 0.0;
+        for (double p : adaptador.getTotales()) {
+            tmpPrecio += p;
+        }
+        total += tmpPrecio;
+        txtTotal.setText("TOTAL: $" + total);
     }
 
     public double redondearDecimales(double valorInicial, int numeroDecimales) {

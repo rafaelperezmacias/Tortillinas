@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -48,6 +49,7 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
 
     private String idSucursal;
     private boolean isEditable;
+    private boolean isAdmin;
     private String idVenta;
 
     private DatabaseReference refVenta;
@@ -70,14 +72,17 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
     private ImageView imgStatusIcon1;
     private ImageView imgStatusIcon2;
 
+    private ArrayList<Cliente> clientes;
+
     private Activity mActivity;
 
-    public VentasRepartidorBottomSheet(String  idVenta, String idSucursal, boolean isEditable, String idEmpleado)
+    public VentasRepartidorBottomSheet(String  idVenta, String idSucursal, boolean isEditable, String idEmpleado, boolean isAdmin)
     {
         this.idVenta = idVenta;
         this.idSucursal = idSucursal;
         this.isEditable = isEditable;
         this.idEmpleado = idEmpleado;
+        this.isAdmin = isAdmin;
     }
 
     @Override
@@ -104,9 +109,6 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
 
             @Override public void onSlide(@NonNull View view, float v) { }
         });
-
-        Log.e("S", "" + idEmpleado);
-        Log.e("sd","" + ControlSesiones.ObtenerUsuarioActivo(getContext()));
 
         ImageButton btnCerrar = view.findViewById(R.id.btn_cerrar);
         btnCerrar.setOnClickListener((v -> dismiss()));
@@ -142,6 +144,8 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
 
+        ImageButton btnOpciones = view.findViewById(R.id.btnOpciones);
+
         String fecha = MainActivity.getFecha();
         ArrayList<VentaCliente> ventaClientes = new ArrayList<>();
 
@@ -152,6 +156,26 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
 
         if (!isEditable) {
             ((MaterialButton) view.findViewById(R.id.btnGuardar)).setVisibility(View.GONE);
+        }
+
+        if (isAdmin) {
+            btnOpciones.setOnClickListener(view13 -> {
+                PopupMenu popupMenu = new PopupMenu(getContext(), btnOpciones);
+                popupMenu.inflate(R.menu.venta_mostrador);
+                popupMenu.setOnMenuItemClickListener(menuItem -> {
+                    switch (menuItem.getItemId()) {
+                        case R.id.menuTotal: {
+                            TotalRepartidorBottomSheet totalBottomSheet = new TotalRepartidorBottomSheet(idVenta,idEmpleado,idSucursal);
+                            totalBottomSheet.show(getChildFragmentManager(),totalBottomSheet.getTag());
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+                popupMenu.show();
+            });
+        } else {
+            btnOpciones.setVisibility(View.GONE);
         }
 
         //TODO muestra la informacion de la venta de tipo repartidor
@@ -280,10 +304,10 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
 
         //TODO muestra los clientes a los que repartira producto
         refClientes = FirebaseDatabase.getInstance().getReference("Clientes");
-        listenerClientes = refClientes.addValueEventListener(new ValueEventListener() {
+        refClientes.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<Cliente> clientes = new ArrayList<>();
+                clientes = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren())
                 {
                     Cliente cliente = snapshot.getValue(Cliente.class);
@@ -292,11 +316,175 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
                         clientes.add(cliente);
                     }
                 }
-                adaptador = new AdaptadorRepartidorClientes(getContext(),clientes, idVenta, getChildFragmentManager(),isEditable,idEmpleado);
-                recyclerView.setAdapter(adaptador);
-                if (adaptador.getVentaClientes() == null && ventaClientes.size() > 0) {
-                    adaptador.addVentas(ventaClientes);
-                }
+                listenerAuxVenta = refAuxVenta.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (!dataSnapshot.exists()) {
+                            txtVendidosUno.setVisibility(View.GONE);
+                            txtTituloVendidoUno.setVisibility(View.GONE);
+                            txtVendidosDos.setVisibility(View.GONE);
+                            txtTituloVendidoDos.setVisibility(View.GONE);
+                            if (ventaRepartidor != null) {
+                                if (ventaRepartidor.getVuelta1() != null) {
+                                    adaptador.setTortillasVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTortillas());
+                                    adaptador.setMasaVentaPrimerVuelta(ventaRepartidor.getVuelta1().getMasa());
+                                    adaptador.setTotoposVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTotopos());
+                                }
+                                if (ventaRepartidor.getVuelta2() != null) {
+                                    adaptador.setTortillasVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTortillas());
+                                    adaptador.setMasaVentaSegundaVuelta(ventaRepartidor.getVuelta2().getMasa());
+                                    adaptador.setTotoposVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTotopos());
+                                }
+                            }
+                            FirebaseDatabase.getInstance().getReference("VentasRepartidor")
+                                    .child(idEmpleado)
+                                    .child(idVenta)
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            VentaRepartidor venta = dataSnapshot.getValue(VentaRepartidor.class);
+                                            adaptador = new AdaptadorRepartidorClientes(venta, getContext(),clientes, idVenta, getChildFragmentManager(),isEditable,idEmpleado);
+                                            recyclerView.setAdapter(adaptador);
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+                            return;
+                        }
+                        ventaClientes.clear();
+                        double tortillaP = 0.0, masaP = 0.0, totoposP = 0.0;
+                        double tortillaS = 0.0, masaS = 0.0, totoposS = 0.0;
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            VentaCliente ventaCliente = snapshot.getValue(VentaCliente.class);
+                            if (ventaCliente.getVuelta1() != null) {
+                                if (ventaCliente.getVuelta1().getTortillas() >= 0) {
+                                    tortillaP += ventaCliente.getVuelta1().getTortillas();
+                                }
+                                if (ventaCliente.getVuelta1().getMasa() >= 0) {
+                                    masaP += ventaCliente.getVuelta1().getMasa();
+                                }
+                                if (ventaCliente.getVuelta1().getTotopos() >= 0) {
+                                    totoposP += ventaCliente.getVuelta1().getTotopos();
+                                }
+                            }
+                            if (ventaCliente.getVuelta2() != null) {
+                                if (ventaCliente.getVuelta2().getTortillas() >= 0) {
+                                    tortillaS += ventaCliente.getVuelta2().getTortillas();
+                                }
+                                if (ventaCliente.getVuelta2().getMasa() >= 0) {
+                                    masaS += ventaCliente.getVuelta2().getMasa();
+                                }
+                                if (ventaCliente.getVuelta2().getTotopos() >= 0) {
+                                    totoposS += ventaCliente.getVuelta2().getTotopos();
+                                }
+                            }
+                            ventaClientes.add(ventaCliente);
+                        }
+                        String text = "";
+                        if (tortillaP == 0.0 && masaP == 0.0 && totoposP == 0.0) {
+                            txtVendidosUno.setVisibility(View.GONE);
+                            txtTituloVendidoUno.setVisibility(View.GONE);
+                        } else {
+                            if (tortillaP > 0.0) {
+                                text += "Tortillas: " + tortillaP + " kgs.\n";
+                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
+                                    adaptador.setTortillasVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTortillas() - tortillaP);
+                                }
+                            } else {
+                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
+                                    adaptador.setTortillasVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTortillas());
+                                }
+                            }
+                            if (masaP > 0.0) {
+                                text += "Masa: " + masaP + " kgs.\n";
+                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
+                                    adaptador.setMasaVentaPrimerVuelta(ventaRepartidor.getVuelta1().getMasa() - masaP);
+                                }
+                            } else {
+                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
+                                    adaptador.setMasaVentaPrimerVuelta(ventaRepartidor.getVuelta1().getMasa());
+                                }
+                            }
+                            if (totoposP > 0.0) {
+                                text += "Totopos: " + totoposP + " kgs.\n";
+                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
+                                    adaptador.setTotoposVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTotopos() - totoposP);
+                                }
+                            } else {
+                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
+                                    adaptador.setTotoposVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTotopos());
+                                }
+                            }
+                            txtVendidosUno.setVisibility(View.VISIBLE);
+                            txtTituloVendidoUno.setVisibility(View.VISIBLE);
+                            txtVendidosUno.setText(text);
+                        }
+                        text = "";
+                        if (tortillaS == 0.0 && masaS == 0.0 && totoposS == 0) {
+                            txtVendidosDos.setVisibility(View.GONE);
+                            txtTituloVendidoDos.setVisibility(View.GONE);
+                        } else {
+                            if (tortillaS > 0.0) {
+                                text += "Tortillas: " + tortillaS + " kgs.\n";
+                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
+                                    adaptador.setTortillasVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTortillas() - tortillaS);
+                                }
+                            } else {
+                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
+                                    adaptador.setTortillasVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTortillas());
+                                }
+                            }
+                            if (masaS > 0.0) {
+                                text += "Masa: " + masaS + " kgs.\n";
+                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
+                                    adaptador.setMasaVentaSegundaVuelta(ventaRepartidor.getVuelta2().getMasa() - masaS);
+                                }
+                            } else {
+                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
+                                    adaptador.setMasaVentaSegundaVuelta(ventaRepartidor.getVuelta2().getMasa());
+                                }
+                            }
+                            if (totoposS > 0.0) {
+                                text += "Totopos: " + totoposS + " kgs.\n";
+                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
+                                    adaptador.setTotoposVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTotopos() - totoposS);
+                                }
+                            } else {
+                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
+                                    adaptador.setTotoposVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTotopos());
+                                }
+                            }
+                            txtVendidosDos.setVisibility(View.VISIBLE);
+                            txtTituloVendidoDos.setVisibility(View.VISIBLE);
+                            txtVendidosDos.setText(text);
+                        }
+                        FirebaseDatabase.getInstance().getReference("VentasRepartidor")
+                                .child(idEmpleado)
+                                .child(idVenta)
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        VentaRepartidor venta = dataSnapshot.getValue(VentaRepartidor.class);
+                                        adaptador = new AdaptadorRepartidorClientes(venta, getContext(),clientes, idVenta, getChildFragmentManager(),isEditable,idEmpleado);
+                                        recyclerView.setAdapter(adaptador);
+                                        adaptador.addVentas(ventaClientes);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override
@@ -310,148 +498,11 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
                 .child(idEmpleado)
                 .child(idVenta);
 
-        listenerAuxVenta = refAuxVenta.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    txtVendidosUno.setVisibility(View.GONE);
-                    txtTituloVendidoUno.setVisibility(View.GONE);
-                    txtVendidosDos.setVisibility(View.GONE);
-                    txtTituloVendidoDos.setVisibility(View.GONE);
-                    if (ventaRepartidor != null) {
-                        if (ventaRepartidor.getVuelta1() != null) {
-                            adaptador.setTortillasVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTortillas());
-                            adaptador.setMasaVentaPrimerVuelta(ventaRepartidor.getVuelta1().getMasa());
-                            adaptador.setTotoposVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTotopos());
-                        }
-                        if (ventaRepartidor.getVuelta2() != null) {
-                            adaptador.setTortillasVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTortillas());
-                            adaptador.setMasaVentaSegundaVuelta(ventaRepartidor.getVuelta2().getMasa());
-                            adaptador.setTotoposVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTotopos());
-                        }
-                    }
-                    return;
-                }
-                ventaClientes.clear();
-                double tortillaP = 0.0, masaP = 0.0, totoposP = 0.0;
-                double tortillaS = 0.0, masaS = 0.0, totoposS = 0.0;
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    VentaCliente ventaCliente = snapshot.getValue(VentaCliente.class);
-                    if (ventaCliente.getVuelta1() != null) {
-                        if (ventaCliente.getVuelta1().getTortillas() >= 0) {
-                            tortillaP += ventaCliente.getVuelta1().getTortillas();
-                        }
-                        if (ventaCliente.getVuelta1().getMasa() >= 0) {
-                            masaP += ventaCliente.getVuelta1().getMasa();
-                        }
-                        if (ventaCliente.getVuelta1().getTotopos() >= 0) {
-                            totoposP += ventaCliente.getVuelta1().getTotopos();
-                        }
-                    }
-                    if (ventaCliente.getVuelta2() != null) {
-                        if (ventaCliente.getVuelta2().getTortillas() >= 0) {
-                            tortillaS += ventaCliente.getVuelta2().getTortillas();
-                        }
-                        if (ventaCliente.getVuelta2().getMasa() >= 0) {
-                            masaS += ventaCliente.getVuelta2().getMasa();
-                        }
-                        if (ventaCliente.getVuelta2().getTotopos() >= 0) {
-                            totoposS += ventaCliente.getVuelta2().getTotopos();
-                        }
-                    }
-                    ventaClientes.add(ventaCliente);
-                }
-                String text = "";
-                if (tortillaP == 0.0 && masaP == 0.0 && totoposP == 0.0) {
-                    txtVendidosUno.setVisibility(View.GONE);
-                    txtTituloVendidoUno.setVisibility(View.GONE);
-                } else {
-                    if (tortillaP > 0.0) {
-                        text += "Tortillas: " + tortillaP + " kgs.\n";
-                        if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
-                            adaptador.setTortillasVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTortillas() - tortillaP);
-                        }
-                    } else {
-                        if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
-                            adaptador.setTortillasVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTortillas());
-                        }
-                    }
-                    if (masaP > 0.0) {
-                        text += "Masa: " + masaP + " kgs.\n";
-                        if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
-                            adaptador.setMasaVentaPrimerVuelta(ventaRepartidor.getVuelta1().getMasa() - masaP);
-                        }
-                    } else {
-                        if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
-                            adaptador.setMasaVentaPrimerVuelta(ventaRepartidor.getVuelta1().getMasa());
-                        }
-                    }
-                    if (totoposP > 0.0) {
-                        text += "Totopos: " + totoposP + " kgs.\n";
-                        if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
-                            adaptador.setTotoposVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTotopos() - totoposP);
-                        }
-                    } else {
-                        if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
-                            adaptador.setTotoposVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTotopos());
-                        }
-                    }
-                    txtVendidosUno.setVisibility(View.VISIBLE);
-                    txtTituloVendidoUno.setVisibility(View.VISIBLE);
-                    txtVendidosUno.setText(text);
-                }
-                text = "";
-                if (tortillaS == 0.0 && masaS == 0.0 && totoposS == 0) {
-                    txtVendidosDos.setVisibility(View.GONE);
-                    txtTituloVendidoDos.setVisibility(View.GONE);
-                } else {
-                    if (tortillaS > 0.0) {
-                        text += "Tortillas: " + tortillaS + " kgs.\n";
-                        if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
-                            adaptador.setTortillasVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTortillas() - tortillaS);
-                        }
-                    } else {
-                        if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
-                            adaptador.setTortillasVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTortillas());
-                        }
-                    }
-                    if (masaS > 0.0) {
-                        text += "Masa: " + masaS + " kgs.\n";
-                        if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
-                            adaptador.setMasaVentaSegundaVuelta(ventaRepartidor.getVuelta2().getMasa() - masaS);
-                        }
-                    } else {
-                        if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
-                            adaptador.setMasaVentaSegundaVuelta(ventaRepartidor.getVuelta2().getMasa());
-                        }
-                    }
-                    if (totoposS > 0.0) {
-                        text += "Totopos: " + totoposS + " kgs.\n";
-                        if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
-                            adaptador.setTotoposVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTotopos() - totoposS);
-                        }
-                    } else {
-                        if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
-                            adaptador.setTotoposVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTotopos());
-                        }
-                    }
-                    txtVendidosDos.setVisibility(View.VISIBLE);
-                    txtTituloVendidoDos.setVisibility(View.VISIBLE);
-                    txtVendidosDos.setText(text);
-                }
-                if (adaptador != null) {
-                    adaptador.addVentas(ventaClientes);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
         ((MaterialButton) view.findViewById(R.id.btnGuardar))
                 .setOnClickListener(view1 -> {
+                    refVenta.removeEventListener(listenerVenta);
+                    refAuxVenta.removeEventListener(listenerAuxVenta);
+                    refGastos.removeEventListener(listenerGastos);
                     if (!isEditable) {
                         dismiss();
                         return;
@@ -488,10 +539,6 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        refVenta.removeEventListener(listenerVenta);
-        refAuxVenta.removeEventListener(listenerAuxVenta);
-        refClientes.removeEventListener(listenerClientes);
-        refGastos.removeEventListener(listenerGastos);
     }
 
     @Override

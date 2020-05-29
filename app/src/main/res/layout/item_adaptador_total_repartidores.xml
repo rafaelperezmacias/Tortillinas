@@ -433,6 +433,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="visible"
                 android:paddingBottom="8dp">
 
                 <TextView
@@ -452,6 +453,25 @@
                     style="@style/TextAppearance.AppCompat.Body1"/>
 
             </LinearLayout>
+
+            <View
+                android:id="@+id/divisor"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:id="@+id/txtTotalFinal"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TOTAL: "
+                android:gravity="right"
+                android:textSize="14sp"
+                android:layout_marginBottom="10dp"
+                style="@style/TextAppearance.AppCompat.Body2"/>
 
         </LinearLayout>
 

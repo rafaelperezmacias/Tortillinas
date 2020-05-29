@@ -16,6 +16,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.zamnadev.tortillinas.BottomSheets.TotalBottomSheet;
+import com.zamnadev.tortillinas.BottomSheets.TotalRepartidorBottomSheet;
 import com.zamnadev.tortillinas.Moldes.Concepto;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.VentaCliente;
@@ -28,12 +30,19 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
 
     private Context context;
     private ArrayList<String> repartidores;
+    private ArrayList<Double> totales;
     private String idVenta;
+    private TotalBottomSheet padre;
 
-    public AdaptadorTotalRepartidores(Context context, ArrayList<String> repartidores, String idVenta) {
+    public AdaptadorTotalRepartidores(Context context, ArrayList<String> repartidores, String idVenta, TotalBottomSheet padre) {
         this.context = context;
         this.repartidores = repartidores;
         this.idVenta = idVenta;
+        this.padre = padre;
+        totales = new ArrayList<>();
+        for (String r : repartidores) {
+            totales.add(0.0);
+        }
     }
 
     @NonNull
@@ -103,9 +112,11 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
                         holder.totoposVendidoD = 0.0; holder.totoposD = 0.0;
                         holder.subTotalP = 0.0; holder.subTotalD = 0.0; holder.subTotalS = 0.0;
                         holder.total = 0.0;
+                        holder.totalFinal = 0.0;
                         for (DataSnapshot snapshot : dataSnapshot.getChildren())
                         {
                             VentaCliente ventaCliente = snapshot.getValue(VentaCliente.class);
+                            holder.total += ventaCliente.getPago();
                             //TODO PRIMER VUELTA
                             if (ventaCliente.getVuelta1() != null) {
                                 if (ventaCliente.getVuelta1().getMasa() >= 0.0) {
@@ -120,8 +131,7 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
                                     holder.totoposVendidoP += ventaCliente.getVuelta1().getTotopos();
                                     holder.totoposP += ventaCliente.getVuelta1().getTotoposVenta();
                                 }
-                                holder.subTotalP += holder.totoposP + holder.toritillaP + holder.masaP;
-                                holder.txtPSubtotal.setText("+ $ " + holder.subTotalP);
+
                             }
                             //TODO SEGUNDA VUELTA
                             if (ventaCliente.getVuelta2() != null) {
@@ -137,8 +147,6 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
                                     holder.totoposVendidoS += ventaCliente.getVuelta2().getTotopos();
                                     holder.totoposS += ventaCliente.getVuelta2().getTotoposVenta();
                                 }
-                                holder.subTotalS += holder.totoposS + holder.toritillaS + holder.masaS;
-                                holder.txtSSubTotal.setText("+ $" + holder.subTotalS);
                             }
                             //TODO DEVOLUCION
                             if (ventaCliente.getDevolucion() != null) {
@@ -154,10 +162,17 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
                                     holder.totoposVendidoD += ventaCliente.getDevolucion().getTotopos();
                                     holder.totoposD += ventaCliente.getDevolucion().getTotoposVenta();
                                 }
-                                holder.subTotalD += holder.totoposD + holder.toritillaD + holder.masaD;
-                                holder.txtDSubtotal.setText("- $" + holder.subTotalD);
                             }
                         }
+
+                        holder.subTotalP += holder.totoposP + holder.toritillaP + holder.masaP;
+                        holder.txtPSubtotal.setText("+ $ " + holder.subTotalP);
+                        holder.subTotalS += holder.totoposS + holder.toritillaS + holder.masaS;
+                        holder.txtSSubTotal.setText("+ $" + holder.subTotalS);
+                        holder.subTotalD += holder.totoposD + holder.toritillaD + holder.masaD;
+                        holder.txtDSubtotal.setText("- $" + holder.subTotalD);
+                        holder.totalFinal += holder.subTotalP + holder.subTotalS;
+                        holder.totalFinal -= holder.subTotalD;
 
                         FirebaseDatabase.getInstance().getReference("Gastos")
                                 .child(id)
@@ -172,10 +187,21 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
                                                 holder.gastos += concepto.getPrecio();
                                             }
                                             holder.txtGastos.setText("- $" +  holder.gastos);
-                                            holder.total += holder.subTotalS + holder.subTotalP;
-                                            holder.total -= holder.subTotalD;
+                                            holder.totalFinal -= holder.gastos;
                                             holder.total -= holder.gastos;
-                                            holder.txtTotal.setText( "$" + holder.total + " +");
+                                            holder.txtTotalFinal.setText("TOTAL: $" + holder.totalFinal);
+                                            totales.set(position,holder.total);
+                                            //TODO CAMBIO DE COLOR DE LA MIERDA ESA
+                                            if (holder.total < holder.totalFinal) {
+                                                holder.cardView.setCardBackgroundColor(R.color.error_background);
+                                                holder.cardView.setStrokeColor(R.color.error_text);
+                                            }
+                                            if (position == totales.size()-1) {
+                                                if (padre != null) {
+                                                    padre.aumentarRepartidores();
+                                                }
+                                            }
+                                            holder.txtTotal.setText("+ $" + holder.total);
                                         } else {
                                             holder.lytGastos.setVisibility(View.GONE);
                                         }
@@ -193,6 +219,9 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        if (!dataSnapshot.exists()) {
+                                            return;
+                                        }
                                         VentaRepartidor ventaRepartidor = dataSnapshot.getValue(VentaRepartidor.class);
                                         //TODO PRIEMER VUELTA
                                         if (ventaRepartidor.getVuelta1() == null) {
@@ -294,6 +323,10 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
         return repartidores.size();
     }
 
+    public ArrayList<Double> getTotales() {
+        return totales;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView txtNombre;
@@ -304,6 +337,7 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
         private double total, gastos;
         private LinearLayout lytGastos;
         private TextView txtGastos;
+        private TextView txtTotalFinal;
 
         //TODO PRIMER VUELTA
         private LinearLayout lytPrimerVuelta;
@@ -354,7 +388,7 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
         private double tortillaVendidaD, toritillaD;
         private double totoposVendidoD, totoposD;
         private TextView txtDSubtotal;
-        private double subTotalD;
+        private double subTotalD, totalFinal;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -365,6 +399,7 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
             lytVenta = itemView.findViewById(R.id.lytVenta);
             lytGastos = itemView.findViewById(R.id.lytGastos);
             txtGastos = itemView.findViewById(R.id.txtGastos);
+            txtTotalFinal = itemView.findViewById(R.id.txtTotalFinal);
 
             //TODO PRIMER VUELTA
             lytPrimerVuelta = itemView.findViewById(R.id.lytPrimerVuelta);
