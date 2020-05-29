@@ -356,8 +356,8 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                                                 if (totoposDevolucion > 0) {
                                                     text += ", " + totoposDevolucion;
                                                 }
-                                                text = text.replaceFirst(",","");
-                                                text = text.replaceFirst(" ","");
+                                                text = text.replaceFirst(",", "");
+                                                text = text.replaceFirst(" ", "");
                                                 txtDevoluciones.setText(text);
 
                                                 //TODO continuacion de calculos
@@ -368,12 +368,13 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
 
                                                 masaTotal -= masaT;
 
-                                                Log.e("Masa" , "" + masaTotal);
-                                                Log.e("Torilla" , "" + tortillaTotal);
+                                                Log.e("Masa", "" + masaTotal);
+                                                Log.e("Torilla", "" + tortillaTotal);
                                                 Log.e("tortillat", "" + tortillaT);
                                             }
                                         } else {
-                                            tortillaTotal = masaTotal * .8;
+                                            //TODO No se para que funciona esto
+                                            /*tortillaTotal = masaTotal * .8;
                                             Log.e("Torilla" , "" + tortillaTotal);
                                             if (venta.getMermaTortilla() >= 0.0) {
                                                 tortillaTotal -= venta.getMermaTortilla();
@@ -384,6 +385,7 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                                             Log.e("Torilla" , "" + tortillaTotal);
                                             Log.e("tortillat", "" + tortillaT);
                                             txtDevoluciones.setText("Ninguna devolución");
+                                            */
                                         }
                                     }
 

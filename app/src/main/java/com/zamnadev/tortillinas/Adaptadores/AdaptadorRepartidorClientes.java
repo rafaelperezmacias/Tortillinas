@@ -50,27 +50,13 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
 
     private boolean isEditable;
 
-    public AdaptadorRepartidorClientes(Context context, ArrayList<Cliente> clientes, String idVenta, FragmentManager fragmentManager, boolean isEditable, String idEmpleado) {
+    public AdaptadorRepartidorClientes(VentaRepartidor venta, Context context, ArrayList<Cliente> clientes, String idVenta, FragmentManager fragmentManager, boolean isEditable, String idEmpleado) {
         this.context = context;
         this.clientes = clientes;
         this.fragmentManager = fragmentManager;
         this.isEditable = isEditable;
+        this.venta = venta;
         pagos = new ArrayList<>();
-        FirebaseDatabase.getInstance().getReference("VentasRepartidor")
-                .child(idEmpleado)
-                .child(idVenta)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        venta = dataSnapshot.getValue(VentaRepartidor.class);
-                        notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
         tortillasVentaPrimerVuelta = -1;
         masaVentaPrimerVuelta = -1;
         totoposVentaPrimerVuelta = -1;
@@ -101,6 +87,12 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
         if (ventaClientes != null && ventaClientes.size() > 0) {
             for (VentaCliente v : ventaClientes) {
                 if (v.getIdCliente().equals(cliente.getIdCliente())) {
+                    for (int x = 0; x < ventaClientes.size(); x++) {
+                        Log.e("asd","" + ventaClientes.get(x).getPago() + ", id = " + ventaClientes.get(x).getIdCliente());
+                    }
+                    for (int x = 0; x < pagos.size(); x++) {
+                        Log.e("das","" + pagos.get(x).getPago()  + ", id = " + pagos.get(x).getIdCliente());
+                    }
                     ventaCliente = v;
                     if (v.getVuelta1() != null) {
                         String text = "";
@@ -147,6 +139,7 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
                         text = text.replaceFirst(" ","");
                         holder.txtDevolucion.setText(text);
                     }
+                    break;
                 }
             }
         }
@@ -248,9 +241,6 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
                             } catch (Exception ignored) {
 
                             }
-                            holder.total = holder.totalFinal;
-                            holder.total -= pago;
-                            holder.txtPendiente.setText("Pendiente: $" + holder.total);
                             for (int x = 0; x < pagos.size(); x++) {
                                 if (finalVentaCliente1.getIdCliente().equals(pagos.get(x).getIdCliente())) {
                                     pagos.get(x).setPago(pago);
@@ -277,7 +267,6 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
                     holder.txtPendiente.setText("Pendiente: $" + holder.total);
                 }
                 if (ventaCliente.getPago() >= 0.0) {
-                    holder.totalFinal = holder.total;
                     holder.total -= ventaCliente.getPago();
                     holder.txtPendiente.setText("Pendiente: $" + holder.total);
                     holder.txtPago.setText("" + ventaCliente.getPago());
@@ -333,6 +322,7 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
 
     public void addVentas(ArrayList<VentaCliente> ventaClientes) {
         this.ventaClientes = ventaClientes;
+        pagos.clear();
         pagos.addAll(ventaClientes);
         notifyDataSetChanged();
     }
@@ -398,7 +388,6 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
         private TextInputEditText txtDevolucion;
         private TextView txtPseudonimo;
         private double total;
-        private double totalFinal;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -413,8 +402,7 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
             txtDevolucion = itemView.findViewById(R.id.txtDevolucion);
             txtPseudonimo = itemView.findViewById(R.id.txtPseudonimo);
             total = 0.0;
-            totalFinal = 0.0;
         }
-
     }
+
 }

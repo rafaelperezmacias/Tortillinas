@@ -108,6 +108,10 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtMasa"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:longClickable="false"
+                        android:clickable="false"
                         android:inputType="numberDecimal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -133,6 +137,10 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtTortillas"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:longClickable="false"
+                        android:clickable="false"
                         android:inputType="numberDecimal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -152,7 +160,6 @@
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="0dp"
-                android:layout_marginBottom="10dp"
                 app:cardUseCompatPadding="true"
                 app:strokeColor="@android:color/darker_gray"
                 app:strokeWidth="1dp">
@@ -288,6 +295,80 @@
                             android:layout_height="wrap_content"/>
 
                     </LinearLayout>
+
+                </RelativeLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_masa_vendida"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                android:layout_marginBottom="10dp"
+                app:cardUseCompatPadding="true"
+                app:strokeColor="@android:color/darker_gray"
+                app:strokeWidth="1dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/lytMasaVendida"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp">
+
+                        <ImageButton
+                            android:id="@+id/btnMasaVendida"
+                            android:tag="down"
+                            android:layout_marginStart="5dp"
+                            android:layout_width="32dp"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_arrow_down_24dp"
+                            android:contentDescription="@string/icon"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:textSize="18sp"
+                            android:layout_weight="1"
+                            android:text="Masa vendida"
+                            android:textColor="@android:color/black"
+                            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+
+                        <TextView
+                            android:layout_marginEnd="10dp"
+                            android:id="@+id/txtMasaVendida"
+                            android:textSize="18sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="23.78"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/txtMasaKgVendida"
+                        android:layout_below="@+id/lytMasaVendida"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        android:layout_marginStart="45dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Molino"
+                        android:textSize="14sp"
+                        style="@style/TextAppearance.AppCompat.Body2"/>
 
                 </RelativeLayout>
 
@@ -547,6 +628,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
+                android:textSize="24sp"
                 android:paddingTop="8dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
