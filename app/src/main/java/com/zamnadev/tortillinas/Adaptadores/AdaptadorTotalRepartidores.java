@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
@@ -17,7 +18,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.BottomSheets.TotalBottomSheet;
-import com.zamnadev.tortillinas.BottomSheets.TotalRepartidorBottomSheet;
 import com.zamnadev.tortillinas.Moldes.Concepto;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.VentaCliente;
@@ -191,10 +191,9 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
                                             holder.total -= holder.gastos;
                                             holder.txtTotalFinal.setText("TOTAL: $" + holder.totalFinal);
                                             totales.set(position,holder.total);
-                                            //TODO CAMBIO DE COLOR DE LA MIERDA ESA
                                             if (holder.total < holder.totalFinal) {
-                                                holder.cardView.setCardBackgroundColor(R.color.error_background);
-                                                holder.cardView.setStrokeColor(R.color.error_text);
+                                                holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.error_background));
+                                                holder.cardView.setStrokeColor(ContextCompat.getColor(context, R.color.error_text));
                                             }
                                             if (position == totales.size()-1) {
                                                 if (padre != null) {
