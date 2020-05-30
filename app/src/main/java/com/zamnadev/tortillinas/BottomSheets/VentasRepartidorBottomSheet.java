@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -119,6 +120,7 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
         ImageButton btnCerrar = view.findViewById(R.id.btn_cerrar);
         btnCerrar.setOnClickListener((v -> dismiss()));
 
+        LinearLayout lytPrimer = view.findViewById(R.id.lytPrimero);
         LinearLayout lytSegundo = view.findViewById(R.id.lytSecond);
 
         TextInputEditText txtFecha = view.findViewById(R.id.txt_fecha);
@@ -143,6 +145,8 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
 
         imgStatusIcon1 = view.findViewById(R.id.img_status_icon_1);
         imgStatusIcon2 = view.findViewById(R.id.img_status_icon_2);
+
+        View div = view.findViewById(R.id.div);
 
         TextInputEditText txtGasto = view.findViewById(R.id.txtGastos);
 
@@ -224,6 +228,8 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
                             txtEstadoUno.setTextColor(ContextCompat.getColor(mActivity, R.color.darker_gray));
                         }
                     }
+                } else {
+                    lytPrimer.setVisibility(View.GONE);
                 }
                 if (ventaRepartidor.getVuelta2() != null) {
                     if (!ventaRepartidor.getVuelta2().isRegistrada()) {
@@ -258,6 +264,11 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
                     }
                 } else {
                     lytSegundo.setVisibility(View.GONE);
+                }
+                if (ventaRepartidor.getVuelta2() != null && ventaRepartidor.getVuelta1() != null) {
+                    div.setVisibility(View.VISIBLE);
+                } else {
+                    div.setVisibility(View.GONE);
                 }
             }
 
@@ -343,7 +354,12 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                             VentaRepartidor venta = dataSnapshot.getValue(VentaRepartidor.class);
-                                            adaptador = new AdaptadorRepartidorClientes(venta, getContext(),clientes, idVenta, getChildFragmentManager(),isEditable,idEmpleado);
+                                            try {
+                                                adaptador = new AdaptadorRepartidorClientes(venta, getContext(),clientes, idVenta, getChildFragmentManager(),isEditable,idEmpleado);
+                                            } catch (Exception ex) {
+                                                Toast.makeText(getContext(), "Ha ocurrido un error", Toast.LENGTH_SHORT).show();
+                                                dismiss();
+                                            }
                                             recyclerView.setAdapter(adaptador);
                                             if (venta.getVuelta1() != null) {
                                                 adaptador.setTortillasVentaPrimerVuelta(venta.getVuelta1().getTortillas());
@@ -401,7 +417,12 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         VentaRepartidor venta = dataSnapshot.getValue(VentaRepartidor.class);
-                                        adaptador = new AdaptadorRepartidorClientes(venta, getContext(),clientes, idVenta, getChildFragmentManager(),isEditable,idEmpleado);
+                                        try {
+                                            adaptador = new AdaptadorRepartidorClientes(venta, getContext(),clientes, idVenta, getChildFragmentManager(),isEditable,idEmpleado);
+                                        } catch (Exception ex) {
+                                            Toast.makeText(getContext(), "Ha ocurrido un error", Toast.LENGTH_SHORT).show();
+                                            dismiss();
+                                        }
                                         recyclerView.setAdapter(adaptador);
                                         adaptador.addVentas(ventaClientes);
                                         String text = "";

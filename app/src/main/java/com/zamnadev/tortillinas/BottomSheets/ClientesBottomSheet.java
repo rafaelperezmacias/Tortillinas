@@ -26,6 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorClientesProductos;
 import com.zamnadev.tortillinas.Moldes.Cliente;
@@ -173,6 +174,7 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
             txtZona.setText(cliente.getDireccion().getZona());
             if (cliente.isPreferencial()) {
                 sPrecio.setChecked(true);
+                sPrecio.setEnabled(false);
                 recyclerView.setVisibility(View.VISIBLE);
             }
             if (isOnlyShow) {
@@ -235,6 +237,19 @@ public class ClientesBottomSheet extends BottomSheetDialogFragment {
                     clienteMap.put("eliminado",false);
 
                     if (sPrecio.isChecked()) {
+                        if (!isEditable) {
+                            clienteMap.put("altaPreferencial", ServerValue.TIMESTAMP);
+                            clienteMap.put("altaPref",false);
+                        } else {
+                            clienteMap.put("altaPref",true);
+                            HashMap<String, Object> h = new HashMap<>();
+                            h.put("fecha",ServerValue.TIMESTAMP);
+                            h.put("precios",cliente.getPrecios());
+                            FirebaseDatabase.getInstance().getReference("PreciosClientes")
+                                    .child(cliente.getIdCliente())
+                                    .push()
+                                    .updateChildren(h);
+                        }
                         HashMap<String, String> mapaProductos = new HashMap<>();
                         for (int x = 0; x < adaptador.getNuevosPrecios().size(); x++) {
                             String tmpProducto = adaptador.getNuevosPrecios().get(x).getPrecio() + "?" + adaptador.getNuevosPrecios().get(x).getIdProducto();

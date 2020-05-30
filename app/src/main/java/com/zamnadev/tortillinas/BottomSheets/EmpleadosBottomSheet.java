@@ -529,12 +529,14 @@ public class EmpleadosBottomSheet extends BottomSheetDialogFragment {
 
     private boolean isValidPassword() {
         if (txtPassword.getText().toString().isEmpty()) {
-            lytPassword.setError("Ingrese la nueva contraseña");
+            lytPassword.setError("Ingrese la contraseña");
             isError = true;
             return false;
         }
 
-        if (txtPassword.getText().toString().length() <= 7 || txtSucursal.getText().toString().length() > 16) {
+        Log.e("dada","" + txtPassword.getText().toString().length());
+
+        if (txtPassword.getText().toString().length() <= 7 || txtPassword.getText().toString().length() > 16) {
             lytPassword.setError("La contraseña debe de medir de 8 a 16 carácteres");
             isError = true;
             return false;

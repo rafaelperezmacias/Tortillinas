@@ -392,7 +392,7 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
                                                 tortillasFinal += ventaMostrador.getTortillaSobra();
                                             }
 
-                                            if (masa > 0) {
+                                            if (materia > 0) {
                                                 txtMasa.setText("" + redondearDecimales(masa,2));
                                                 txtTortillas.setText("" + redondearDecimales(tortillasFinal,2));
                                             } else {

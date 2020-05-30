@@ -13,12 +13,14 @@ public class Cliente {
     private boolean eliminado;
     private boolean preferencial;
     private long timeDelete;
+    private long altaPreferencial;
+    private boolean altaPref;
 
     public Cliente() {
 
     }
 
-    public Cliente(String idCliente, Nombre nombre, Direccion direccion, String telefono, String pseudonimo, HashMap<String, String> precios, boolean eliminado, boolean preferencial, long timeDelete) {
+    public Cliente(String idCliente, Nombre nombre, Direccion direccion, String telefono, String pseudonimo, HashMap<String, String> precios, boolean eliminado, boolean preferencial, long timeDelete, long altaPreferencial, boolean altaPref) {
         this.idCliente = idCliente;
         this.nombre = nombre;
         this.direccion = direccion;
@@ -28,6 +30,8 @@ public class Cliente {
         this.eliminado = eliminado;
         this.preferencial = preferencial;
         this.timeDelete = timeDelete;
+        this.altaPreferencial = altaPreferencial;
+        this.altaPref = altaPref;
     }
 
     public String getIdCliente() {
@@ -102,6 +106,22 @@ public class Cliente {
         this.timeDelete = timeDelete;
     }
 
+    public long getAltaPreferencial() {
+        return altaPreferencial;
+    }
+
+    public void setAltaPreferencial(long altaPreferencial) {
+        this.altaPreferencial = altaPreferencial;
+    }
+
+    public boolean isAltaPref() {
+        return altaPref;
+    }
+
+    public void setAltaPref(boolean altaPref) {
+        this.altaPref = altaPref;
+    }
+
     @Override
     public String toString() {
         return "Cliente{" +
@@ -114,6 +134,8 @@ public class Cliente {
                 ", eliminado=" + eliminado +
                 ", preferencial=" + preferencial +
                 ", timeDelete=" + timeDelete +
+                ", altaPreferencial=" + altaPreferencial +
+                ", altaPref=" + altaPref +
                 '}';
     }
 }

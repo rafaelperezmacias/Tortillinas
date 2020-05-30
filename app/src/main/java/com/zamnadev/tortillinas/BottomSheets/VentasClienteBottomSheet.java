@@ -3,6 +3,7 @@ package com.zamnadev.tortillinas.BottomSheets;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -27,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorRepartidorClientes;
 import com.zamnadev.tortillinas.Moldes.Cliente;
 import com.zamnadev.tortillinas.Moldes.Modificado;
+import com.zamnadev.tortillinas.Moldes.PrecioCliente;
 import com.zamnadev.tortillinas.Moldes.Producto;
 import com.zamnadev.tortillinas.Moldes.VentaCliente;
 import com.zamnadev.tortillinas.Moldes.VentaRepartidor;
@@ -412,15 +414,147 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
                                                     for (DataSnapshot snapshot : dataSnapshot.getChildren())
                                                     {
                                                         Producto p = snapshot.getValue(Producto.class);
+                                                        //TODO TORTILLA
                                                         if (p.getNombre().toUpperCase().contains("TORTILLA")) {
                                                             if (cliente.isPreferencial()) {
-                                                                for (int x = 0; x < cliente.getPrecios().size(); x++) {
-                                                                    StringTokenizer a = new StringTokenizer(cliente.getPrecios().get("p"+x),"?");
-                                                                    double precio = Double.parseDouble(a.nextToken());
-                                                                    String id = a.nextToken();
-                                                                    if (id.equals(p.getIdProducto())) {
-                                                                        tortillaVenta = precio * finalTortilla;
+                                                                if (!cliente.isAltaPref()) {
+                                                                    for (int x = 0; x < cliente.getPrecios().size(); x++) {
+                                                                        StringTokenizer a = new StringTokenizer(cliente.getPrecios().get("p"+x),"?");
+                                                                        double precio = Double.parseDouble(a.nextToken());
+                                                                        String id = a.nextToken();
+                                                                        if (id.equals(p.getIdProducto())) {
+                                                                            tortillaVenta = precio * finalTortilla;
+                                                                        }
                                                                     }
+                                                                } else {
+                                                                    if (ventaRepartidor.getTiempo() < cliente.getAltaPreferencial()) {
+                                                                        if (p.isModificado()) {
+                                                                            FirebaseDatabase.getInstance().getReference("CambioPrecios")
+                                                                                    .child(p.getIdProducto())
+                                                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                                        @Override
+                                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                            int x = 0;
+                                                                                            Modificado ant = null;
+                                                                                            for (DataSnapshot sp : dataSnapshot.getChildren()) {
+                                                                                                Modificado pd = sp.getValue(Modificado.class);
+                                                                                                if (x == 0) {
+                                                                                                    if (p.getAlta() < ventaRepartidor.getTiempo() && ventaRepartidor.getTiempo() < pd.getFecha()) {
+                                                                                                        precioProducto = pd.getPrecio();
+                                                                                                        activo = true;
+                                                                                                        break;
+                                                                                                    }
+                                                                                                    ant = new Modificado(pd);
+                                                                                                } else {
+                                                                                                    if (ant.getFecha() < ventaRepartidor.getTiempo() && ventaRepartidor.getTiempo() < pd.getFecha()) {
+                                                                                                        precioProducto = pd.getPrecio();
+                                                                                                        activo = true;
+                                                                                                        break;
+                                                                                                    }
+                                                                                                    ant = new Modificado(pd);
+                                                                                                }
+                                                                                                x++;
+                                                                                            }
+                                                                                            if (!activo) {
+                                                                                                precioProducto = p.getPrecio();
+                                                                                            }
+
+                                                                                            tortillaVenta = precioProducto * finalTortilla;
+
+                                                                                            vueltaMap.put("totoposVenta",totoposVenta);
+                                                                                            vueltaMap.put("masaVenta",masaVenta);
+                                                                                            vueltaMap.put("tortillaVenta",tortillaVenta);
+                                                                                            if (devolucion) {
+                                                                                                hashMap.put("devolucion",vueltaMap);
+                                                                                            } else if (primero) {
+                                                                                                hashMap.put("vuelta1",vueltaMap);
+                                                                                            } else {
+                                                                                                hashMap.put("vuelta2",vueltaMap);
+                                                                                            }
+                                                                                            ref.updateChildren(hashMap);
+                                                                                        }
+
+                                                                                        @Override
+                                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                                        }
+                                                                                    });
+                                                                        } else {
+                                                                            tortillaVenta = p.getPrecio() * finalTortilla;
+                                                                        }
+                                                                        return;
+                                                                    }
+                                                                    FirebaseDatabase.getInstance().getReference("PreciosClientes")
+                                                                            .child(cliente.getIdCliente())
+                                                                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                                @Override
+                                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                    int x = 0;
+                                                                                    PrecioCliente ant = null;
+                                                                                    for (DataSnapshot sp : dataSnapshot.getChildren()) {
+                                                                                        PrecioCliente pd = sp.getValue(PrecioCliente.class);
+                                                                                        if (x == 0) {
+                                                                                            if (cliente.getAltaPreferencial() < ventaRepartidor.getTiempo() && ventaRepartidor.getTiempo() < pd.getFecha()) {
+                                                                                                for (int y = 0; y < pd.getPrecios().size(); y++) {
+                                                                                                    StringTokenizer a = new StringTokenizer(pd.getPrecios().get("p"+y),"?");
+                                                                                                    double precio = Double.parseDouble(a.nextToken());
+                                                                                                    String id = a.nextToken();
+                                                                                                    if (id.equals(p.getIdProducto())) {
+                                                                                                        precioProducto = precio;
+                                                                                                    }
+                                                                                                }
+                                                                                                activo = true;
+                                                                                                break;
+                                                                                            }
+                                                                                            ant = new PrecioCliente(pd);
+                                                                                        } else {
+                                                                                            if (ant.getFecha() < ventaRepartidor.getTiempo() && ventaRepartidor.getTiempo() < pd.getFecha()) {
+                                                                                                for (int y = 0; y < pd.getPrecios().size(); y++) {
+                                                                                                    StringTokenizer a = new StringTokenizer(pd.getPrecios().get("p"+y),"?");
+                                                                                                    double precio = Double.parseDouble(a.nextToken());
+                                                                                                    String id = a.nextToken();
+                                                                                                    if (id.equals(p.getIdProducto())) {
+                                                                                                        precioProducto = precio;
+                                                                                                    }
+                                                                                                }
+                                                                                                activo = true;
+                                                                                                break;
+                                                                                            }
+                                                                                            ant = new PrecioCliente(pd);
+                                                                                        }
+                                                                                        x++;
+                                                                                    }
+                                                                                    if (!activo) {
+                                                                                        for (int y = 0; y < cliente.getPrecios().size(); y++) {
+                                                                                            StringTokenizer a = new StringTokenizer(cliente.getPrecios().get("p"+y),"?");
+                                                                                            double precio = Double.parseDouble(a.nextToken());
+                                                                                            String id = a.nextToken();
+                                                                                            if (id.equals(p.getIdProducto())) {
+                                                                                                precioProducto = precio;
+                                                                                            }
+                                                                                        }
+                                                                                    }
+
+                                                                                    tortillaVenta = precioProducto * finalTortilla;
+
+                                                                                    vueltaMap.put("totoposVenta",totoposVenta);
+                                                                                    vueltaMap.put("masaVenta",masaVenta);
+                                                                                    vueltaMap.put("tortillaVenta",tortillaVenta);
+                                                                                    if (devolucion) {
+                                                                                        hashMap.put("devolucion",vueltaMap);
+                                                                                    } else if (primero) {
+                                                                                        hashMap.put("vuelta1",vueltaMap);
+                                                                                    } else {
+                                                                                        hashMap.put("vuelta2",vueltaMap);
+                                                                                    }
+                                                                                    ref.updateChildren(hashMap);
+                                                                                }
+
+                                                                                @Override
+                                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                                }
+                                                                            });
                                                                 }
                                                             } else {
                                                                 if (p.isModificado()) {
@@ -479,15 +613,147 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
                                                                 }
                                                             }
                                                         }
+                                                        //TODO MASA
                                                         if (p.getNombre().toUpperCase().contains("MASA")) {
                                                             if (cliente.isPreferencial()) {
-                                                                for (int x = 0; x < cliente.getPrecios().size(); x++) {
-                                                                    StringTokenizer a = new StringTokenizer(cliente.getPrecios().get("p"+x),"?");
-                                                                    double precio = Double.parseDouble(a.nextToken());
-                                                                    String id = a.nextToken();
-                                                                    if (id.equals(p.getIdProducto())) {
-                                                                        masaVenta = precio * finalMasa;
+                                                                if (!cliente.isAltaPref()) {
+                                                                    for (int x = 0; x < cliente.getPrecios().size(); x++) {
+                                                                        StringTokenizer a = new StringTokenizer(cliente.getPrecios().get("p"+x),"?");
+                                                                        double precio = Double.parseDouble(a.nextToken());
+                                                                        String id = a.nextToken();
+                                                                        if (id.equals(p.getIdProducto())) {
+                                                                            masaVenta = precio * finalMasa;
+                                                                        }
                                                                     }
+                                                                } else {
+                                                                    if (ventaRepartidor.getTiempo() < cliente.getAltaPreferencial()) {
+                                                                        if (p.isModificado()) {
+                                                                            FirebaseDatabase.getInstance().getReference("CambioPrecios")
+                                                                                    .child(p.getIdProducto())
+                                                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                                        @Override
+                                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                            int x = 0;
+                                                                                            Modificado ant = null;
+                                                                                            for (DataSnapshot sp : dataSnapshot.getChildren()) {
+                                                                                                Modificado pd = sp.getValue(Modificado.class);
+                                                                                                if (x == 0) {
+                                                                                                    if (p.getAlta() < ventaRepartidor.getTiempo() && ventaRepartidor.getTiempo() < pd.getFecha()) {
+                                                                                                        precioProducto = pd.getPrecio();
+                                                                                                        activo = true;
+                                                                                                        break;
+                                                                                                    }
+                                                                                                    ant = new Modificado(pd);
+                                                                                                } else {
+                                                                                                    if (ant.getFecha() < ventaRepartidor.getTiempo() && ventaRepartidor.getTiempo() < pd.getFecha()) {
+                                                                                                        precioProducto = pd.getPrecio();
+                                                                                                        activo = true;
+                                                                                                        break;
+                                                                                                    }
+                                                                                                    ant = new Modificado(pd);
+                                                                                                }
+                                                                                                x++;
+                                                                                            }
+                                                                                            if (!activo) {
+                                                                                                precioProducto = p.getPrecio();
+                                                                                            }
+
+                                                                                            masaVenta = precioProducto * finalMasa;
+
+                                                                                            vueltaMap.put("totoposVenta",totoposVenta);
+                                                                                            vueltaMap.put("masaVenta",masaVenta);
+                                                                                            vueltaMap.put("tortillaVenta",tortillaVenta);
+                                                                                            if (devolucion) {
+                                                                                                hashMap.put("devolucion",vueltaMap);
+                                                                                            } else if (primero) {
+                                                                                                hashMap.put("vuelta1",vueltaMap);
+                                                                                            } else {
+                                                                                                hashMap.put("vuelta2",vueltaMap);
+                                                                                            }
+                                                                                            ref.updateChildren(hashMap);
+                                                                                        }
+
+                                                                                        @Override
+                                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                                        }
+                                                                                    });
+                                                                        } else {
+                                                                            masaVenta = p.getPrecio() * finalMasa;
+                                                                        }
+                                                                        return;
+                                                                    }
+                                                                    FirebaseDatabase.getInstance().getReference("PreciosClientes")
+                                                                            .child(cliente.getIdCliente())
+                                                                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                                @Override
+                                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                    int x = 0;
+                                                                                    PrecioCliente ant = null;
+                                                                                    for (DataSnapshot sp : dataSnapshot.getChildren()) {
+                                                                                        PrecioCliente pd = sp.getValue(PrecioCliente.class);
+                                                                                        if (x == 0) {
+                                                                                            if (cliente.getAltaPreferencial() < ventaRepartidor.getTiempo() && ventaRepartidor.getTiempo() < pd.getFecha()) {
+                                                                                                for (int y = 0; y < pd.getPrecios().size(); y++) {
+                                                                                                    StringTokenizer a = new StringTokenizer(pd.getPrecios().get("p"+y),"?");
+                                                                                                    double precio = Double.parseDouble(a.nextToken());
+                                                                                                    String id = a.nextToken();
+                                                                                                    if (id.equals(p.getIdProducto())) {
+                                                                                                        precioProducto = precio;
+                                                                                                    }
+                                                                                                }
+                                                                                                activo = true;
+                                                                                                break;
+                                                                                            }
+                                                                                            ant = new PrecioCliente(pd);
+                                                                                        } else {
+                                                                                            if (ant.getFecha() < ventaRepartidor.getTiempo() && ventaRepartidor.getTiempo() < pd.getFecha()) {
+                                                                                                for (int y = 0; y < pd.getPrecios().size(); y++) {
+                                                                                                    StringTokenizer a = new StringTokenizer(pd.getPrecios().get("p"+y),"?");
+                                                                                                    double precio = Double.parseDouble(a.nextToken());
+                                                                                                    String id = a.nextToken();
+                                                                                                    if (id.equals(p.getIdProducto())) {
+                                                                                                        precioProducto = precio;
+                                                                                                    }
+                                                                                                }
+                                                                                                activo = true;
+                                                                                                break;
+                                                                                            }
+                                                                                            ant = new PrecioCliente(pd);
+                                                                                        }
+                                                                                        x++;
+                                                                                    }
+                                                                                    if (!activo) {
+                                                                                        for (int y = 0; y < cliente.getPrecios().size(); y++) {
+                                                                                            StringTokenizer a = new StringTokenizer(cliente.getPrecios().get("p"+y),"?");
+                                                                                            double precio = Double.parseDouble(a.nextToken());
+                                                                                            String id = a.nextToken();
+                                                                                            if (id.equals(p.getIdProducto())) {
+                                                                                                precioProducto = precio;
+                                                                                            }
+                                                                                        }
+                                                                                    }
+
+                                                                                    masaVenta = precioProducto * finalMasa;
+
+                                                                                    vueltaMap.put("totoposVenta",totoposVenta);
+                                                                                    vueltaMap.put("masaVenta",masaVenta);
+                                                                                    vueltaMap.put("tortillaVenta",tortillaVenta);
+                                                                                    if (devolucion) {
+                                                                                        hashMap.put("devolucion",vueltaMap);
+                                                                                    } else if (primero) {
+                                                                                        hashMap.put("vuelta1",vueltaMap);
+                                                                                    } else {
+                                                                                        hashMap.put("vuelta2",vueltaMap);
+                                                                                    }
+                                                                                    ref.updateChildren(hashMap);
+                                                                                }
+
+                                                                                @Override
+                                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                                }
+                                                                            });
                                                                 }
                                                             } else {
                                                                 if (p.isModificado()) {
@@ -546,15 +812,147 @@ public class VentasClienteBottomSheet extends BottomSheetDialogFragment {
                                                                 }
                                                             }
                                                         }
+                                                        //TODO TOTOPO
                                                         if (p.getNombre().toUpperCase().contains("TOTOPO")) {
                                                             if (cliente.isPreferencial()) {
-                                                                for (int x = 0; x < cliente.getPrecios().size(); x++) {
-                                                                    StringTokenizer a = new StringTokenizer(cliente.getPrecios().get("p"+x),"?");
-                                                                    double precio = Double.parseDouble(a.nextToken());
-                                                                    String id = a.nextToken();
-                                                                    if (id.equals(p.getIdProducto())) {
-                                                                        totoposVenta = precio * finalTotopos;
+                                                                if (!cliente.isAltaPref()) {
+                                                                    for (int x = 0; x < cliente.getPrecios().size(); x++) {
+                                                                        StringTokenizer a = new StringTokenizer(cliente.getPrecios().get("p"+x),"?");
+                                                                        double precio = Double.parseDouble(a.nextToken());
+                                                                        String id = a.nextToken();
+                                                                        if (id.equals(p.getIdProducto())) {
+                                                                            totoposVenta = precio * finalTotopos;
+                                                                        }
                                                                     }
+                                                                } else {
+                                                                    if (ventaRepartidor.getTiempo() < cliente.getAltaPreferencial()) {
+                                                                        if (p.isModificado()) {
+                                                                            FirebaseDatabase.getInstance().getReference("CambioPrecios")
+                                                                                    .child(p.getIdProducto())
+                                                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                                        @Override
+                                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                            int x = 0;
+                                                                                            Modificado ant = null;
+                                                                                            for (DataSnapshot sp : dataSnapshot.getChildren()) {
+                                                                                                Modificado pd = sp.getValue(Modificado.class);
+                                                                                                if (x == 0) {
+                                                                                                    if (p.getAlta() < ventaRepartidor.getTiempo() && ventaRepartidor.getTiempo() < pd.getFecha()) {
+                                                                                                        precioProducto = pd.getPrecio();
+                                                                                                        activo = true;
+                                                                                                        break;
+                                                                                                    }
+                                                                                                    ant = new Modificado(pd);
+                                                                                                } else {
+                                                                                                    if (ant.getFecha() < ventaRepartidor.getTiempo() && ventaRepartidor.getTiempo() < pd.getFecha()) {
+                                                                                                        precioProducto = pd.getPrecio();
+                                                                                                        activo = true;
+                                                                                                        break;
+                                                                                                    }
+                                                                                                    ant = new Modificado(pd);
+                                                                                                }
+                                                                                                x++;
+                                                                                            }
+                                                                                            if (!activo) {
+                                                                                                precioProducto = p.getPrecio();
+                                                                                            }
+
+                                                                                            totoposVenta = precioProducto * finalTotopos;
+
+                                                                                            vueltaMap.put("totoposVenta",totoposVenta);
+                                                                                            vueltaMap.put("masaVenta",masaVenta);
+                                                                                            vueltaMap.put("tortillaVenta",tortillaVenta);
+                                                                                            if (devolucion) {
+                                                                                                hashMap.put("devolucion",vueltaMap);
+                                                                                            } else if (primero) {
+                                                                                                hashMap.put("vuelta1",vueltaMap);
+                                                                                            } else {
+                                                                                                hashMap.put("vuelta2",vueltaMap);
+                                                                                            }
+                                                                                            ref.updateChildren(hashMap);
+                                                                                        }
+
+                                                                                        @Override
+                                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                                        }
+                                                                                    });
+                                                                        } else {
+                                                                            totoposVenta = p.getPrecio() * finalTotopos;
+                                                                        }
+                                                                        return;
+                                                                    }
+                                                                    FirebaseDatabase.getInstance().getReference("PreciosClientes")
+                                                                            .child(cliente.getIdCliente())
+                                                                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                                @Override
+                                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                    int x = 0;
+                                                                                    PrecioCliente ant = null;
+                                                                                    for (DataSnapshot sp : dataSnapshot.getChildren()) {
+                                                                                        PrecioCliente pd = sp.getValue(PrecioCliente.class);
+                                                                                        if (x == 0) {
+                                                                                            if (cliente.getAltaPreferencial() < ventaRepartidor.getTiempo() && ventaRepartidor.getTiempo() < pd.getFecha()) {
+                                                                                                for (int y = 0; y < pd.getPrecios().size(); y++) {
+                                                                                                    StringTokenizer a = new StringTokenizer(pd.getPrecios().get("p"+y),"?");
+                                                                                                    double precio = Double.parseDouble(a.nextToken());
+                                                                                                    String id = a.nextToken();
+                                                                                                    if (id.equals(p.getIdProducto())) {
+                                                                                                        precioProducto = precio;
+                                                                                                    }
+                                                                                                }
+                                                                                                activo = true;
+                                                                                                break;
+                                                                                            }
+                                                                                            ant = new PrecioCliente(pd);
+                                                                                        } else {
+                                                                                            if (ant.getFecha() < ventaRepartidor.getTiempo() && ventaRepartidor.getTiempo() < pd.getFecha()) {
+                                                                                                for (int y = 0; y < pd.getPrecios().size(); y++) {
+                                                                                                    StringTokenizer a = new StringTokenizer(pd.getPrecios().get("p"+y),"?");
+                                                                                                    double precio = Double.parseDouble(a.nextToken());
+                                                                                                    String id = a.nextToken();
+                                                                                                    if (id.equals(p.getIdProducto())) {
+                                                                                                        precioProducto = precio;
+                                                                                                    }
+                                                                                                }
+                                                                                                activo = true;
+                                                                                                break;
+                                                                                            }
+                                                                                            ant = new PrecioCliente(pd);
+                                                                                        }
+                                                                                        x++;
+                                                                                    }
+                                                                                    if (!activo) {
+                                                                                        for (int y = 0; y < cliente.getPrecios().size(); y++) {
+                                                                                            StringTokenizer a = new StringTokenizer(cliente.getPrecios().get("p"+y),"?");
+                                                                                            double precio = Double.parseDouble(a.nextToken());
+                                                                                            String id = a.nextToken();
+                                                                                            if (id.equals(p.getIdProducto())) {
+                                                                                                precioProducto = precio;
+                                                                                            }
+                                                                                        }
+                                                                                    }
+
+                                                                                    totoposVenta = precioProducto * finalTotopos;
+
+                                                                                    vueltaMap.put("totoposVenta",totoposVenta);
+                                                                                    vueltaMap.put("masaVenta",masaVenta);
+                                                                                    vueltaMap.put("tortillaVenta",tortillaVenta);
+                                                                                    if (devolucion) {
+                                                                                        hashMap.put("devolucion",vueltaMap);
+                                                                                    } else if (primero) {
+                                                                                        hashMap.put("vuelta1",vueltaMap);
+                                                                                    } else {
+                                                                                        hashMap.put("vuelta2",vueltaMap);
+                                                                                    }
+                                                                                    ref.updateChildren(hashMap);
+                                                                                }
+
+                                                                                @Override
+                                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                                }
+                                                                            });
                                                                 }
                                                             } else {
                                                                 if (p.isModificado()) {
