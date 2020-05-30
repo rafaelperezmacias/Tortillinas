@@ -257,6 +257,18 @@
                 android:textColor="@android:color/black"
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
 
+            <TextView
+                android:id="@+id/txtErrorClientes"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="8dp"
+                android:text="Ningun cliente registrado"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerview_repartidores"
                 android:layout_width="match_parent"

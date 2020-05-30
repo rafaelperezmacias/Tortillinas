@@ -105,6 +105,8 @@ public class TotalRepartidorBottomSheet extends BottomSheetDialogFragment {
         TextView txtProducidoDos = view.findViewById(R.id.txtProducidoDos);
         txtVendidoDos = view.findViewById(R.id.txtVendidoDos);
 
+        TextView txtError = view.findViewById(R.id.txtErrorClientes);
+
         rGastosMostrador.setLayoutManager(new LinearLayoutManager(getContext()));
         rGastosMostrador.setHasFixedSize(true);
         rClientes.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -179,6 +181,12 @@ public class TotalRepartidorBottomSheet extends BottomSheetDialogFragment {
                         }
                         adaptador = new AdaptadorTotalClientes(getContext(),clientes,idVenta,TotalRepartidorBottomSheet.this,idEmpleado);
                         rClientes.setAdapter(adaptador);
+                        if (clientes.size() == 0) {
+                            aumentarRepartidores();
+                            txtError.setVisibility(View.VISIBLE);
+                        } else {
+                            txtError.setVisibility(View.GONE);
+                        }
                     }
 
                     @Override
@@ -209,7 +217,7 @@ public class TotalRepartidorBottomSheet extends BottomSheetDialogFragment {
                         AdaptadorTotal adaptador = new AdaptadorTotal(getContext(),conceptos);
                         rGastosMostrador.setAdapter(adaptador);
                     } else {
-                        txtTotalGastosMostrador.setText("+ $0.0");
+                        txtTotalGastosMostrador.setText("- $0.0");
                     }
                 }
 
@@ -310,6 +318,9 @@ public class TotalRepartidorBottomSheet extends BottomSheetDialogFragment {
         if (totoposP > 0) {
             text += "Totopos: " + totoposP + " kgs.\n";
         }
+        if (text.equals("")) {
+            text += "Ninguna venta realizada";
+        }
         txtVendidoUno.setText(text);
         text = "";
         if (tortillaS > 0) {
@@ -321,17 +332,10 @@ public class TotalRepartidorBottomSheet extends BottomSheetDialogFragment {
         if (totoposS > 0) {
             text += "Totopos: " + totoposS + " kgs.\n";
         }
+        if (text.equals("")) {
+            text += "Ninguna venta realizada";
+        }
         txtVendidoDos.setText(text);
-    }
-
-    public double redondearDecimales(double valorInicial, int numeroDecimales) {
-        double parteEntera, resultado;
-        resultado = valorInicial;
-        parteEntera = Math.floor(resultado);
-        resultado=(resultado-parteEntera)*Math.pow(10, numeroDecimales);
-        resultado=Math.round(resultado);
-        resultado=(resultado/Math.pow(10, numeroDecimales))+parteEntera;
-        return resultado;
     }
 }
 

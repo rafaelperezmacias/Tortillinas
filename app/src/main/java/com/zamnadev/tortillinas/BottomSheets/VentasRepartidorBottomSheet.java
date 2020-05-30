@@ -59,7 +59,6 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
 
     private ValueEventListener listenerVenta;
     private ValueEventListener listenerAuxVenta;
-    private ValueEventListener listenerClientes;
     private ValueEventListener listenerGastos;
 
     private VentaRepartidor ventaRepartidor;
@@ -75,6 +74,13 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
     private ArrayList<Cliente> clientes;
 
     private Activity mActivity;
+
+    private double tortillaP;
+    private double masaP;
+    private double totoposP;
+    private double tortillaS;
+    private double masaS;
+    private double totoposS;
 
     public VentasRepartidorBottomSheet(String  idVenta, String idSucursal, boolean isEditable, String idEmpleado, boolean isAdmin)
     {
@@ -314,6 +320,12 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
                     if (!cliente.isEliminado())
                     {
                         clientes.add(cliente);
+                    } else {
+                        if (ventaRepartidor != null) {
+                            if (ventaRepartidor.getTiempo() < cliente.getTimeDelete()) {
+                                clientes.add(cliente);
+                            }
+                        }
                     }
                 }
                 listenerAuxVenta = refAuxVenta.addValueEventListener(new ValueEventListener() {
@@ -324,18 +336,6 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
                             txtTituloVendidoUno.setVisibility(View.GONE);
                             txtVendidosDos.setVisibility(View.GONE);
                             txtTituloVendidoDos.setVisibility(View.GONE);
-                            if (ventaRepartidor != null) {
-                                if (ventaRepartidor.getVuelta1() != null) {
-                                    adaptador.setTortillasVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTortillas());
-                                    adaptador.setMasaVentaPrimerVuelta(ventaRepartidor.getVuelta1().getMasa());
-                                    adaptador.setTotoposVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTotopos());
-                                }
-                                if (ventaRepartidor.getVuelta2() != null) {
-                                    adaptador.setTortillasVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTortillas());
-                                    adaptador.setMasaVentaSegundaVuelta(ventaRepartidor.getVuelta2().getMasa());
-                                    adaptador.setTotoposVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTotopos());
-                                }
-                            }
                             FirebaseDatabase.getInstance().getReference("VentasRepartidor")
                                     .child(idEmpleado)
                                     .child(idVenta)
@@ -345,6 +345,17 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
                                             VentaRepartidor venta = dataSnapshot.getValue(VentaRepartidor.class);
                                             adaptador = new AdaptadorRepartidorClientes(venta, getContext(),clientes, idVenta, getChildFragmentManager(),isEditable,idEmpleado);
                                             recyclerView.setAdapter(adaptador);
+                                            if (venta.getVuelta1() != null) {
+                                                adaptador.setTortillasVentaPrimerVuelta(venta.getVuelta1().getTortillas());
+                                                adaptador.setMasaVentaPrimerVuelta(venta.getVuelta1().getMasa());
+                                                adaptador.setTotoposVentaPrimerVuelta(venta.getVuelta1().getTotopos());
+                                            }
+                                            if (venta.getVuelta2() != null) {
+                                                adaptador.setTortillasVentaSegundaVuelta(venta.getVuelta2().getTortillas());
+                                                adaptador.setMasaVentaSegundaVuelta(venta.getVuelta2().getMasa());
+                                                adaptador.setTotoposVentaSegundaVuelta(venta.getVuelta2().getTotopos());
+                                            }
+
                                         }
 
                                         @Override
@@ -355,8 +366,8 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
                             return;
                         }
                         ventaClientes.clear();
-                        double tortillaP = 0.0, masaP = 0.0, totoposP = 0.0;
-                        double tortillaS = 0.0, masaS = 0.0, totoposS = 0.0;
+                        tortillaP = 0.0; masaP = 0.0; totoposP = 0.0;
+                        tortillaS = 0.0; masaS = 0.0; totoposS = 0.0;
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             VentaCliente ventaCliente = snapshot.getValue(VentaCliente.class);
                             if (ventaCliente.getVuelta1() != null) {
@@ -383,84 +394,6 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
                             }
                             ventaClientes.add(ventaCliente);
                         }
-                        String text = "";
-                        if (tortillaP == 0.0 && masaP == 0.0 && totoposP == 0.0) {
-                            txtVendidosUno.setVisibility(View.GONE);
-                            txtTituloVendidoUno.setVisibility(View.GONE);
-                        } else {
-                            if (tortillaP > 0.0) {
-                                text += "Tortillas: " + tortillaP + " kgs.\n";
-                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
-                                    adaptador.setTortillasVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTortillas() - tortillaP);
-                                }
-                            } else {
-                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
-                                    adaptador.setTortillasVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTortillas());
-                                }
-                            }
-                            if (masaP > 0.0) {
-                                text += "Masa: " + masaP + " kgs.\n";
-                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
-                                    adaptador.setMasaVentaPrimerVuelta(ventaRepartidor.getVuelta1().getMasa() - masaP);
-                                }
-                            } else {
-                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
-                                    adaptador.setMasaVentaPrimerVuelta(ventaRepartidor.getVuelta1().getMasa());
-                                }
-                            }
-                            if (totoposP > 0.0) {
-                                text += "Totopos: " + totoposP + " kgs.\n";
-                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
-                                    adaptador.setTotoposVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTotopos() - totoposP);
-                                }
-                            } else {
-                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
-                                    adaptador.setTotoposVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTotopos());
-                                }
-                            }
-                            txtVendidosUno.setVisibility(View.VISIBLE);
-                            txtTituloVendidoUno.setVisibility(View.VISIBLE);
-                            txtVendidosUno.setText(text);
-                        }
-                        text = "";
-                        if (tortillaS == 0.0 && masaS == 0.0 && totoposS == 0) {
-                            txtVendidosDos.setVisibility(View.GONE);
-                            txtTituloVendidoDos.setVisibility(View.GONE);
-                        } else {
-                            if (tortillaS > 0.0) {
-                                text += "Tortillas: " + tortillaS + " kgs.\n";
-                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
-                                    adaptador.setTortillasVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTortillas() - tortillaS);
-                                }
-                            } else {
-                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
-                                    adaptador.setTortillasVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTortillas());
-                                }
-                            }
-                            if (masaS > 0.0) {
-                                text += "Masa: " + masaS + " kgs.\n";
-                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
-                                    adaptador.setMasaVentaSegundaVuelta(ventaRepartidor.getVuelta2().getMasa() - masaS);
-                                }
-                            } else {
-                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
-                                    adaptador.setMasaVentaSegundaVuelta(ventaRepartidor.getVuelta2().getMasa());
-                                }
-                            }
-                            if (totoposS > 0.0) {
-                                text += "Totopos: " + totoposS + " kgs.\n";
-                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
-                                    adaptador.setTotoposVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTotopos() - totoposS);
-                                }
-                            } else {
-                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
-                                    adaptador.setTotoposVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTotopos());
-                                }
-                            }
-                            txtVendidosDos.setVisibility(View.VISIBLE);
-                            txtTituloVendidoDos.setVisibility(View.VISIBLE);
-                            txtVendidosDos.setText(text);
-                        }
                         FirebaseDatabase.getInstance().getReference("VentasRepartidor")
                                 .child(idEmpleado)
                                 .child(idVenta)
@@ -471,6 +404,84 @@ public class VentasRepartidorBottomSheet extends BottomSheetDialogFragment {
                                         adaptador = new AdaptadorRepartidorClientes(venta, getContext(),clientes, idVenta, getChildFragmentManager(),isEditable,idEmpleado);
                                         recyclerView.setAdapter(adaptador);
                                         adaptador.addVentas(ventaClientes);
+                                        String text = "";
+                                        if (tortillaP == 0.0 && masaP == 0.0 && totoposP == 0.0) {
+                                            txtVendidosUno.setVisibility(View.GONE);
+                                            txtTituloVendidoUno.setVisibility(View.GONE);
+                                        } else {
+                                            if (tortillaP > 0.0) {
+                                                text += "Tortillas: " + tortillaP + " kgs.\n";
+                                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
+                                                    adaptador.setTortillasVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTortillas() - tortillaP);
+                                                }
+                                            } else {
+                                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
+                                                    adaptador.setTortillasVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTortillas());
+                                                }
+                                            }
+                                            if (masaP > 0.0) {
+                                                text += "Masa: " + masaP + " kgs.\n";
+                                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
+                                                    adaptador.setMasaVentaPrimerVuelta(ventaRepartidor.getVuelta1().getMasa() - masaP);
+                                                }
+                                            } else {
+                                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
+                                                    adaptador.setMasaVentaPrimerVuelta(ventaRepartidor.getVuelta1().getMasa());
+                                                }
+                                            }
+                                            if (totoposP > 0.0) {
+                                                text += "Totopos: " + totoposP + " kgs.\n";
+                                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
+                                                    adaptador.setTotoposVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTotopos() - totoposP);
+                                                }
+                                            } else {
+                                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta1() != null) {
+                                                    adaptador.setTotoposVentaPrimerVuelta(ventaRepartidor.getVuelta1().getTotopos());
+                                                }
+                                            }
+                                            txtVendidosUno.setVisibility(View.VISIBLE);
+                                            txtTituloVendidoUno.setVisibility(View.VISIBLE);
+                                            txtVendidosUno.setText(text);
+                                        }
+                                        text = "";
+                                        if (tortillaS == 0.0 && masaS == 0.0 && totoposS == 0) {
+                                            txtVendidosDos.setVisibility(View.GONE);
+                                            txtTituloVendidoDos.setVisibility(View.GONE);
+                                        } else {
+                                            if (tortillaS > 0.0) {
+                                                text += "Tortillas: " + tortillaS + " kgs.\n";
+                                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
+                                                    adaptador.setTortillasVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTortillas() - tortillaS);
+                                                }
+                                            } else {
+                                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
+                                                    adaptador.setTortillasVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTortillas());
+                                                }
+                                            }
+                                            if (masaS > 0.0) {
+                                                text += "Masa: " + masaS + " kgs.\n";
+                                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
+                                                    adaptador.setMasaVentaSegundaVuelta(ventaRepartidor.getVuelta2().getMasa() - masaS);
+                                                }
+                                            } else {
+                                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
+                                                    adaptador.setMasaVentaSegundaVuelta(ventaRepartidor.getVuelta2().getMasa());
+                                                }
+                                            }
+                                            if (totoposS > 0.0) {
+                                                text += "Totopos: " + totoposS + " kgs.\n";
+                                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
+                                                    adaptador.setTotoposVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTotopos() - totoposS);
+                                                }
+                                            } else {
+                                                if (adaptador != null && ventaRepartidor != null && ventaRepartidor.getVuelta2() != null) {
+                                                    adaptador.setTotoposVentaSegundaVuelta(ventaRepartidor.getVuelta2().getTotopos());
+                                                }
+                                            }
+                                            txtVendidosDos.setVisibility(View.VISIBLE);
+                                            txtTituloVendidoDos.setVisibility(View.VISIBLE);
+                                            txtVendidosDos.setText(text);
+                                        }
                                     }
 
                                     @Override

@@ -101,6 +101,54 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (!dataSnapshot.exists()) {
+                            holder.total = 0.0;
+                            holder.totalFinal = 0.0;
+                            holder.lytDevoluciones.setVisibility(View.GONE);
+                            holder.lytPrimerVuelta.setVisibility(View.GONE);
+                            holder.lytSegundaVuelta.setVisibility(View.GONE);
+                            holder.txtTotalFinal.setText("TOTAL: $" + holder.totalFinal);
+                            holder.txtTotal.setText("+ $"+ holder.total);
+                            totales.set(position,holder.total);
+                            FirebaseDatabase.getInstance().getReference("Gastos")
+                                    .child(id)
+                                    .child(idVenta)
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.exists()) {
+                                                holder.gastos = 0.0;
+                                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                    Concepto concepto = snapshot.getValue(Concepto.class);
+                                                    holder.gastos += concepto.getPrecio();
+                                                }
+                                                holder.txtGastos.setText("- $" +  holder.gastos);
+                                                holder.totalFinal -= holder.gastos;
+                                                holder.total -= holder.gastos;
+                                                holder.txtTotalFinal.setText("TOTAL: $" + holder.totalFinal);
+                                                totales.set(position,holder.total);
+                                                if (holder.total < holder.totalFinal) {
+                                                    holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.error_background));
+                                                    holder.cardView.setStrokeColor(ContextCompat.getColor(context, R.color.error_text));
+                                                }
+                                                if (position == totales.size()-1) {
+                                                    if (padre != null) {
+                                                        padre.aumentarRepartidores();
+                                                    }
+                                                }
+                                                holder.txtTotal.setText("+ $" + holder.total);
+                                            } else {
+                                                holder.lytGastos.setVisibility(View.GONE);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+                            return;
+                        }
                         holder.masaVendidaP = 0.0; holder.masaP = 0.0;
                         holder.tortillaVendidaP = 0.0; holder.toritillaP = 0.0;
                         holder.totoposVendidoP = 0.0; holder.totoposP = 0.0;
@@ -180,30 +228,30 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        holder.gastos = 0.0;
                                         if (dataSnapshot.exists()) {
-                                            holder.gastos = 0.0;
                                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                                 Concepto concepto = snapshot.getValue(Concepto.class);
                                                 holder.gastos += concepto.getPrecio();
                                             }
                                             holder.txtGastos.setText("- $" +  holder.gastos);
-                                            holder.totalFinal -= holder.gastos;
-                                            holder.total -= holder.gastos;
-                                            holder.txtTotalFinal.setText("TOTAL: $" + holder.totalFinal);
-                                            totales.set(position,holder.total);
-                                            if (holder.total < holder.totalFinal) {
-                                                holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.error_background));
-                                                holder.cardView.setStrokeColor(ContextCompat.getColor(context, R.color.error_text));
-                                            }
-                                            if (position == totales.size()-1) {
-                                                if (padre != null) {
-                                                    padre.aumentarRepartidores();
-                                                }
-                                            }
-                                            holder.txtTotal.setText("+ $" + holder.total);
                                         } else {
                                             holder.lytGastos.setVisibility(View.GONE);
                                         }
+                                        holder.totalFinal -= holder.gastos;
+                                        holder.total -= holder.gastos;
+                                        holder.txtTotalFinal.setText("TOTAL: $" + holder.totalFinal);
+                                        totales.set(position,holder.total);
+                                        if (holder.total < holder.totalFinal) {
+                                            holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.error_background));
+                                            holder.cardView.setStrokeColor(ContextCompat.getColor(context, R.color.error_text));
+                                        }
+                                        if (position == totales.size()-1) {
+                                            if (padre != null) {
+                                                padre.aumentarRepartidores();
+                                            }
+                                        }
+                                        holder.txtTotal.setText("+ $" + holder.total);
                                     }
 
                                     @Override
@@ -279,7 +327,7 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
                                         }
 
                                         //TODO DEVOLUCION
-                                        if (holder.totoposD >= 0.0 || holder.toritillaD >= 0.0 || holder.masaD >= 0.0) {
+                                        if (holder.totoposD > 0.0 || holder.toritillaD > 0.0 || holder.masaD > 0.0) {
                                             if (holder.masaVendidaD > 0.0 && holder.masaD > 0.0) {
                                                 holder.txtDMasa.setText("Masa: " + holder.masaVendidaD + "kgs");
                                                 holder.txtDMasaD.setText("$" + holder.masaD);

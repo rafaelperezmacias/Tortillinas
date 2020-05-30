@@ -87,12 +87,6 @@ public class AdaptadorRepartidorClientes extends RecyclerView.Adapter<AdaptadorR
         if (ventaClientes != null && ventaClientes.size() > 0) {
             for (VentaCliente v : ventaClientes) {
                 if (v.getIdCliente().equals(cliente.getIdCliente())) {
-                    for (int x = 0; x < ventaClientes.size(); x++) {
-                        Log.e("asd","" + ventaClientes.get(x).getPago() + ", id = " + ventaClientes.get(x).getIdCliente());
-                    }
-                    for (int x = 0; x < pagos.size(); x++) {
-                        Log.e("das","" + pagos.get(x).getPago()  + ", id = " + pagos.get(x).getIdCliente());
-                    }
                     ventaCliente = v;
                     if (v.getVuelta1() != null) {
                         String text = "";

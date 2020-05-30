@@ -19,6 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.BottomSheets.ClientesBottomSheet;
 import com.zamnadev.tortillinas.Dialogs.MessageDialog;
@@ -29,6 +30,7 @@ import com.zamnadev.tortillinas.Moldes.ProductoModificado;
 import com.zamnadev.tortillinas.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AdaptadorClientes extends RecyclerView.Adapter<AdaptadorClientes.ViewHolder> {
     private Context context;
@@ -103,11 +105,13 @@ public class AdaptadorClientes extends RecyclerView.Adapter<AdaptadorClientes.Vi
                         );
                         dialog.show();
                         dialog.setPositiveButtonListener(v -> {
+                            HashMap<String, Object> hashMap = new HashMap<>();
+                            hashMap.put("eliminado",true);
+                            hashMap.put("timeDelete", ServerValue.TIMESTAMP);
                             DatabaseReference refEmpleado = FirebaseDatabase.getInstance()
                                     .getReference("Clientes")
-                                    .child(cliente.getIdCliente())
-                                    .child("eliminado");
-                            refEmpleado.setValue(true).addOnCompleteListener(task -> {
+                                    .child(cliente.getIdCliente());
+                            refEmpleado.updateChildren(hashMap).addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(context, "Cliente eliminado con exito",
                                             Toast.LENGTH_SHORT).show();

@@ -32,6 +32,7 @@ import com.zamnadev.tortillinas.Dialogos.DialogoMaizCocido;
 import com.zamnadev.tortillinas.Dialogos.DialogoVentaRepartidor;
 import com.zamnadev.tortillinas.Moldes.AuxVenta;
 import com.zamnadev.tortillinas.Moldes.Concepto;
+import com.zamnadev.tortillinas.Moldes.Modificado;
 import com.zamnadev.tortillinas.Moldes.Producto;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
 import com.zamnadev.tortillinas.Moldes.VentaCliente;
@@ -94,6 +95,9 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
     private double totoposT;
 
     private boolean isAdmin;
+
+    private boolean activo;
+    private double precioProducto;
 
     public VentasMostradorBottomSheet(String  idVenta, String idSucursal, boolean isEditable, String idEmpleado, boolean isAdmin)
     {
@@ -600,16 +604,79 @@ public class VentasMostradorBottomSheet extends BottomSheetDialogFragment {
                     }
                     if (adaptadorVentasExtra != null) {
                         for (VentaDelDia ventaDelDia : adaptadorVentasExtra.getVentasMotrador()) {
-                            HashMap<String, Object> productoMap = new HashMap<>();
-                            productoMap.put("idProducto",ventaDelDia.getIdProducto());
-                            productoMap.put("cantidad",ventaDelDia.getCantidad());
-                            Log.e("asd", ventaDelDia.toString());
-                            productoMap.put("total",ventaDelDia.getCantidad() * ventaDelDia.getPrecio());
-                            FirebaseDatabase.getInstance().getReference("VentasDelDia")
-                                    .child(idEmpleado)
-                                    .child(idVenta)
+                            FirebaseDatabase.getInstance().getReference("Productos")
                                     .child(ventaDelDia.getIdProducto())
-                                    .updateChildren(productoMap);
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            Producto p = dataSnapshot.getValue(Producto.class);
+                                            activo = false;
+                                            precioProducto = 0.0;
+                                            if (p.isModificado()) {
+                                                FirebaseDatabase.getInstance().getReference("CambioPrecios")
+                                                        .child(p.getIdProducto())
+                                                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                int x = 0;
+                                                                Modificado ant = null;
+                                                                for (DataSnapshot sp : dataSnapshot.getChildren()) {
+                                                                    Modificado pd = sp.getValue(Modificado.class);
+                                                                    if (x == 0) {
+                                                                        if (p.getAlta() < venta.getTiempo() && venta.getTiempo() < pd.getFecha()) {
+                                                                            precioProducto = pd.getPrecio();
+                                                                            activo = true;
+                                                                            break;
+                                                                        }
+                                                                        ant = new Modificado(pd);
+                                                                    } else {
+                                                                        if (ant.getFecha() < venta.getTiempo() && venta.getTiempo() < pd.getFecha()) {
+                                                                            precioProducto = pd.getPrecio();
+                                                                            activo = true;
+                                                                            break;
+                                                                        }
+                                                                        ant = new Modificado(pd);
+                                                                    }
+                                                                    x++;
+                                                                }
+                                                                if (!activo) {
+                                                                    precioProducto = p.getPrecio();
+                                                                }
+
+                                                                HashMap<String, Object> productoMap = new HashMap<>();
+                                                                productoMap.put("idProducto",ventaDelDia.getIdProducto());
+                                                                productoMap.put("cantidad",ventaDelDia.getCantidad());
+                                                                productoMap.put("total",ventaDelDia.getCantidad() * precioProducto);
+                                                                FirebaseDatabase.getInstance().getReference("VentasDelDia")
+                                                                        .child(idEmpleado)
+                                                                        .child(idVenta)
+                                                                        .child(ventaDelDia.getIdProducto())
+                                                                        .updateChildren(productoMap);
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                            }
+                                                        });
+                                            } else {
+                                                HashMap<String, Object> productoMap = new HashMap<>();
+                                                productoMap.put("idProducto",ventaDelDia.getIdProducto());
+                                                productoMap.put("cantidad",ventaDelDia.getCantidad());
+                                                productoMap.put("total",ventaDelDia.getCantidad() * p.getPrecio());
+                                                FirebaseDatabase.getInstance().getReference("VentasDelDia")
+                                                        .child(idEmpleado)
+                                                        .child(idVenta)
+                                                        .child(ventaDelDia.getIdProducto())
+                                                        .updateChildren(productoMap);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
                         }
                     }
                     dismiss();

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -27,15 +28,23 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorTotal;
 import com.zamnadev.tortillinas.Adaptadores.AdaptadorTotalRepartidores;
+import com.zamnadev.tortillinas.MainActivity;
 import com.zamnadev.tortillinas.Moldes.AuxVenta;
 import com.zamnadev.tortillinas.Moldes.Concepto;
+import com.zamnadev.tortillinas.Moldes.Modificado;
 import com.zamnadev.tortillinas.Moldes.Producto;
+import com.zamnadev.tortillinas.Moldes.ProductoModificado;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
 import com.zamnadev.tortillinas.Moldes.VentaDelDia;
 import com.zamnadev.tortillinas.Moldes.VentaMostrador;
 import com.zamnadev.tortillinas.R;
 
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class TotalBottomSheet extends BottomSheetDialogFragment {
 
@@ -53,6 +62,8 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
     private int x;
     private int cont;
     private boolean precio;
+    private boolean activo;
+    private double precioProducto;
 
     private AdaptadorTotalRepartidores adaptador;
     private TextView txtTotal;
@@ -177,42 +188,153 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
                                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                             Producto p = snapshot.getValue(Producto.class);
                                             if (p.getNombre().toUpperCase().contains("TORTILLA")) {
-                                                if (ventaMostrador.getMermaTortilla() >= 0.0) {
-                                                    txtTortilla.setText("Tortillas: " + ventaMostrador.getMermaTortilla() + "kgs");
-                                                    txtTortillaP.setText("$" + p.getPrecio() * ventaMostrador.getMermaTortilla());
-                                                    mermasTotal += p.getPrecio() * ventaMostrador.getMermaTortilla();
+                                                if (p.isModificado()) {
+                                                    activo = false;
+                                                    precioProducto = 0.0;
+                                                    FirebaseDatabase.getInstance().getReference("CambioPrecios")
+                                                            .child(p.getIdProducto())
+                                                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                    int x = 0;
+                                                                    Modificado ant = null;
+                                                                    for (DataSnapshot sp : dataSnapshot.getChildren()) {
+                                                                        Modificado pd = sp.getValue(Modificado.class);
+                                                                        if (x == 0) {
+                                                                            if (p.getAlta() < ventaMostrador.getTiempo() && ventaMostrador.getTiempo() < pd.getFecha()) {
+                                                                                precioProducto = pd.getPrecio();
+                                                                                activo = true;
+                                                                                break;
+                                                                            }
+                                                                            ant = new Modificado(pd);
+                                                                        } else {
+                                                                            if (ant.getFecha() < ventaMostrador.getTiempo() && ventaMostrador.getTiempo() < pd.getFecha()) {
+                                                                                precioProducto = pd.getPrecio();
+                                                                                activo = true;
+                                                                                break;
+                                                                            }
+                                                                            ant = new Modificado(pd);
+                                                                        }
+                                                                        x++;
+                                                                    }
+                                                                    if (!activo) {
+                                                                        precioProducto = p.getPrecio();
+                                                                    }
+                                                                    if (ventaMostrador.getMermaTortilla() >= 0.0) {
+                                                                        txtTortilla.setText("Tortillas: " + ventaMostrador.getMermaTortilla() + " kgs");
+                                                                        txtTortillaP.setText("$" + precioProducto * ventaMostrador.getMermaTortilla());
+                                                                        mermasTotal += precioProducto * ventaMostrador.getMermaTortilla();
+                                                                    } else {
+                                                                        txtTortilla.setText("Tortillas: 0 kgs");
+                                                                        txtTortillaP.setText("$0");
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                }
+                                                            });
                                                 } else {
-                                                    txtTortilla.setText("Tortillas: 0kgs");
-                                                    txtTortillaP.setText("$0");
+                                                    if (ventaMostrador.getMermaTortilla() >= 0.0) {
+                                                        txtTortilla.setText("Tortillas: " + ventaMostrador.getMermaTortilla() + " kgs");
+                                                        txtTortillaP.setText("$" + p.getPrecio() * ventaMostrador.getMermaTortilla());
+                                                        mermasTotal += p.getPrecio() * ventaMostrador.getMermaTortilla();
+                                                    } else {
+                                                        txtTortilla.setText("Tortillas: 0 kgs");
+                                                        txtTortillaP.setText("$0");
+                                                    }
                                                 }
                                             }
                                             if (p.getNombre().toUpperCase().contains("MASA")) {
-                                                if (precio) {
-                                                    txtMasaVendida.setText("+ $" + ventaMostrador.getMasaVendida() * p.getPrecio());
-                                                    total += ventaMostrador.getMasaVendida() * p.getPrecio();
-                                                    txtTotal.setText("TOTAL: $" + total);
-                                                }
-                                                if (ventaMostrador.getMaquinaMasa() >= 0.0) {
-                                                    txtMaquinaMasa.setText("Maquina masa: " + ventaMostrador.getMaquinaMasa() + "kgs");
+                                                if (p.isModificado()) {
+                                                    activo = false;
+                                                    precioProducto = 0.0;
+                                                    FirebaseDatabase.getInstance().getReference("CambioPrecios")
+                                                            .child(p.getIdProducto())
+                                                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                    int x = 0;
+                                                                    Modificado ant = null;
+                                                                    for (DataSnapshot sp : dataSnapshot.getChildren()) {
+                                                                        Modificado pd = sp.getValue(Modificado.class);
+                                                                        if (x == 0) {
+                                                                            if (p.getAlta() < ventaMostrador.getTiempo() && ventaMostrador.getTiempo() < pd.getFecha()) {
+                                                                                precioProducto = pd.getPrecio();
+                                                                                activo = true;
+                                                                                break;
+                                                                            }
+                                                                            ant = new Modificado(pd);
+                                                                        } else {
+                                                                            if (ant.getFecha() < ventaMostrador.getTiempo() && ventaMostrador.getTiempo() < pd.getFecha()) {
+                                                                                precioProducto = pd.getPrecio();
+                                                                                activo = true;
+                                                                                break;
+                                                                            }
+                                                                            ant = new Modificado(pd);
+                                                                        }
+                                                                        x++;
+                                                                    }
+                                                                    if (!activo) {
+                                                                        precioProducto = p.getPrecio();
+                                                                    }
+
+                                                                    if (precio) {
+                                                                        txtMasaVendida.setText("+ $" + ventaMostrador.getMasaVendida() * precioProducto);
+                                                                        total += ventaMostrador.getMasaVendida() * precioProducto;
+                                                                        txtTotal.setText("TOTAL: $" + total);
+                                                                    }
+
+                                                                    if (ventaMostrador.getMaquinaMasa() >= 0.0) {
+                                                                        txtMaquinaMasa.setText("Maquina masa: " + ventaMostrador.getMaquinaMasa() + " kgs");
+                                                                        txtMaquinaMasaP.setText("$" + precioProducto * ventaMostrador.getMaquinaMasa());
+                                                                        mermasTotal += precioProducto * ventaMostrador.getMaquinaMasa();
+                                                                    } else {
+                                                                        txtMaquinaMasa.setText("Maquina masa: 0 kgs");
+                                                                        txtMaquinaMasaP.setText("$0");
+                                                                    }
+                                                                    if (ventaMostrador.getMolino() >= 0.0) {
+                                                                        txtMolino.setText("Molino: " + ventaMostrador.getMolino() + " kgs");
+                                                                        txtMolinoP.setText("$" + precioProducto * ventaMostrador.getMolino());
+                                                                        mermasTotal += precioProducto * ventaMostrador.getMolino();
+                                                                    } else {
+                                                                        txtMolino.setText("Molino: 0 kgs");
+                                                                        txtMolinoP.setText("$0");
+                                                                    }
+                                                                    txtMermaTotal.setText("- $" + mermasTotal);
+                                                                    total -= mermasTotal;
+                                                                    txtTotal.setText("TOTAL: $" + total);
+                                                                }
+
+                                                                @Override
+                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                }
+                                                            });
+                                                } else {
+                                                    if (ventaMostrador.getMolino() >= 0.0) {
+                                                        txtMolino.setText("Molino: " + ventaMostrador.getMolino() + " kgs");
+                                                        txtMolinoP.setText("$" + p.getPrecio() * ventaMostrador.getMolino());
+                                                        mermasTotal += p.getPrecio() * ventaMostrador.getMolino();
+                                                    } else {
+                                                        txtMolino.setText("Molino: 0 kgs");
+                                                        txtMolinoP.setText("$0");
+                                                    }
+                                                    if (precio) {
+                                                        txtMasaVendida.setText("+ $" + ventaMostrador.getMasaVendida() * p.getPrecio());
+                                                        total += ventaMostrador.getMasaVendida() * p.getPrecio();
+                                                        txtTotal.setText("TOTAL: $" + total);
+                                                    }
+                                                    txtMaquinaMasa.setText("Maquina masa: " + ventaMostrador.getMaquinaMasa() + " kgs");
                                                     txtMaquinaMasaP.setText("$" + p.getPrecio() * ventaMostrador.getMaquinaMasa());
                                                     mermasTotal += p.getPrecio() * ventaMostrador.getMaquinaMasa();
-                                                } else {
-                                                    txtMaquinaMasa.setText("Maquina masa: 0kgs");
-                                                    txtMaquinaMasaP.setText("$0");
-                                                }
-                                                if (ventaMostrador.getMolino() >= 0.0) {
-                                                    txtMolino.setText("Molino: " + ventaMostrador.getMolino() + "kgs");
-                                                    txtMolinoP.setText("$" + p.getPrecio() * ventaMostrador.getMolino());
-                                                    mermasTotal += p.getPrecio() * ventaMostrador.getMolino();
-                                                } else {
-                                                    txtMolino.setText("Molino: 0kgs");
-                                                    txtMolinoP.setText("$0");
+                                                    txtMermaTotal.setText("- $" + mermasTotal);
+                                                    total -= mermasTotal;
+                                                    txtTotal.setText("TOTAL: $" + total);
                                                 }
                                             }
                                         }
-                                        txtMermaTotal.setText("- $" + mermasTotal);
-                                        total -= mermasTotal;
-                                        txtTotal.setText("TOTAL: $" + total);
                                     }
 
                                     @Override
@@ -261,13 +383,22 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
                                                     }
                                                 }
                                             }
-                                            double masaTotal = masa + ventaMostrador.getMasaVendida();
-                                            materia -= masaTotal;
+                                            if (ventaMostrador.getMasaVendida() > 0) {
+                                                masa += ventaMostrador.getMasaVendida();
+                                            }
+                                            materia -= masa;
                                             double tortillasFinal = materia * .8;
-                                            tortillasFinal += ventaMostrador.getTortillaSobra();
+                                            if (ventaMostrador.getTortillaSobra() > 0) {
+                                                tortillasFinal += ventaMostrador.getTortillaSobra();
+                                            }
 
-                                            txtMasa.setText("" + redondearDecimales(masaTotal,2));
-                                            txtTortillas.setText("" + redondearDecimales(tortillasFinal,2));
+                                            if (masa > 0) {
+                                                txtMasa.setText("" + redondearDecimales(masa,2));
+                                                txtTortillas.setText("" + redondearDecimales(tortillasFinal,2));
+                                            } else {
+                                                txtMasa.setText("0 kgs");
+                                                txtTortillas.setText("0 kgs");
+                                            }
                                         }
 
                                         @Override

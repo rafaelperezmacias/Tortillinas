@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
@@ -205,8 +206,8 @@ public class AdaptadorTotalClientes extends RecyclerView.Adapter<AdaptadorTotalC
                         totales.set(position,vc.getPago());
                         //TODO CAMBIO DE COLOR DE LA MIERDA ESA
                         if (vc.getPago() < holder.total) {
-                            holder.cardView.setCardBackgroundColor(R.color.error_background);
-                            holder.cardView.setStrokeColor(R.color.error_text);
+                            holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.error_background));
+                            holder.cardView.setStrokeColor(ContextCompat.getColor(context, R.color.error_text));
                         }
                         masaP +=  AdaptadorTotalClientes.this.masaP.get(position);
                         AdaptadorTotalClientes.this.masaP.set(position,masaP);

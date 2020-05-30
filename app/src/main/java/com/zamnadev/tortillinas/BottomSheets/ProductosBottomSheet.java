@@ -155,7 +155,7 @@ public class ProductosBottomSheet extends BottomSheetDialogFragment {
                                             hashMap.put("idProducto", productoMap.get("idProducto").toString());
                                             hashMap.put("precio", producto.getPrecio());
                                             DatabaseReference refCambios = FirebaseDatabase.getInstance().getReference("CambioPrecios");
-                                            refCambios.push().updateChildren(hashMap);
+                                            refCambios.child(productoMap.get("idProducto").toString()).push().updateChildren(hashMap);
                                         }
                                         Toast.makeText(getContext(), "Actualización exitosa", Toast.LENGTH_SHORT).show();
                                         dismiss();

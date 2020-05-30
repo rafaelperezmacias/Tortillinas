@@ -12,12 +12,13 @@ public class Cliente {
     private HashMap<String, String> precios;
     private boolean eliminado;
     private boolean preferencial;
+    private long timeDelete;
 
     public Cliente() {
 
     }
 
-    public Cliente(String idCliente, Nombre nombre, Direccion direccion, String telefono, String pseudonimo, HashMap<String, String> precios, boolean eliminado, boolean preferencial) {
+    public Cliente(String idCliente, Nombre nombre, Direccion direccion, String telefono, String pseudonimo, HashMap<String, String> precios, boolean eliminado, boolean preferencial, long timeDelete) {
         this.idCliente = idCliente;
         this.nombre = nombre;
         this.direccion = direccion;
@@ -26,6 +27,7 @@ public class Cliente {
         this.precios = precios;
         this.eliminado = eliminado;
         this.preferencial = preferencial;
+        this.timeDelete = timeDelete;
     }
 
     public String getIdCliente() {
@@ -92,6 +94,14 @@ public class Cliente {
         this.preferencial = preferencial;
     }
 
+    public long getTimeDelete() {
+        return timeDelete;
+    }
+
+    public void setTimeDelete(long timeDelete) {
+        this.timeDelete = timeDelete;
+    }
+
     @Override
     public String toString() {
         return "Cliente{" +
@@ -103,6 +113,7 @@ public class Cliente {
                 ", precios=" + precios +
                 ", eliminado=" + eliminado +
                 ", preferencial=" + preferencial +
+                ", timeDelete=" + timeDelete +
                 '}';
     }
 }
