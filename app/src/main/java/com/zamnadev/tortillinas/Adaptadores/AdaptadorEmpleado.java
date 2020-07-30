@@ -26,6 +26,7 @@ import com.zamnadev.tortillinas.Moldes.Cuenta;
 import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
 import com.zamnadev.tortillinas.R;
+import com.zamnadev.tortillinas.Sesiones.Encriptar;
 
 import java.util.ArrayList;
 
@@ -169,10 +170,21 @@ public class AdaptadorEmpleado extends RecyclerView.Adapter<AdaptadorEmpleado.Vi
                 if (dataSnapshot.exists()) {
                     Cuenta cuenta = dataSnapshot.getValue(Cuenta.class);
                     if (showPassword.get(position)) {
-                        holder.txtCuenta.setText(cuenta.getUsuario() + ", " + cuenta.getPassword());
+                        try {
+                            String pass = Encriptar.desencriptar(cuenta.getPassword());
+                            holder.txtCuenta.setText(cuenta.getUsuario() + ", " + pass);
+                        } catch (Exception e) {
+                            holder.txtCuenta.setText(cuenta.getUsuario() + ", " + cuenta.getPassword());
+                        }
                     } else {
-                        holder.txtCuenta.setText(cuenta.getUsuario() + ", " +
-                                cuenta.getPassword().replaceAll(".","*"));
+                        try {
+                            String pass = Encriptar.desencriptar(cuenta.getPassword());
+                            holder.txtCuenta.setText(cuenta.getUsuario() + ", " +
+                                    pass.replaceAll(".","*"));
+                        } catch (Exception e) {
+                            holder.txtCuenta.setText(cuenta.getUsuario() + ", " +
+                                    cuenta.getPassword().replaceAll(".","*"));
+                        }
                     }
                 }
             }

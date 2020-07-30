@@ -1,6 +1,6 @@
 package com.zamnadev.tortillinas.Moldes;
 
-public class Venta {
+public class Venta implements Comparable {
 
     private String idVenta;
     private long tiempo;
@@ -79,5 +79,11 @@ public class Venta {
                 ", idSucursal='" + idSucursal + '\'' +
                 ", isMostrador=" + isMostrador +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        long comparable = ((Venta) o).getTiempo();
+        return ((int) (this.tiempo - comparable));
     }
 }

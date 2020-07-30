@@ -34,6 +34,8 @@ public class ProductosFragment extends Fragment {
     private DatabaseReference refProductos;
     private ValueEventListener listenerProductos;
 
+    private AdaptadorProductos adaptador;
+
     private View elevation;
 
     public ProductosFragment() { }
@@ -70,15 +72,17 @@ public class ProductosFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 productos.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Log.e("Producto","" + snapshot.toString());
                     Producto producto = snapshot.getValue(Producto.class);
-                    Log.e("Producto","" + producto.toString());
                     if (!producto.isEliminado()) {
                         productos.add(producto);
                     }
                 }
-                AdaptadorProductos adaptador = new AdaptadorProductos(getContext(),productos,true,getChildFragmentManager(),true);
-                recyclerView.setAdapter(adaptador);
+                try {
+                    adaptador = new AdaptadorProductos(getContext(),productos,true,getChildFragmentManager(),true);
+                    recyclerView.setAdapter(adaptador);
+                } catch (Exception ignored) {
+
+                }
             }
 
             @Override

@@ -351,62 +351,63 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
                             }
                             adaptador = new AdaptadorTotalRepartidores(getContext(),repartidores,idVenta, TotalBottomSheet.this);
                             rRepartidores.setAdapter(adaptador);
-                            FirebaseDatabase.getInstance().getReference("AuxVentaMostrador")
-                                    .child(idVenta)
-                                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            double masa = 0.0, tortillas = 0.0, totopos = 0.0;
-                                            for (DataSnapshot snapshot : dataSnapshot.getChildren())
-                                            {
-                                                AuxVenta auxVenta = snapshot.getValue(AuxVenta.class);
-                                                if (auxVenta.getVuelta1().isConfirmado()) {
-                                                    if (auxVenta.getVuelta1().getMasa() > 0) {
-                                                        masa += auxVenta.getVuelta1().getMasa();
-                                                    }
-                                                    if (auxVenta.getVuelta1().getTortillas() > 0) {
-                                                        tortillas += auxVenta.getVuelta1().getTortillas();
-                                                    }
-                                                    if (auxVenta.getVuelta1().getTotopos() > 0 ) {
-                                                        totopos += auxVenta.getVuelta1().getTotopos();
-                                                    }
-                                                }
-                                                if (auxVenta.getVuelta2().isConfirmado()) {
-                                                    if (auxVenta.getVuelta2().getMasa() > 0) {
-                                                        masa += auxVenta.getVuelta2().getMasa();
-                                                    }
-                                                    if (auxVenta.getVuelta2().getTortillas() > 0) {
-                                                        tortillas += auxVenta.getVuelta2().getTortillas();
-                                                    }
-                                                    if (auxVenta.getVuelta2().getTotopos() > 0) {
-                                                        totopos += auxVenta.getVuelta2().getTotopos();
-                                                    }
-                                                }
-                                            }
-                                            if (ventaMostrador.getMasaVendida() > 0) {
-                                                masa += ventaMostrador.getMasaVendida();
-                                            }
-                                            materia -= masa;
-                                            double tortillasFinal = materia * .8;
-                                            if (ventaMostrador.getTortillaSobra() > 0) {
-                                                tortillasFinal += ventaMostrador.getTortillaSobra();
-                                            }
-
-                                            if (materia > 0) {
-                                                txtMasa.setText("" + redondearDecimales(masa,2));
-                                                txtTortillas.setText("" + redondearDecimales(tortillasFinal,2));
-                                            } else {
-                                                txtMasa.setText("0 kgs");
-                                                txtTortillas.setText("0 kgs");
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
                         }
+
+                        FirebaseDatabase.getInstance().getReference("AuxVentaMostrador")
+                                .child(idVenta)
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        double masa = 0.0, tortillas = 0.0, totopos = 0.0;
+                                        for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                                        {
+                                            AuxVenta auxVenta = snapshot.getValue(AuxVenta.class);
+                                            if (auxVenta.getVuelta1().isConfirmado()) {
+                                                if (auxVenta.getVuelta1().getMasa() > 0) {
+                                                    masa += auxVenta.getVuelta1().getMasa();
+                                                }
+                                                if (auxVenta.getVuelta1().getTortillas() > 0) {
+                                                    tortillas += auxVenta.getVuelta1().getTortillas();
+                                                }
+                                                if (auxVenta.getVuelta1().getTotopos() > 0 ) {
+                                                    totopos += auxVenta.getVuelta1().getTotopos();
+                                                }
+                                            }
+                                            if (auxVenta.getVuelta2().isConfirmado()) {
+                                                if (auxVenta.getVuelta2().getMasa() > 0) {
+                                                    masa += auxVenta.getVuelta2().getMasa();
+                                                }
+                                                if (auxVenta.getVuelta2().getTortillas() > 0) {
+                                                    tortillas += auxVenta.getVuelta2().getTortillas();
+                                                }
+                                                if (auxVenta.getVuelta2().getTotopos() > 0) {
+                                                    totopos += auxVenta.getVuelta2().getTotopos();
+                                                }
+                                            }
+                                        }
+                                        if (ventaMostrador.getMasaVendida() > 0) {
+                                            masa += ventaMostrador.getMasaVendida();
+                                        }
+                                        materia -= masa;
+                                        double tortillasFinal = materia * .8;
+                                        if (ventaMostrador.getTortillaSobra() > 0) {
+                                            tortillasFinal += ventaMostrador.getTortillaSobra();
+                                        }
+
+                                        if (materia > 0) {
+                                            txtMasa.setText("" + redondearDecimales(masa,2));
+                                            txtTortillas.setText("" + redondearDecimales(tortillasFinal,2));
+                                        } else {
+                                            txtMasa.setText("0 kgs");
+                                            txtTortillas.setText("0 kgs");
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
                     }
 
                     @Override
@@ -700,6 +701,7 @@ public class TotalBottomSheet extends BottomSheetDialogFragment {
         for (double p : adaptador.getTotales()) {
             tmpPrecio += p;
         }
+        Log.e("sad",""+ tmpPrecio);
         total += tmpPrecio;
         txtTotal.setText("TOTAL: $" + total);
     }

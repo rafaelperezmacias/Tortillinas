@@ -139,6 +139,11 @@ public class AdaptadorTotalRepartidores extends RecyclerView.Adapter<AdaptadorTo
                                                 holder.txtTotal.setText("+ $" + holder.total);
                                             } else {
                                                 holder.lytGastos.setVisibility(View.GONE);
+                                                if (position == totales.size()-1) {
+                                                    if (padre != null) {
+                                                        padre.aumentarRepartidores();
+                                                    }
+                                                }
                                             }
                                         }
 

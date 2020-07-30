@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -29,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Moldes.Cuenta;
 import com.zamnadev.tortillinas.R;
 import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
+import com.zamnadev.tortillinas.Sesiones.Encriptar;
 
 public class PasswordBottomSheet extends BottomSheetDialogFragment {
 
@@ -96,21 +98,38 @@ public class PasswordBottomSheet extends BottomSheetDialogFragment {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             Cuenta c = dataSnapshot.getValue(Cuenta.class);
-                            if (!c.getPassword().equals(txtPassword.getText().toString())) {
+                            String pass;
+                            try {
+                                pass = Encriptar.desencriptar(c.getPassword());
+                            } catch (Exception e) {
+                                pass = null;
+                            }
+                            if (pass == null) {
+                                return;
+                            }
+                            if (!pass.equals(txtPassword.getText().toString().trim())) {
                                 lytPassword.setError("La contraseña anterior no coincide");
                                 return;
                             }
                             lytPassword.setError(null);
-                            refUser.child("password").setValue(txtPasswordNew.getText().toString())
-                                    .addOnCompleteListener(task -> {
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(getContext(), "La contraseña se ha cambiado", Toast.LENGTH_SHORT).show();
-                                            dismiss();
-                                        } else {
-                                            Toast.makeText(getContext(), "Error, intentelo más tarde", Toast.LENGTH_SHORT).show();
-                                            dismiss();
-                                        }
-                                    });
+                            String password;
+                            try {
+                                password = Encriptar.encriptar(txtPasswordNew.getText().toString().trim());
+                            } catch (Exception e) {
+                                password = null;
+                            }
+                            if (password != null) {
+                                refUser.child("password").setValue(password)
+                                        .addOnCompleteListener(task -> {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(getContext(), "La contraseña se ha cambiado", Toast.LENGTH_SHORT).show();
+                                                dismiss();
+                                            } else {
+                                                Toast.makeText(getContext(), "Error, intentelo más tarde", Toast.LENGTH_SHORT).show();
+                                                dismiss();
+                                            }
+                                        });
+                            }
                         }
 
                         @Override

@@ -1,6 +1,7 @@
 package com.zamnadev.tortillinas.Adaptadores;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,6 +90,7 @@ public class AdaptadorVenta extends RecyclerView.Adapter<AdaptadorVenta.ViewHold
             }
         });
 
+        Log.e("HOla","fecha: " + fecha + ", venta.getFecha(): " + venta.getFecha());
         if (fecha.equals(venta.getFecha())) {
             holder.lytMain.setBackgroundColor(ContextCompat.getColor(context, R.color.venta));
             holder.itemView.setOnClickListener(view -> {
@@ -111,6 +113,7 @@ public class AdaptadorVenta extends RecyclerView.Adapter<AdaptadorVenta.ViewHold
                 }
             });
         } else {
+            holder.lytMain.setBackgroundColor(ContextCompat.getColor(context, R.color.blanco));
             holder.itemView.setOnClickListener(view -> {
                 if (venta.isMostrador()) {
                     VentasMostradorBottomSheet bottomSheet;

@@ -31,6 +31,8 @@ import com.zamnadev.tortillinas.R;
 import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 public class ListadoVentasFragment extends Fragment {
@@ -83,11 +85,11 @@ public class ListadoVentasFragment extends Fragment {
                     if (empleado.getTipo() == Empleado.TIPO_MOSTRADOR) {
                          refVentas = FirebaseDatabase.getInstance().getReference("VentasMostrador")
                                 .child(empleado.getIdEmpleado())
-                                .orderByChild("fecha");
+                                .orderByChild("tiempo");
                     } else {
                         refVentas = FirebaseDatabase.getInstance().getReference("VentasRepartidor")
                                 .child(empleado.getIdEmpleado())
-                                .orderByChild("fecha");
+                                .orderByChild("tiempo");
                         fabAgregarVenta.hide();
                         if (ventasFragment.getAdapter().getCount() != 2) {
                             ventasFragment.getAdapter().addFragment(new ConfirmacionesFragment(ventasFragment), "Confirmaciones");
@@ -138,7 +140,7 @@ public class ListadoVentasFragment extends Fragment {
                     if (isMostrador) {
                         ventasFragment.getTabLayout().getTabAt(0).setText("Ventas mostrador");
                         Query refVentasMostrador = FirebaseDatabase.getInstance().getReference("VentasMostrador")
-                                .orderByChild("fecha");
+                                .orderByChild("tiempo");
                         listenerVentasMostrador = refVentasMostrador.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -156,6 +158,9 @@ public class ListadoVentasFragment extends Fragment {
                                         }
                                     }
                                 }
+
+                                Collections.sort(ventas);
+
                                 AdaptadorVenta adaptador = new AdaptadorVenta(getContext(),ventas,fecha,getFragmentManager(),true);
                                 recyclerView.setAdapter(adaptador);
                             }
@@ -167,7 +172,7 @@ public class ListadoVentasFragment extends Fragment {
                         });
                     } else {
                         Query refVentaRepartidor = FirebaseDatabase.getInstance().getReference("VentasRepartidor")
-                                .orderByChild("fecha");
+                                .orderByChild("tiempo");
                         listenerVentasRepartidor = refVentaRepartidor.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -185,6 +190,9 @@ public class ListadoVentasFragment extends Fragment {
                                         }
                                     }
                                 }
+
+                                Collections.sort(ventas);
+
                                 AdaptadorVenta adaptador = new AdaptadorVenta(getContext(),ventas,fecha,getFragmentManager(),true);
                                 recyclerView.setAdapter(adaptador);
                             }

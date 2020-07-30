@@ -21,6 +21,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.zamnadev.tortillinas.Moldes.Cuenta;
 import com.zamnadev.tortillinas.Sesiones.ControlSesiones;
+import com.zamnadev.tortillinas.Sesiones.Encriptar;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -64,19 +65,52 @@ public class LoginActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         Query reference = FirebaseDatabase.getInstance().getReference("Cuentas")
-                                .orderByChild("password")
-                                .equalTo(txtPassword.getText().toString().trim());
+                                .orderByChild("usuario")
+                                .equalTo(txtUsuario.getText().toString().trim());
                         reference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot data) {
                                 if (data.exists()) {
+                                    boolean login = false;
                                     Cuenta cuenta = null;
                                     for (DataSnapshot snapshot : data.getChildren()) {
                                         cuenta = snapshot.getValue(Cuenta.class);
+                                        if (cuenta == null) {
+                                            continue;
+                                        }
+
+                                        String usuario = txtUsuario.getText().toString().trim();
+                                        String password = txtPassword.getText().toString().trim();
+                                        String passForBd;
+
+                                        try {
+                                             passForBd = Encriptar.desencriptar(cuenta.getPassword());
+                                        } catch (Exception e) {
+                                            passForBd = null;
+                                        }
+
+                                        if (passForBd == null) {
+                                            return;
+                                        }
+
+                                        if (cuenta.getUsuario().equals(usuario) && passForBd.equals(password)) {
+                                            login = true;
+                                            break;
+                                        }
                                     }
-                                    ControlSesiones.IngreasarUsuario(getApplicationContext(), cuenta.getIdCuenta());
-                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                    finish();
+
+                                    if (login) {
+                                        ControlSesiones.IngreasarUsuario(getApplicationContext(), cuenta.getIdCuenta());
+                                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                        finish();
+                                    } else {
+                                        btnIngresar.setText("INGRESAR");
+                                        btnIngresar.setEnabled(true);
+                                        lytUsuario.setEnabled(true);
+                                        lytPassword.setEnabled(true);
+                                        progressBar.setVisibility(View.GONE);
+                                        mcvError.setVisibility(View.VISIBLE);
+                                    }
                                 } else {
                                     btnIngresar.setText("INGRESAR");
                                     btnIngresar.setEnabled(true);

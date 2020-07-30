@@ -38,6 +38,7 @@ import com.zamnadev.tortillinas.Moldes.Empleado;
 import com.zamnadev.tortillinas.Moldes.Nombre;
 import com.zamnadev.tortillinas.Moldes.Sucursal;
 import com.zamnadev.tortillinas.R;
+import com.zamnadev.tortillinas.Sesiones.Encriptar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -184,7 +185,14 @@ public class EmpleadosBottomSheet extends BottomSheetDialogFragment {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     cuenta = dataSnapshot.getValue(Cuenta.class);
                     txtUsuario.setText(cuenta.getUsuario());
-                    txtPassword.setText(cuenta.getPassword());
+                    String pass = null;
+                    try {
+                        pass = Encriptar.desencriptar(cuenta.getPassword());
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), "Ha ocurrido un error, inténtelo más tarde", Toast.LENGTH_SHORT).show();
+                        dismiss();
+                    }
+                    txtPassword.setText(""+pass);
                 }
 
                 @Override
@@ -316,7 +324,13 @@ public class EmpleadosBottomSheet extends BottomSheetDialogFragment {
                                                 .child(empleado.getIdEmpleado());
                                         HashMap<String, Object> cuentaMap = new HashMap<>();
                                         cuentaMap.put("usuario",txtUsuario.getText().toString().trim());
-                                        cuentaMap.put("password",txtPassword.getText().toString().trim());
+                                        String pass;
+                                        try {
+                                            pass = Encriptar.encriptar(txtPassword.getText().toString().trim());
+                                        } catch (Exception ignored) {
+                                            pass = "12345678a";
+                                        }
+                                        cuentaMap.put("password",pass);
 
                                         reference1.updateChildren(cuentaMap)
                                                 .addOnCompleteListener(task1 -> {
@@ -383,7 +397,13 @@ public class EmpleadosBottomSheet extends BottomSheetDialogFragment {
                                                         .child(empleado.getIdEmpleado());
                                                 HashMap<String, Object> cuentaMap = new HashMap<>();
                                                 cuentaMap.put("usuario",txtUsuario.getText().toString().trim());
-                                                cuentaMap.put("password",txtPassword.getText().toString().trim());
+                                                String pass;
+                                                try {
+                                                    pass = Encriptar.encriptar(txtPassword.getText().toString().trim());
+                                                } catch (Exception ignored) {
+                                                    pass = "12345678a";
+                                                }
+                                                cuentaMap.put("password",pass);
 
                                                 reference1.updateChildren(cuentaMap)
                                                         .addOnCompleteListener(task1 -> {
@@ -459,7 +479,13 @@ public class EmpleadosBottomSheet extends BottomSheetDialogFragment {
                                                 HashMap<String, Object> cuentaMap = new HashMap<>();
                                                 cuentaMap.put("idCuenta",id);
                                                 cuentaMap.put("usuario",txtUsuario.getText().toString().trim());
-                                                cuentaMap.put("password",txtPassword.getText().toString().trim());
+                                                String pass;
+                                                try {
+                                                    pass = Encriptar.encriptar(txtPassword.getText().toString().trim());
+                                                } catch (Exception ignored) {
+                                                    pass = "12345678a";
+                                                }
+                                                cuentaMap.put("password",pass);
 
                                                 reference1.child(id).updateChildren(cuentaMap)
                                                         .addOnCompleteListener(task1 -> {
